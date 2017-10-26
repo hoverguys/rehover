@@ -15,7 +15,6 @@ func main() {
 	allowmultiple := flag.Bool("allowmultiple", false, "Allow multiple meshes in one file (not currently supported)")
 	dumpjson := flag.Bool("dumpjson", false, "Dump JSON from parser instead of binary (for debugging parser bugs)(")
 	endianess := flag.String("endianess", "big", "Endianess of values (valid values: big, small)")
-	optimize := flag.Bool("optimize", true, "Perform some space-saving optimizations (such as deduplication)")
 	flag.Parse()
 
 	// Get input reader
@@ -41,7 +40,6 @@ func main() {
 		AllowNgons:      *allowngons,
 		PartialFaces:    *allowpartial,
 		MultipleObjects: *allowmultiple,
-		Optimize:        *optimize,
 	})
 	checkErr(err, "Error while parsing input file")
 
