@@ -57,8 +57,8 @@ func SaveModel(mesh Object, out io.Writer, boType Endianess) error {
 	for _, face := range mesh.Faces {
 		for _, vcombo := range face {
 			binary.Write(out, endianess, vcombo.Vertex)
-			binary.Write(out, endianess, vcombo.Normal)
 			binary.Write(out, endianess, vcombo.TexCoord)
+			binary.Write(out, endianess, vcombo.Normal)
 		}
 	}
 
