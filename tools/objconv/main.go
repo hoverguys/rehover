@@ -52,7 +52,7 @@ func main() {
 	}
 
 	// Save to binary
-	checkErr(SaveModel(meshdata[0], out, Endianess(*endianess)), "Error saving model")
+	checkErr(SaveModel(meshdata, out, Endianess(*endianess)), "Error saving model")
 }
 
 func checkErr(err error, msg string, args ...interface{}) {

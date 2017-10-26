@@ -32,17 +32,19 @@ type VertexCombo struct {
 	Vertex, TexCoord, Normal uint16
 }
 
-// Object is an OBJ Object
-type Object struct {
-	Name          string
+// Mesh is all the data inside an OBJ file
+type Mesh struct {
 	Vertices      []Coord
 	TextureCoords []UV
 	VertexNormals []Coord
-	Faces         []Face
+	Objects       []Object
 }
 
-// Mesh is a collection of objects from an OBJ file
-type Mesh []Object
+// Object is a single OBJ object
+type Object struct {
+	Name  string
+	Faces []Face
+}
 
 // ParseOBJ parses an OBJ file from a reader and returns a mesh and an optional error, if any
 func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
@@ -78,7 +80,7 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 		if space < 1 {
 			// No space?!
 			err = fmt.Errorf("Weird line (%d): %s", linenum, line)
-			return nil, err
+			return mesh, err
 		}
 
 		ftype := line[:space]
@@ -86,68 +88,66 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 
 		switch ftype {
 		// Object (and name)
-		/* THIS IS BROKEN
 		case "o":
 			// Only add the current object if valid (ie. not the empty one before the first one)
 			if currentObject.Valid() {
-				mesh = append(mesh, currentObject)
+				mesh.Objects = append(mesh.Objects, currentObject)
 			}
 			currentObject = Object{
 				Name: rest,
 			}
-		*/
 		// Vertex
 		case "v":
 			coord, err := parseCoord(rest)
 			if err != nil {
-				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
+				return mesh, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
 
-			currentObject.Vertices = append(currentObject.Vertices, coord)
+			mesh.Vertices = append(mesh.Vertices, coord)
 		// UV coordinate
 		case "vt":
 			uv, err := parseUV(rest)
 			if err != nil {
-				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
+				return mesh, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
 
-			currentObject.TextureCoords = append(currentObject.TextureCoords, uv)
+			mesh.TextureCoords = append(mesh.TextureCoords, uv)
 		// Vertex normal
 		case "vn":
 			coord, err := parseCoord(rest)
 			if err != nil {
-				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
+				return mesh, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
 
-			currentObject.VertexNormals = append(currentObject.VertexNormals, coord)
+			mesh.VertexNormals = append(mesh.VertexNormals, coord)
 		// Face
 		case "f":
 			face, err := parseFace(rest, settings.PartialFaces)
 			if err != nil {
-				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
+				return mesh, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
 			// Check for ngons
 			if len(face) > 3 && !settings.AllowNgons {
-				return nil, fmt.Errorf("Face on line %d is an Ngon (%d vertices), and that's not allowed (needs -allowngons)", linenum, len(line))
+				return mesh, fmt.Errorf("Face on line %d is an Ngon (%d vertices), and that's not allowed (needs -allowngons)", linenum, len(line))
 			}
 
 			currentObject.Faces = append(currentObject.Faces, face)
 		// Ignore the following until we support them properly
-		case "g", "usemtl", "mtllib", "s", "vp", "o":
+		case "g", "usemtl", "mtllib", "s", "vp":
 			// nothing
 		default:
 			// Unknown stuff
 			err = fmt.Errorf("Weird line (%d): %s", linenum, line)
-			return nil, err
+			return mesh, err
 		}
 	}
 
 	// Add current object to mesh
-	mesh = append(mesh, currentObject)
+	mesh.Objects = append(mesh.Objects, currentObject)
 
 	// Check for multiple objects, if forbidden
-	if len(mesh) > 1 && !settings.MultipleObjects {
-		return nil, fmt.Errorf("This file contains %d objects, but only one is allowed (needs -allowmultiple)", len(mesh))
+	if len(mesh.Objects) > 1 && !settings.MultipleObjects {
+		return mesh, fmt.Errorf("This file contains %d objects, but only one is allowed (needs -allowmultiple)", len(mesh.Objects))
 	}
 
 	return mesh, nil
@@ -155,7 +155,7 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 
 // Valid checks wether the object is valid or not
 func (o Object) Valid() bool {
-	return len(o.Vertices) > 0 && len(o.Faces) > 0
+	return len(o.Faces) > 0
 }
 
 func parseCoord(line string) (c Coord, err error) {

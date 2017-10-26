@@ -16,7 +16,7 @@ const (
 )
 
 // SaveModel takes a parsed model and writes it in binary format using a provided byte order
-func SaveModel(mesh Object, out io.Writer, boType Endianess) error {
+func SaveModel(mesh Mesh, out io.Writer, boType Endianess) error {
 	var endianess binary.ByteOrder
 	switch boType {
 	case EndianessLittle:
@@ -27,11 +27,14 @@ func SaveModel(mesh Object, out io.Writer, boType Endianess) error {
 		return fmt.Errorf("Unknown endianess: %s (supported: big, little)", boType)
 	}
 
+	//TODO Support multiple objects?
+	object := mesh.Objects[0]
+
 	// Write header
 	binary.Write(out, endianess, uint32(len(mesh.Vertices)))
 	binary.Write(out, endianess, uint32(len(mesh.VertexNormals)))
 	binary.Write(out, endianess, uint32(len(mesh.TextureCoords)))
-	binary.Write(out, endianess, uint32(len(mesh.Faces)))
+	binary.Write(out, endianess, uint32(len(object.Faces)))
 
 	// Write vertices
 	for _, vertex := range mesh.Vertices {
@@ -54,7 +57,7 @@ func SaveModel(mesh Object, out io.Writer, boType Endianess) error {
 	}
 
 	// Write faces
-	for _, face := range mesh.Faces {
+	for _, face := range object.Faces {
 		for _, vcombo := range face {
 			binary.Write(out, endianess, vcombo.Vertex)
 			binary.Write(out, endianess, vcombo.TexCoord)
