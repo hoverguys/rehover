@@ -271,7 +271,11 @@ func parseFace(line string, allowPartial bool) (f Face, err error) {
 				vcombo.Normal, vcombo.TexCoord = vcombo.TexCoord, vcombo.Normal
 			}
 		}
-		f = append(f, vcombo)
+		f = append(f, VertexCombo{
+			Vertex:   vcombo.Vertex - 1,
+			TexCoord: vcombo.TexCoord - 1,
+			Normal:   vcombo.Normal - 1,
+		})
 	}
 
 	return
