@@ -12,6 +12,7 @@ type OBJSettings struct {
 	AllowNgons      bool // Allow faces with more than 3 vertices
 	PartialFaces    bool // Allow faces without texcoord or normal indices
 	MultipleObjects bool // Allow multiple objects
+	Optimize        bool // Try to perform some space-saving optimizations
 }
 
 // Coord represents a 3D (+1) coordinate for OBJ structures
@@ -47,8 +48,17 @@ type Mesh []Object
 // ParseOBJ parses an OBJ file from a reader and returns a mesh and an optional error, if any
 func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 	//TODO MTL support??
+
+	// Current object and mesh
 	var currentObject Object
 	var mesh Mesh
+
+	// Optmization structures (deduplication)
+	remapVertex := make(map[uint16]uint16)
+	remapUV := make(map[uint16]uint16)
+	remapNormal := make(map[uint16]uint16)
+
+	// Start reading from file
 	reader := bufio.NewReader(in)
 	linenum := 0
 	for {
@@ -65,7 +75,7 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 		line = strings.TrimSpace(line)
 
 		// Skip empty lines and comments
-		if len(line) < 0 || line[0] == '#' {
+		if len(line) < 1 || line[0] == '#' {
 			continue
 		}
 
@@ -96,21 +106,72 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 			if err != nil {
 				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
-			currentObject.Vertices = append(currentObject.Vertices, coord)
+
+			// Try to deduplicate
+			if settings.Optimize {
+				found := false
+				for oindex, ocoord := range currentObject.Vertices {
+					if coord == ocoord {
+						remapVertex[uint16(len(currentObject.Vertices))] = uint16(oindex)
+						found = true
+					}
+				}
+				if !found {
+					currentObject.Vertices = append(currentObject.Vertices, coord)
+				}
+			} else {
+				// Just add
+				currentObject.Vertices = append(currentObject.Vertices, coord)
+			}
+
 		// UV coordinate
 		case "vt":
 			uv, err := parseUV(rest)
 			if err != nil {
 				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
-			currentObject.TextureCoords = append(currentObject.TextureCoords, uv)
+
+			// Try to deduplicate
+			if settings.Optimize {
+				found := false
+				for oindex, ouv := range currentObject.TextureCoords {
+					if uv == ouv {
+						remapUV[uint16(len(currentObject.TextureCoords))] = uint16(oindex)
+						found = true
+					}
+				}
+				if !found {
+					currentObject.TextureCoords = append(currentObject.TextureCoords, uv)
+				}
+			} else {
+				// Just add
+				currentObject.TextureCoords = append(currentObject.TextureCoords, uv)
+			}
+
 		// Vertex normal
 		case "vn":
 			coord, err := parseCoord(rest)
 			if err != nil {
 				return nil, fmt.Errorf("Error on line %d: %s", linenum, err.Error())
 			}
-			currentObject.VertexNormals = append(currentObject.VertexNormals, coord)
+
+			// Try to deduplicate
+			if settings.Optimize {
+				found := false
+				for oindex, ocoord := range currentObject.VertexNormals {
+					if coord == ocoord {
+						remapNormal[uint16(len(currentObject.VertexNormals))] = uint16(oindex)
+						found = true
+					}
+				}
+				if !found {
+					currentObject.VertexNormals = append(currentObject.VertexNormals, coord)
+				}
+			} else {
+				// Just add
+				currentObject.VertexNormals = append(currentObject.VertexNormals, coord)
+			}
+
 		// Face
 		case "f":
 			face, err := parseFace(rest, settings.PartialFaces)
@@ -121,6 +182,23 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 			if len(face) > 3 && !settings.AllowNgons {
 				return nil, fmt.Errorf("Face on line %d is an Ngon (%d vertices), and that's not allowed (needs -allowngons)", linenum, len(line))
 			}
+
+			// Handle remapping
+			if settings.Optimize {
+				for vcomboid := range face {
+					// Check for deduplicated normal
+					remappednormal, ok := remapNormal[face[vcomboid].Normal]
+					if ok {
+						face[vcomboid].Normal = remappednormal
+					}
+					// Check for deduplicated texture coordinate
+					remappeduv, ok := remapUV[face[vcomboid].TexCoord]
+					if ok {
+						face[vcomboid].TexCoord = remappeduv
+					}
+				}
+			}
+
 			currentObject.Faces = append(currentObject.Faces, face)
 		// Ignore the following until we support them properly
 		case "g", "usemtl", "mtllib", "s", "vp":
