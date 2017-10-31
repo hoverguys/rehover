@@ -11,7 +11,7 @@ You will need:
 
 Step 1:
 ```
-mkdir build
+mkdir build && cd build
 cmake ../project
 make
 ```
