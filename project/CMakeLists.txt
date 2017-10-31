@@ -21,10 +21,10 @@ add_definitions(-DGIT_VERSION="${GIT_VERSION}")
 
 # Sources
 file(GLOB_RECURSE SOURCE_FILES source/*)
-add_executable(rehover ${SOURCE_FILES})
+add_multi_target(rehover "${SOURCE_FILES}")
 
 # Dependencies
-target_link_libraries(rehover ogc)
+add_default_library(rehover ogc)
 
 # Create .dol
-add_dol_target(rehover)
+add_dol_targets(rehover)

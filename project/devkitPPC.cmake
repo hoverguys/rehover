@@ -7,7 +7,8 @@ set(CMAKE_SYSTEM_PROCESSOR powerpc)
 set(GEKKO TRUE) # To be used for multiplatform projects
 
 # Variables
-set(WII false CACHE BOOL "Build Wii version (instead of Gamecube)")
+set(GCN TRUE CACHE BOOL "Build Gamecube version")
+set(WII FALSE CACHE BOOL "Build Wii version")
 
 # devkitPro paths are broken on windows, so we have to fix those
 macro(msys_to_cmake_path MsysPath ResultingPath)
@@ -50,12 +51,6 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 SET(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available" )
 
-add_definitions(-DGEKKO)
-
-if(WII)
-    add_definitions(-DWII)
-endif()
-
-set(ARCH "-mogc -mcpu=750 -meabi -mhard-float")
+set(ARCH "-mcpu=750 -meabi -mhard-float")
 set(CMAKE_C_FLAGS "${ARCH}" CACHE STRING "C flags")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "C++ flags")
