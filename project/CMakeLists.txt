@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 project(rehover C CXX)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(SetupOGC)
+include(Tools)
 
 # Get version if possible
 include(FindGit OPTIONAL)

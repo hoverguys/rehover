@@ -31,7 +31,7 @@ find_package_handle_standard_args(LIBOGC  DEFAULT_MSG
 mark_as_advanced(LIBOGC_INCLUDE_DIR_GCN LIBOGC_LIBRARY_DIR_WII LIBOGC_LIBRARY_DIR)
 if(LIBOGC_FOUND)
     set(LIBOGC ${LIBOGC_INCLUDE_DIR}/..)
-    message(STATUS "setting LIBOGC to ${LIBOGC}")
+    message(STATUS "Setting LIBOGC to ${LIBOGC}")
 
     # Add paths it to toolchain
     include_directories(${LIBOGC_INCLUDE_DIR})
@@ -48,6 +48,7 @@ if(NOT ELF2DOL)
         message(WARNING "elf2dol - not found")
     endif()
 endif()
+mark_as_advanced(ELF2DOL)
 
 # Function to make .elf and .dols
 function(add_dol_target target)
