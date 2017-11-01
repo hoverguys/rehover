@@ -53,13 +53,12 @@ endif()
 function(add_dol_target target)
     # First, make sure the file has the proper extension (otherwise Dolphin won't load it)
     set_target_properties(${target} PROPERTIES SUFFIX ".elf")
-
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol
-                       COMMAND ${ELF2DOL} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol
-                       DEPENDS ${target}
-                       COMMENT "Generating .dol files from compiled .elf"
-                       VERBATIM)
-    add_custom_target(${target}_dol ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol)
+    add_custom_target(${target}_dol ALL
+                      ${ELF2DOL} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol
+                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${target}.elf
+                      COMMENT "Generating .dol files from compiled .elf"
+                      VERBATIM)
+    set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol)
 endfunction()
 
 # Apply add_dol_target to a multi-target
