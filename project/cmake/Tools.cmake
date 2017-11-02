@@ -9,11 +9,17 @@ if(NOT OBJCONV)
     message(WARNING "Could not find objconv")
 endif()
 
+# Check for objconv
+find_program(BENTO bento ${TOOLBIN})
+if(NOT BENTO)
+    message(WARNING "Could not find bento")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TOOLS DEFAULT_MSG
-                                  OBJCONV)
+                                  OBJCONV BENTO)
 
-mark_as_advanced(OBJCONV TOOLBIN)
+mark_as_advanced(OBJCONV BENTO TOOLBIN)
 
 if(TOOLS_FOUND)
     message(STATUS "All tools found")
