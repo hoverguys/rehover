@@ -48,7 +48,8 @@ var maxlen int
 
 func main() {
 	path := flag.String("in", "-", "Input file (- for stdin)")
-	outpath := flag.String("out", ".", "Where to put the output files")
+	headerpath := flag.String("headerpath", ".", "Where to put the output header file")
+	objectpath := flag.String("objectpath", ".", "Where to put the output asm file")
 	alignment := flag.Int("align", 4, "Boundary alignment, in bytes")
 	name := flag.String("name", "", "Name of the output files (filename, if empty)")
 	flag.IntVar(&maxlen, "line-length", 16, "Maximum number of bytes per line")
@@ -87,11 +88,11 @@ func main() {
 	ctpl := template.Must(template.New("header").Parse(ctpldata))
 
 	// Open output files
-	objfile, err := os.Create(filepath.Join(*outpath, data.CName+".s"))
+	objfile, err := os.Create(filepath.Join(*objectpath, data.CName+".s"))
 	checkErr(err, "Cannot create output object file")
 	defer objfile.Close()
 
-	headfile, err := os.Create(filepath.Join(*outpath, data.CName+".h"))
+	headfile, err := os.Create(filepath.Join(*headerpath, data.CName+".h"))
 	checkErr(err, "Cannot create output header file")
 	defer headfile.Close()
 
@@ -108,6 +109,16 @@ func maprune(r rune) rune {
 	default:
 		return '_'
 	}
+}
+
+// Make C-friendly name
+func cname(str string) string {
+	// Add number to the start
+	if len(str) > 0 && unicode.IsNumber(rune(str[0])) {
+		str = "_" + str
+	}
+	// Change unfriendly characters
+	return strings.Map(maprune, str)
 }
 
 func checkErr(err error, msg string, args ...interface{}) {
