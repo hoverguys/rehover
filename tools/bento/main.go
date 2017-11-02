@@ -33,7 +33,7 @@ extern const unsigned char {{.CName}}_txt_end[];
 extern const unsigned int {{.CName}}_txt_size;
 `
 
-type FileData struct {
+type filedata struct {
 	Alignment int
 	CName     string
 	Bytes     []byte
@@ -76,7 +76,7 @@ func main() {
 	bytes, err := ioutil.ReadAll(in)
 	checkErr(err, "Cannot read input file")
 
-	filedata := FileData{
+	data := filedata{
 		Alignment: *alignment,
 		CName:     strings.Map(maprune, *name),
 		Bytes:     bytes,
@@ -87,17 +87,17 @@ func main() {
 	ctpl := template.Must(template.New("header").Parse(ctpldata))
 
 	// Open output files
-	objfile, err := os.Create(filepath.Join(*outpath, filedata.CName+".s"))
+	objfile, err := os.Create(filepath.Join(*outpath, data.CName+".s"))
 	checkErr(err, "Cannot create output object file")
 	defer objfile.Close()
 
-	headfile, err := os.Create(filepath.Join(*outpath, filedata.CName+".h"))
+	headfile, err := os.Create(filepath.Join(*outpath, data.CName+".h"))
 	checkErr(err, "Cannot create output header file")
 	defer headfile.Close()
 
 	// Run the templates
-	checkErr(otpl.Execute(objfile, filedata), "Error while writing object file")
-	checkErr(ctpl.Execute(headfile, filedata), "Error while writing header file")
+	checkErr(otpl.Execute(objfile, data), "Error while writing object file")
+	checkErr(ctpl.Execute(headfile, data), "Error while writing header file")
 }
 
 // Replace any non alphanumeric char with _
