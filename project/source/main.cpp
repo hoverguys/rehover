@@ -16,7 +16,7 @@ int main() {
 
 	Graphics::Init();
 
-	MeshResource* resource = new MeshResource(hovercraft_obj_txt, hovercraft_obj_txt_size);
+	MeshResource* resource = new MeshResource((unsigned char*)hovercraft_obj_txt, hovercraft_obj_txt_size);
 	Mesh* mesh = resource->Load();
 
 	isRunning = TRUE;
