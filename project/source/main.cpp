@@ -4,7 +4,7 @@
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
 
-#include <hovercraft_obj.h>
+#include <hovercraft_bmb.h>
 
 bool isRunning;
 void OnResetCalled();
@@ -16,7 +16,7 @@ int main() {
 
 	Graphics::Init();
 
-	MeshResource* resource = new MeshResource((unsigned char*)hovercraft_obj_txt, hovercraft_obj_txt_size);
+	MeshResource* resource = new MeshResource((unsigned char*)hovercraft_bmb_txt, hovercraft_bmb_txt_size);
 	Mesh* mesh = resource->Load();
 
 	isRunning = TRUE;
