@@ -28,10 +28,9 @@ add_multi_target(rehover "${SOURCE_FILES}")
 add_default_library(rehover ogc)
 
 # Add resources
-#embed_resources(rehover
-#	folder/file1
-#	folder/file2
-#)
+embed_resources(rehover
+	assets/models/hovercraft.obj
+)
 
 # Create .dol
 add_dol_targets(rehover)
