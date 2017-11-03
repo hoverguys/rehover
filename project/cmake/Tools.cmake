@@ -27,6 +27,27 @@ else()
     message(FATAL_ERROR "Could not find one or more required tools! Run \"tools/build.cmd\" or \"tools/build.sh\" depending on your OS to fix this")
 endif()
 
+function(convert_models output)
+    # Make directory
+    set(MODEL_BMB_PATH ${CMAKE_CURRENT_BINARY_DIR}/models_bmb)
+    file(MAKE_DIRECTORY ${MODEL_BMB_PATH})
+
+    # Process all the given models
+    foreach(__file ${ARGN})
+        # Get output filename
+        get_filename_component(__file_wd ${__file} NAME)
+        string(REGEX REPLACE ".obj$" ".bmb" __BMB_FILE_NAME ${__file_wd})
+        # Schedule objconv to run
+        add_custom_command(OUTPUT ${MODEL_BMB_PATH}/${__BMB_FILE_NAME}
+            COMMAND ${OBJCONV} -in ${__file} -out ${MODEL_BMB_PATH}/${__BMB_FILE_NAME}
+            DEPENDS ${__file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+        # Append new file to output array
+        list(APPEND MODELS ${MODEL_BMB_PATH}/${__BMB_FILE_NAME})
+    endforeach()
+    set(${output} ${MODELS} PARENT_SCOPE)
+endfunction()
+
 function(embed_resources target)
     # Make directories
     set(RES_OBJ_PATH ${CMAKE_CURRENT_BINARY_DIR}/resources_asm)

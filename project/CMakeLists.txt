@@ -27,9 +27,14 @@ add_multi_target(rehover "${SOURCE_FILES}")
 # Dependencies
 add_default_library(rehover ogc)
 
-# Add resources
-embed_resources(rehover
+# Convert models
+convert_models(MODELS
 	assets/models/hovercraft.obj
+)
+
+# Add resources to binary
+embed_resources(rehover
+	${MODELS}
 )
 
 # Create .dol
