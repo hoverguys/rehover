@@ -36,10 +36,10 @@ function(embed_resources target)
 
     # Add as include path
     if(GCN)
-        target_include_directories(${target}_gcn INTERFACE ${RES_HEADER_PATH})
+        target_include_directories(${target}_gcn PUBLIC ${RES_HEADER_PATH})
     endif()
     if(WII)
-        target_include_directories(${target}_wii INTERFACE ${RES_HEADER_PATH})
+        target_include_directories(${target}_wii PUBLIC ${RES_HEADER_PATH})
     endif()
 
     # Process all the given resources
