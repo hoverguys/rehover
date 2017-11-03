@@ -1,6 +1,4 @@
-#ifndef _GRAPHICS_H 
-#define _GRAPHICS_H
-
+#pragma once
 #include <gccore.h>
 
 class Graphics {
@@ -39,6 +37,14 @@ private:
 
 	/* Frame time (1/60 or 1/50 depending on video mode) */
 	static f32 frameTime;
-};
+	static const u32 DEFAULT_FIFO_SIZE = 256 * 1024;
 
-#endif
+	static void *xfb[2];
+	static u32 fbi;
+
+	static GXRModeObj *rmode;
+	static bool first_frame;
+	static void *gpfifo;
+	static f32 aspectRatio;
+	static Mtx44 orthographicMatrix;
+};

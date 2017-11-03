@@ -4,15 +4,15 @@
 #include <string.h>
 #include <malloc.h>
 
-/* GX vars */
-#define DEFAULT_FIFO_SIZE	(256*1024)
-static void *xfb[2] = { NULL, NULL };
-static u32 fbi = 0;
-static GXRModeObj *rmode = NULL;
-BOOL first_frame = FALSE;
-void *gpfifo = NULL;
-f32 aspectRatio;
-Mtx44 orthographicMatrix;
+f32 Graphics::frameTime = 0;
+void* Graphics::xfb[2] = {NULL, NULL};
+u32 Graphics::fbi = 0;
+
+GXRModeObj* Graphics::rmode = NULL;
+bool Graphics::first_frame = FALSE;
+void* Graphics::gpfifo = NULL;
+f32 Graphics::aspectRatio;
+Mtx44 Graphics::orthographicMatrix;
 
 void Graphics::Init() {
 	VIDEO_Init();
@@ -23,7 +23,8 @@ void Graphics::Init() {
 	/* Try to get the framerate */
 	Graphics::frameTime = 1.f / Graphics::GetFramerate();
 
-	/* Allocate frame buffers */
+	/* Setup frame buffers */
+	fbi = 0;
 	xfb[0] = (u32 *)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 	xfb[1] = (u32 *)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 
@@ -56,7 +57,6 @@ void Graphics::Init() {
 	}
 #endif
 
-
 	/* Swap frames */
 	fbi ^= 1;
 
@@ -66,7 +66,7 @@ void Graphics::Init() {
 	GX_Init(gpfifo, DEFAULT_FIFO_SIZE);
 
 	/* Clear the background to black and clear the Z buf */
-	GXColor background = { 0xa0, 0xe0, 0xf0, 0xff };
+	GXColor background = { 0xa0, 0x00, 0xf0, 0xff };
 	GX_SetCopyClear(background, GX_MAX_Z24);
 
 	GX_SetDispCopyYScale(GX_GetYScaleFactor(rmode->efbHeight, rmode->xfbHeight));
@@ -146,5 +146,3 @@ u32 Graphics::GetFramerate() {
 		return 50;
 	}
 }
-
-f32 Graphics::frameTime = 0;

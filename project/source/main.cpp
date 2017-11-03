@@ -1,7 +1,10 @@
 /* SDK Libraries */
 #include <gccore.h>
 
-#include "graphics.h"
+#include "rendering/Graphics.h"
+#include "resources/MeshResource.h"
+
+#include <hovercraft_obj.h>
 
 bool isRunning;
 void OnResetCalled();
@@ -12,6 +15,9 @@ int main() {
 	SYS_SetResetCallback(OnResetCalled);
 
 	Graphics::Init();
+
+	MeshResource* resource = new MeshResource(hovercraft_obj_txt, hovercraft_obj_txt_size);
+	Mesh* mesh = resource->Load();
 
 	isRunning = TRUE;
 	while (isRunning) {
