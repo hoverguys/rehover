@@ -3,15 +3,17 @@
 
 Camera* Camera::activeCamera = nullptr;
 
+static guVector up = { 0, 1, 0 };
 Camera::Camera(guVector position, guVector target) {
-    this->position = position;
-    this->target = target;
-
-	guVector up = { 0, 1, 0 };
-	guLookAt(cameraMtx, &position, &up, &target);
-
+    Move(position, target);
     SetViewport(0, 0, 1, 1);
     SetPerspective(60, 0.1f, 300.0f);
+}
+
+void Camera::Move(guVector position, guVector target) {
+    this->position = position;
+    this->target = target;
+    guLookAt(cameraMtx, &position, &up, &target);
 }
 
 void Camera::SetViewport(float offsetLeft, float offsetTop, float width, float height) {

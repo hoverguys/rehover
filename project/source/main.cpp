@@ -2,6 +2,7 @@
 #include <gccore.h>
 #include <stdio.h>
 #include <gctypes.h>
+#include <math.h>
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
@@ -25,27 +26,33 @@ int main() {
 	Mesh* mesh = resource->Load();
 
 	//DEBUG Camera
-	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 100 });
+	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 0 });
 	camera->SetActive();
 
-	//DEBUG Render matrices
-	Mtx modelviewMtx, modelviewInverseMtx, objectMtx;
-	guMtxIdentity(objectMtx);
-	guMtxConcat(*camera->GetActiveMtx(), objectMtx, modelviewMtx);
-	GX_LoadPosMtxImm(modelviewMtx, GX_PNMTX0);
-
-	guMtxInverse(modelviewMtx, modelviewInverseMtx);
-	guMtxTranspose(modelviewInverseMtx, modelviewMtx);
-
-	GX_LoadNrmMtxImm(modelviewMtx, GX_PNMTX0);
-
 	isRunning = TRUE;
+	unsigned int frame = 0;
 	while (isRunning) {
+		
+		//DEBUG Move Camera
+		camera->Move({cos(frame * 0.01f) * 10, 5, sin(frame * 0.01f) * 10}, { 0, 0, 0 });
+
+		//DEBUG Render matrices
+		Mtx modelviewMtx, modelviewInverseMtx, objectMtx;
+		guMtxIdentity(objectMtx);
+		guMtxConcat(*camera->GetActiveMtx(), objectMtx, modelviewMtx);
+		GX_LoadPosMtxImm(modelviewMtx, GX_PNMTX0);
+
+		guMtxInverse(modelviewMtx, modelviewInverseMtx);
+		guMtxTranspose(modelviewInverseMtx, modelviewMtx);
+
+		GX_LoadNrmMtxImm(modelviewMtx, GX_PNMTX0);
+
 		mesh->Render();
 
 		// Render here
 		Graphics::Done();
-		printf("Console doesnt work yet");
+		printf("Frame %d\n", frame);
+		frame++;
 	}
 
 	return 0;

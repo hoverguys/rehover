@@ -11,6 +11,7 @@ struct CameraViewport {
 class Camera {
 public:
     Camera(guVector position, guVector target);
+    void Move(guVector position, guVector target);
     void SetViewport(float width, float height, float offsetLeft, float offsetTop);
     void SetPerspective(float fov, float nearPlane, float farPlane);
     void SetActive();

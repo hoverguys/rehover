@@ -60,6 +60,8 @@ void Graphics::Init() {
 	/* Swap frames */
 	fbi ^= 1;
 
+	//CON_InitEx(rmode, 0, 0, rmode->fbWidth, 100);
+
 	/* Init flipper */
 	gpfifo = MEM_K0_TO_K1(memalign(32, DEFAULT_FIFO_SIZE));
 	memset(gpfifo, 0, DEFAULT_FIFO_SIZE);
@@ -111,8 +113,6 @@ void Graphics::Done() {
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
 	fbi ^= 1;
-
-	CON_InitEx(rmode, 0, 0, rmode->fbWidth,rmode->xfbHeight);
 }
 
 GXRModeObj* Graphics::GetMode() {
