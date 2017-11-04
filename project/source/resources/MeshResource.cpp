@@ -70,9 +70,9 @@ Mesh* MeshResource::Load() {
 	GX_End();
 
 	/* Close display list */
-    unsigned int modelListSize = GX_EndDispList();
-    assert(dispSize == modelListSize);
-	if (modelListSize == 0) {
+    internal->displayListSize = GX_EndDispList();
+    assert(dispSize == internal->displayListSize);
+	if (internal->displayListSize == 0) {
 		printf("Error: Display list not big enough [%u]\n", dispSize);
 		return NULL;
 	}

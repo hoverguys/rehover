@@ -11,6 +11,8 @@ public:
     Mesh();
     ~Mesh();
 
+    void Render();
+
 protected:
     friend class MeshResource;
 
@@ -20,4 +22,5 @@ protected:
     MeshIndex* indexArray;
 
     void* displayList;
+    unsigned int displayListSize;
 };

@@ -90,7 +90,7 @@ void Graphics::Init() {
 
 	first_frame = TRUE;
 
-	Graphics::SetViewport(0, 0, rmode->viWidth, rmode->viHeight, 0, 1);
+	SetViewport(0, 0, rmode->viWidth, rmode->viHeight, 0, 1);
 }
 
 void Graphics::Done() {
@@ -111,6 +111,8 @@ void Graphics::Done() {
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
 	fbi ^= 1;
+
+	CON_InitEx(rmode, 0, 0, rmode->fbWidth,rmode->xfbHeight);
 }
 
 GXRModeObj* Graphics::GetMode() {
