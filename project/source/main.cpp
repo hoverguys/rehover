@@ -1,14 +1,19 @@
 /* SDK Libraries */
 #include <gccore.h>
 #include <stdio.h>
-#include <gctypes.h>
 #include <math.h>
+#include <gctypes.h>
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
 #include "rendering/Camera.h"
+#include "Game.h"
 
 #include <hovercraft_bmb.h>
+
+#include <entityx/entityx.h>
+
+namespace ex = entityx;
 
 
 bool isRunning;
@@ -21,9 +26,13 @@ int main() {
 
 	Graphics::Init();
 
+	Game game;
+
 	//DEBUG: Load hardcoded model
 	MeshResource* resource = new MeshResource((unsigned char*)hovercraft_bmb_txt, hovercraft_bmb_txt_size);
 	Mesh* mesh = resource->Load();
+	
+	game.init(mesh);
 
 	//DEBUG Camera
 	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 0 });
@@ -47,7 +56,8 @@ int main() {
 
 		GX_LoadNrmMtxImm(modelviewMtx, GX_PNMTX0);
 
-		mesh->Render();
+		game.update(1.f / Graphics::GetFramerate());
+		//mesh->Render();
 
 		// Render here
 		Graphics::Done();
