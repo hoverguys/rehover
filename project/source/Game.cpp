@@ -1,5 +1,6 @@
 #include "Game.h"
-#include "rendering/RenderSystem.h"
+#include "systems/RenderSystem.h"
+#include "components/Renderable.h"
 
 Game::Game() {
     systems.add<RenderSystem>();
@@ -8,7 +9,7 @@ Game::Game() {
 
 void Game::init(Mesh* mesh) {
     ex::Entity hovercaft = entities.create();
-    hovercaft.assign<Mesh*>(mesh);
+    hovercaft.assign<Components::Renderable>(Components::Renderable(mesh);
 }
 
 void Game::update(ex::TimeDelta dt) {
