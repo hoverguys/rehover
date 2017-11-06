@@ -32,6 +32,10 @@ public:
 	/*! \brief Get frame rate depending on current TV mode
 	*/
 	static u32 GetFramerate();
+
+	/*! \brief Get a simpler video mode (for PAL vs NTSC checks)
+	*/
+	static u32 GetGenericVideoMode();
 private:
 	Graphics(){}
 

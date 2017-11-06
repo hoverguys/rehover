@@ -50,9 +50,13 @@ void Graphics::Init() {
 
 #ifdef WII
 	/* If 16:9 we need some hacks */
-	if (CONF_GetAspectRatio()) {
+	if (CONF_GetAspectRatio() == CONF_ASPECT_16_9) {
 		rmode->viWidth = 678;
-		rmode->viXOrigin = (VI_MAX_WIDTH_PAL - 678) / 2;
+		if (Graphics::GetGenericVideoMode() == VI_NTSC) {
+			rmode->viXOrigin = (VI_MAX_WIDTH_NTSC - 678) / 2;
+		} else {
+			rmode->viXOrigin = (VI_MAX_WIDTH_PAL - 678) / 2;
+		}
 		aspectRatio = 16.f / 9.f;
 	}
 #endif
@@ -146,5 +150,20 @@ u32 Graphics::GetFramerate() {
 	case VI_DEBUG_PAL:
 	default:
 		return 50;
+	}
+}
+
+u32 Graphics::GetGenericVideoMode() {
+	u32 tvmode = rmode->viTVMode >> 2;
+	switch (tvmode) {
+	case VI_NTSC:
+	case VI_DEBUG:
+		return VI_NTSC;
+	case VI_PAL:
+	case VI_DEBUG_PAL:
+	case VI_MPAL:
+	case VI_EURGB60:
+	default:
+		return VI_PAL;
 	}
 }
