@@ -57,11 +57,9 @@ int main() {
 		GX_LoadNrmMtxImm(modelviewMtx, GX_PNMTX0);
 
 		game.update(1.f / Graphics::GetFramerate());
-		//mesh->Render();
 
 		// Render here
 		Graphics::Done();
-		printf("Frame %d\n", frame);
 		frame++;
 	}
 
