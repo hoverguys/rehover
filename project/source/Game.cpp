@@ -9,7 +9,7 @@ Game::Game() {
 
 void Game::init(Mesh* mesh) {
     ex::Entity hovercaft = entities.create();
-    hovercaft.assign<Components::Renderable>(Components::Renderable(mesh);
+    hovercaft.assign<Components::Renderable>(Components::Renderable(mesh));
 }
 
 void Game::update(ex::TimeDelta dt) {

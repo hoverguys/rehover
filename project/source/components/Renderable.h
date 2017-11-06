@@ -1,5 +1,5 @@
 #pragma once
-#include "rendering/Mesh.h"
+#include "../rendering/Mesh.h"
 
 namespace Components {
     struct Renderable {
