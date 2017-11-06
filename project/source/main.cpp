@@ -8,6 +8,7 @@
 #include "resources/MeshResource.h"
 #include "rendering/Camera.h"
 #include "Game.h"
+#include "utils/fnv.h"
 
 #include <hovercraft_bmb.h>
 
@@ -60,6 +61,7 @@ int main() {
 
 		// Render here
 		Graphics::Done();
+		printf("%u\n", fnv1_hash("hovercraft.obj"));
 		frame++;
 	}
 
