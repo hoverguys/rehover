@@ -9,6 +9,13 @@ endif()
 
 set(LIBOGC_PATHS $ENV{LIBOGC} libogc ${DEVKITPRO}/libogc)
 
+# Set default portlib
+set(PORTLIB_PATH ${DEVKITPRO}/ppc-portlibs CACHE STRING "Path to portlibs (if used)")
+set(PORT_INCLUDE_DIR ${PORTLIB_PATH}/include)
+set(PORT_LIBRARY_DIR_GCN ${PORTLIB_PATH}/lib/cube)
+set(PORT_LIBRARY_DIR_WII ${PORTLIB_PATH}/lib/wii)
+include_directories(${PORT_INCLUDE_DIR})
+
 # Find libogc
 find_path(LIBOGC_INCLUDE_DIR gccore.h
           PATHS ${LIBOGC_PATHS}
@@ -80,6 +87,16 @@ function(add_default_library target libname)
     if(WII)
         target_link_libraries(${target}_wii "${LIBOGC_LIBRARY_DIR_WII}/lib${libname}.a")
     endif()
+endfunction()
+
+# Add library to all available targets
+function(add_port_library target libname)
+if(GCN)
+    target_link_libraries(${target}_gcn "${PORT_LIBRARY_DIR_GCN}/lib${libname}.a")
+endif()
+if(WII)
+    target_link_libraries(${target}_wii "${PORT_LIBRARY_DIR_WII}/lib${libname}.a")
+endif()
 endfunction()
 
 # Create both GCN and WII version

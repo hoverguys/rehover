@@ -26,6 +26,7 @@ add_multi_target(rehover "${SOURCE_FILES}")
 
 # Dependencies
 add_default_library(rehover ogc)
+add_port_library(rehover entityx)
 
 # Convert models
 convert_models(MODELS
