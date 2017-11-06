@@ -6,6 +6,7 @@ project(rehover C CXX ASM)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(SetupOGC)
 include(Tools)
+include(PrecompiledHeader)
 
 # Get version if possible
 include(FindGit OPTIONAL)
@@ -23,6 +24,7 @@ add_definitions(-DGIT_VERSION="${GIT_VERSION}")
 # Sources
 file(GLOB_RECURSE SOURCE_FILES source/*)
 add_multi_target(rehover "${SOURCE_FILES}")
+add_multi_precompiled_header(rehover source/pchheader.h)
 
 # Dependencies
 add_default_library(rehover ogc)
