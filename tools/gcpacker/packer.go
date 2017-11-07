@@ -7,15 +7,22 @@ import (
 	"os"
 )
 
+// PackerOptions is a list of options that can change the packer's behavior
+type PackerOptions struct {
+	IgnoreConflicts bool // Ignore conflicts (does not give a fatal error on conflict)
+}
+
 // Packer encodes a list of files into a single GCR file
 type Packer struct {
-	handle io.WriteSeeker
+	handle  io.WriteSeeker
+	options PackerOptions
 }
 
 // NewPacker returns an instance of a packer that writes to a specified file
-func NewPacker(writer io.WriteSeeker) *Packer {
+func NewPacker(writer io.WriteSeeker, options PackerOptions) *Packer {
 	return &Packer{
-		handle: writer,
+		handle:  writer,
+		options: options,
 	}
 }
 
@@ -34,6 +41,9 @@ func (p *Packer) Pack(files []ResourceFile) error {
 
 	// Make hasher
 	hash := fnv.New32()
+
+	// Make conflict map
+	hashmap := map[uint32]string{}
 
 	// Start embedding files
 	offset := headersize
@@ -72,10 +82,20 @@ func (p *Packer) Pack(files []ResourceFile) error {
 		if err != nil {
 			return fmt.Errorf("Error while hashing file identifier %s: %s", res.Identifier, err.Error())
 		}
+		filehash := hash.Sum32()
+
+		// Check for conflicts
+		if !p.options.IgnoreConflicts {
+			orig, ok := hashmap[filehash]
+			if ok {
+				return fmt.Errorf("Hash conflict detected between the following files:\n    [%8x] %s\n    [%8x] %s", filehash, orig, filehash, res.Identifier)
+			}
+			hashmap[filehash] = res.Identifier
+		}
 
 		// Make header
 		header[index] = FileHeader{
-			Hash:   hash.Sum32(),
+			Hash:   filehash,
 			Offset: offset,
 			Length: length,
 		}

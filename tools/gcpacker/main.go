@@ -16,6 +16,7 @@ type ResourceFile struct {
 func main() {
 	list := flag.String("list", "resources.txt", "Path to resource list")
 	outpath := flag.String("out", "-", "Output file (- for stdout)")
+	ignoreconflict := flag.Bool("ignoreconflict", false, "Ignore conflicts (why would you do that)")
 	flag.Parse()
 
 	// Get output writer
@@ -45,7 +46,9 @@ func main() {
 		})
 	}
 
-	packer := NewPacker(out)
+	packer := NewPacker(out, PackerOptions{
+		IgnoreConflicts: *ignoreconflict,
+	})
 	checkErr(packer.Pack(resources), "Error while generating GCR file")
 }
 
