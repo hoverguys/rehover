@@ -40,6 +40,7 @@ add_resource_pack(rehover-data
 if(EMBED_RESOURCES)
 	get_property(RESOURCEFILE TARGET rehover-data PROPERTY OUTPUT_NAME)
 	embed_resources(rehover ${RESOURCEFILE})
+	add_definitions(-DEMBED_RESOURCES)
 else()
 	add_multi_dependency(rehover rehover-data)
 endif()
