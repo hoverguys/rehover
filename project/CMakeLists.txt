@@ -21,19 +21,8 @@ add_multi_precompiled_header(rehover source/pchheader.h)
 add_default_libraries(rehover ogc)
 add_port_libraries(rehover entityx)
 
-# Convert models
-#convert_models(MODELS
-#	assets/models/hovercraft.obj
-#)
-
-# Add resources to binary
-#embed_resources(rehover
-#	${MODELS}
-#)
-
 # Create resource pack
 add_resource_pack(rehover-data
-	BIN   assets/models/hovercraft.obj
 	MODEL assets/models/hovercraft.obj
 )
 
