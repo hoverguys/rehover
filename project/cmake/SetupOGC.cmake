@@ -58,6 +58,8 @@ endif()
 mark_as_advanced(ELF2DOL)
 
 # Function to make .elf and .dols
+# Usage:
+#     add_dol_target(<target>)
 function(add_dol_target target)
     # First, make sure the file has the proper extension (otherwise Dolphin won't load it)
     set_target_properties(${target} PROPERTIES SUFFIX ".elf")
@@ -66,10 +68,12 @@ function(add_dol_target target)
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${target}.elf
                       COMMENT "Generating .dol files from compiled .elf"
                       VERBATIM)
-    set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol)
+    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/${target}.dol)
 endfunction()
 
 # Apply add_dol_target to a multi-target
+# Usage:
+#     add_dol_targets(<target>)
 function(add_dol_targets target)
     if(GCN)
         add_dol_target(${target}_gcn)
@@ -79,36 +83,58 @@ function(add_dol_targets target)
     endif()
 endfunction()
 
-# Add library to all available targets
-function(add_default_library target libname)
-    if(GCN)
-        target_link_libraries(${target}_gcn "${LIBOGC_LIBRARY_DIR_GCN}/lib${libname}.a")
-    endif()
-    if(WII)
-        target_link_libraries(${target}_wii "${LIBOGC_LIBRARY_DIR_WII}/lib${libname}.a")
-    endif()
+# Add one or more libraries from dkP to all available targets
+# Usage:
+#     add_default_libraries(<target> <lib1> [<lib2> ..])
+function(add_default_libraries target)
+    foreach(libname ${ARGN})
+        if(GCN)
+            target_link_libraries(${target}_gcn "${LIBOGC_LIBRARY_DIR_GCN}/lib${libname}.a")
+        endif()
+        if(WII)
+            target_link_libraries(${target}_wii "${LIBOGC_LIBRARY_DIR_WII}/lib${libname}.a")
+        endif()
+    endforeach()
 endfunction()
 
-# Add library to all available targets
-function(add_port_library target libname)
-if(GCN)
-    target_link_libraries(${target}_gcn "${PORT_LIBRARY_DIR_GCN}/lib${libname}.a")
-endif()
-if(WII)
-    target_link_libraries(${target}_wii "${PORT_LIBRARY_DIR_WII}/lib${libname}.a")
-endif()
+# Add one or more libraries from ppc-portlibs to all available targets
+# Usage:
+#     add_default_libraries(<target> <lib1> [<lib2> ..])
+function(add_port_libraries target)
+    foreach(libname ${ARGN})
+        if(GCN)
+            target_link_libraries(${target}_gcn "${PORT_LIBRARY_DIR_GCN}/lib${libname}.a")
+        endif()
+        if(WII)
+            target_link_libraries(${target}_wii "${PORT_LIBRARY_DIR_WII}/lib${libname}.a")
+        endif()
+    endforeach()
 endfunction()
 
 # Create both GCN and WII version
-function(add_multi_target target sources)
+# Usage:
+#     add_multi_target(<target>)
+function(add_multi_target target)
     if(GCN)
-        add_executable(${target}_gcn ${sources})
+        add_executable(${target}_gcn ${ARGN})
         target_compile_options(${target}_gcn PUBLIC -DGEKKO -mogc)
         target_link_libraries(${target}_gcn "-mogc")
     endif()
     if(WII)
-        add_executable(${target}_wii ${sources})
+        add_executable(${target}_wii ${ARGN})
         target_compile_options(${target}_wii PUBLIC -DWII -mrvl)
         target_link_libraries(${target}_wii "-mrvl")
+    endif()
+endfunction()
+
+# Add a dependency to all targets inside a multi-target
+# Usage:
+#     add_multi_target(<target> <dep1> [<dep2> ..])
+function(add_multi_dependency target)
+    if(GCN)
+        add_dependencies(${target}_gcn ${ARGN})
+    endif()
+    if(WII)
+        add_dependencies(${target}_wii ${ARGN})
     endif()
 endfunction()

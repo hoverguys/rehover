@@ -7,19 +7,10 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(SetupOGC)
 include(Tools)
 include(PrecompiledHeader)
+include(GitVersion)
 
-# Get version if possible
-include(FindGit OPTIONAL)
-if(GIT_FOUND)
-	execute_process(COMMAND
-	  "${GIT_EXECUTABLE}" describe --tags --always --dirty
-	  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-	  OUTPUT_VARIABLE GIT_VERSION
-	  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-else()
-	set(GIT_VERSION "unknown")
-endif()
-add_definitions(-DGIT_VERSION="${GIT_VERSION}")
+# Options
+set(EMBED_RESOURCES false CACHE BOOL "Embed resource pack into the binary")
 
 # Sources
 file(GLOB_RECURSE SOURCE_FILES source/*)
@@ -27,18 +18,31 @@ add_multi_target(rehover "${SOURCE_FILES}")
 add_multi_precompiled_header(rehover source/pchheader.h)
 
 # Dependencies
-add_default_library(rehover ogc)
-add_port_library(rehover entityx)
+add_default_libraries(rehover ogc)
+add_port_libraries(rehover entityx)
 
 # Convert models
-convert_models(MODELS
-	assets/models/hovercraft.obj
-)
+#convert_models(MODELS
+#	assets/models/hovercraft.obj
+#)
 
 # Add resources to binary
-embed_resources(rehover
-	${MODELS}
+#embed_resources(rehover
+#	${MODELS}
+#)
+
+# Create resource pack
+add_resource_pack(rehover-data
+	BIN   assets/models/hovercraft.obj
+	MODEL assets/models/hovercraft.obj
 )
+
+if(EMBED_RESOURCES)
+	get_property(RESOURCEFILE TARGET rehover-data PROPERTY OUTPUT_NAME)
+	embed_resources(rehover ${RESOURCEFILE})
+else()
+	add_multi_dependency(rehover rehover-data)
+endif()
 
 # Create .dol
 add_dol_targets(rehover)
