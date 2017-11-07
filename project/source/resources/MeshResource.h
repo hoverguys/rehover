@@ -12,8 +12,8 @@ struct MeshResourceHeader {
 
 class MeshResource : public Resource {
 public:
+	MeshResource(void* base, unsigned int size) : Resource(base, size) {}
 	Mesh* Load();
-protected:
 	void Initialize() override;
 private:
     MeshResourceHeader* header;

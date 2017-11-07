@@ -14,6 +14,7 @@ struct PackEntry {
 
 #ifdef EMBED_RESOURCES
 #include <rehover_data_gcr.h>
+const unsigned char* ResourceLoader::embedded = rehover_data_gcr_txt;
 #endif
 
 ResourceLoader::FileMap ResourceLoader::files;
@@ -40,32 +41,8 @@ void ResourceLoader::LoadPack(const char* path) {
     for(int i = 0; i < header->fileCount; ++i, address += sizeof(PackEntry)) {
         PackEntry* entry = reinterpret_cast<PackEntry*>(address);
 
-        files.emplace(entry->hash, std::pair<unsigned int, unsigned int>(entry->offset, entry->size));
-        printf("Found file %08x at %u, size %u bytes", entry->hash, entry->offset, entry->size);
+        auto info = std::pair<unsigned int, unsigned int>(entry->offset, entry->size);
+        files.emplace(entry->hash, info);
+        printf("Found file %08x at %u, size %u bytes\n", entry->hash, info.first, info.second);
     }
-}
-
-std::shared_ptr<Resource> ResourceLoader::Load(FileHash hash) {
-    auto entry = cache.find(hash);
-    if (entry != cache.end()) {
-        return entry->second;
-    }
-
-    auto file = files.find(hash);
-    assert(file != files.end());
-    auto info = file->second;
-
-#ifndef EMBED_RESOURCES
-    // Allocate buffer for resource
-    // Load from pack
-#else
-    char* address = (char*)rehover_data_gcr_txt;
-    address += info.first; //Add offset
-
-    auto resource = new Resource((void*)address, info.second);
-#endif
-
-
-
-    return nullptr;
 }

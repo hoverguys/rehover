@@ -29,10 +29,10 @@ int main() {
 	Game game;
 
 	//DEBUG: Load hardcoded model
-	auto resource = ResourceLoader::Load<MeshResource>("hovercraft.obj");
+	auto resource = ResourceLoader::Load<MeshResource>("assets/models/hovercraft.obj");
 	Mesh* mesh = resource->Load();
 	
-	//game.init(mesh);
+	game.init(mesh);
 
 	//DEBUG Camera
 	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 0 });
