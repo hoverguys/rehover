@@ -1,13 +1,20 @@
 package main
 
 import (
+	"encoding/csv"
 	"flag"
 	"fmt"
 	"os"
 )
 
+// ResourceFile is an entry int he resources list file containing the identifies and compiled resource paths
+type ResourceFile struct {
+	Identifier string
+	File       string
+}
+
 func main() {
-	conf := flag.String("list", "resources.txt", "Path to resource list")
+	list := flag.String("list", "resources.txt", "Path to resource list")
 	outpath := flag.String("out", "-", "Output file (- for stdout)")
 	flag.Parse()
 
@@ -20,6 +27,26 @@ func main() {
 		out = file
 	}
 
+	file, err := os.Open(*list)
+	checkErr(err, "Could not open file list")
+
+	resources := []ResourceFile{}
+	rows, err := csv.NewReader(file).ReadAll()
+	checkErr(err, "Could not parse file list")
+
+	for lno, record := range rows {
+		if len(record) < 2 {
+			fmt.Fprintf(os.Stderr, "[WARN] Line no. %d has invalid resource record (not enough fields): %v\n", lno, record)
+			continue
+		}
+		resources = append(resources, ResourceFile{
+			Identifier: record[0],
+			File:       record[1],
+		})
+	}
+
+	packer := NewPacker(out)
+	checkErr(packer.Pack(resources), "Error while generating GCR file")
 }
 
 func checkErr(err error, msg string, args ...interface{}) {
