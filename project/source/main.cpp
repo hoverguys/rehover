@@ -6,11 +6,9 @@
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
+#include "resources/ResourceLoader.h"
 #include "rendering/Camera.h"
 #include "Game.h"
-#include "utils/fnv.h"
-
-#include <hovercraft_bmb.h>
 
 #include <entityx/entityx.h>
 
@@ -26,14 +24,15 @@ int main() {
 	SYS_SetResetCallback(OnResetCalled);
 
 	Graphics::Init();
+	ResourceLoader::LoadPack("rehover_data.gcr");
 
 	Game game;
 
 	//DEBUG: Load hardcoded model
-	MeshResource* resource = new MeshResource((unsigned char*)hovercraft_bmb_txt, hovercraft_bmb_txt_size);
+	auto resource = ResourceLoader::Load<MeshResource>("hovercraft.obj");
 	Mesh* mesh = resource->Load();
 	
-	game.init(mesh);
+	//game.init(mesh);
 
 	//DEBUG Camera
 	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 0 });
@@ -61,7 +60,6 @@ int main() {
 
 		// Render here
 		Graphics::Done();
-		printf("%u\n", fnv1_hash("hovercraft.obj"));
 		frame++;
 	}
 

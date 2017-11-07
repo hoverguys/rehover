@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Resource.h"
 #include "../rendering/Mesh.h"
 
 struct MeshResourceHeader {
@@ -8,11 +10,11 @@ struct MeshResourceHeader {
 	unsigned int fcount;  /*< Face/Index count    */
 };
 
-class MeshResource {
+class MeshResource : public Resource {
 public:
-	MeshResource(unsigned char* base, unsigned int size);
 	Mesh* Load();
-
+protected:
+	void Initialize() override;
 private:
     MeshResourceHeader* header;
 	Mesh* internal;

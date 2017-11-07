@@ -6,8 +6,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-MeshResource::MeshResource(unsigned char* base, unsigned int size) {
-    header = (MeshResourceHeader*)base;
+void MeshResource::Initialize() {
+	header = static_cast<MeshResourceHeader*>(address);
+	char* base = static_cast<char*>(address);
 
     const unsigned int posOffset = sizeof(MeshResourceHeader);
 	const unsigned int nrmOffset = posOffset + (sizeof(float)* 3 * header->vcount);
