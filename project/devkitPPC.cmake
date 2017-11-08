@@ -53,4 +53,4 @@ SET(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available" )
 
 set(ARCH "-mcpu=750 -meabi -mhard-float")
 set(CMAKE_C_FLAGS "${ARCH}" CACHE STRING "C flags")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "C++ flags")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-exceptions -fno-rtti" CACHE STRING "C++ flags")
