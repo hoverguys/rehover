@@ -1,10 +1,19 @@
-# BMB model format
+# BMB (Binary Model Blob) format
 
 A BMB file is a model composed by a collection of vertex positions, vertex normals, texture coordinates (UV) and faces. BMB currently supports only one mesh per file.
 
 Since the target platform runs on PowerPC, assume all values are big-endian.
 
 Just like OBJ (original format), position, normals and coordinates are uncoupled and can be reused more than once.
+
+### Limits
+
+| Field | Limit |
+|-------|-------|
+| Unique vertex positions | x < 65536 |
+| Unique vertex normals | x < 65536 | 
+| Unique texture coordinates | x < 65536 |
+| Total faces |  x < 65536 |
 
 ## File format
 
