@@ -18,7 +18,7 @@ File data is padded to the nearest 32 bit.
 
 | Name | Data type | Length (bytes) |
 |------|-----------|----------------|
-| Header | GCR header | 8 |
+| Header | GCR header | 4 + 12 * # of files |
 | Files | file data array | ? |
 
 ## Header format
