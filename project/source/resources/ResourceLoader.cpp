@@ -26,10 +26,10 @@ void ResourceLoader::LoadPack(const char* path) {
     //Load header from file into allocated memory
     //libfat for loating
     packfile = path;
-    char* address = 0;
+    unsigned char* address = 0;
     printf("Loading pack from file %s\n", path);
 #else
-    char* address = (char*)rehover_data_gcr_txt;
+    unsigned char* address = (unsigned char*)rehover_data_gcr_txt;
     printf("Loading pack from memory @ 0x%08x\n", address);
 #endif
 

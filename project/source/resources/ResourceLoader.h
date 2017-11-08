@@ -17,7 +17,6 @@ public:
         }
     
         auto file = files.find(hash);
-        //assert(file != files.end());
         if (file == files.end()) {
             printf("File %08x not found\n", hash);
         }

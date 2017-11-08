@@ -4,11 +4,10 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
-#include <assert.h>
 
 void MeshResource::Initialize() {
 	header = static_cast<MeshResourceHeader*>(address);
-	char* base = static_cast<char*>(address);
+	unsigned char* base = static_cast<unsigned char*>(address);
 
     const unsigned int posOffset = sizeof(MeshResourceHeader);
 	const unsigned int nrmOffset = posOffset + (sizeof(float)* 3 * header->vcount);
@@ -42,7 +41,8 @@ Mesh* MeshResource::Load() {
     
     // Allocate display list
     internal->displayList = memalign(32, dispSize);
-    memset(internal->displayList, 0, dispSize);
+	memset(internal->displayList, 0, dispSize);
+	DCInvalidateRange(internal->displayList, dispSize);
 
     // Build display list
     GX_BeginDispList(internal->displayList, dispSize);
@@ -72,9 +72,8 @@ Mesh* MeshResource::Load() {
 
 	/* Close display list */
     internal->displayListSize = GX_EndDispList();
-    assert(dispSize == internal->displayListSize);
 	if (internal->displayListSize == 0) {
-		printf("Error: Display list not big enough [%u]\n", dispSize);
+		printf("Error: Display list is wrong size [%u]\n", dispSize);
 		return NULL;
 	}
 
