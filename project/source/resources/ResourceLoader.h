@@ -19,25 +19,28 @@ public:
         auto file = files.find(hash);
         //assert(file != files.end());
         if (file == files.end()) {
-            printf("FILE %08x NOT FOUND\n", hash);
+            printf("File %08x not found\n", hash);
         }
         auto info = file->second;
     
 #ifndef EMBED_RESOURCES
         // Allocate buffer for resource
         // Load from pack
-        printf("LOADING FROM FILE");
+        printf("Loading from file");
         return nullptr;
 #else
         unsigned char* address = (unsigned char*)embedded;
-        printf("INFO %d %d\n", info.first, info.second);
         address += info.first; //Add offset
-    
-        printf("LOADING FROM MEMORY @ 0x%08x\n", address);
+        printf("Loading from memory @ 0x%08x\n", address);
+#endif
+
         auto resource = std::make_shared<T>((void*)address, (unsigned int)info.second);
         resource->Initialize();
+
+        // Cache loaded resource
+        cache.emplace(hash, resource);
+
         return resource;
-#endif
     }
 
     template<typename T>
