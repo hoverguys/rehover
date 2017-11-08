@@ -4,10 +4,10 @@
 #include "../rendering/Mesh.h"
 
 struct MeshResourceHeader {
-	unsigned int vcount;  /*< Vertex count        */
-	unsigned int ncount;  /*< Normal count        */
-	unsigned int vtcount; /*< UV Coordinate count */
-	unsigned int fcount;  /*< Face/Index count    */
+	unsigned short vcount;  /*< Vertex count        */
+	unsigned short ncount;  /*< Normal count        */
+	unsigned short vtcount; /*< UV Coordinate count */
+	unsigned short fcount;  /*< Face/Index count    */
 };
 
 class MeshResource : public Resource {
