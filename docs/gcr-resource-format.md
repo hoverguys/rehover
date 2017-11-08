@@ -2,7 +2,7 @@
 
 GCR is a format for packing multiple files in a single archive 
 
-Files are identified by a unique uint32 identifier (currently obtained by hashing the filename using FNV32)
+Files are identified by a unique uint32 identifier (currently obtained by hashing the filename using FNV-1 32bits)
 
 File data is padded to the nearest 32 bit.
 
