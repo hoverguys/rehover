@@ -21,9 +21,9 @@ Just like OBJ (original format), position, normals and coordinates are uncoupled
 | Offset | Name | Data type | Length (bytes) |
 |--------|------|-----------|----------------|
 | 0x0 | # of vertex positions | uint16 | 2 |
-| 0x4 | # of vertex normals | uint16 | 2 |
-| 0x8 | # of texture coordinates | uint16 | 2 |
-| 0xC | # of faces | uint16 | 2 |
+| 0x2 | # of vertex normals | uint16 | 2 |
+| 0x4 | # of texture coordinates | uint16 | 2 |
+| 0x6 | # of faces | uint16 | 2 |
 
 ## Vertex position/normal format
 
@@ -49,13 +49,13 @@ Each face is made of 3 vertices forming a triangle:
 | Offset | Name | Data type | Length (bytes) |
 |--------|------|-----------|----------------|
 | 0x0 | Vertex 1 | vertex data (see below) | 6 |
-| 0xC | Vertex 2 | vertex data (see below) | 6 |
-| 0x18 | Vertex 3 | vertex data (see below) | 6 |
+| 0x6 | Vertex 2 | vertex data (see below) | 6 |
+| 0xC | Vertex 3 | vertex data (see below) | 6 |
 
 ### Vertex data
 
 | Offset | Name | Data type | Length (bytes) |
 |--------|------|-----------|----------------|
 | 0x0 | Vertex position index | uint16 | 2 |
-| 0x4 | Texture coordinate index | uint16 | 2 |
-| 0x8 | Vertex normal index | uint16 | 2 |
+| 0x2 | Texture coordinate index | uint16 | 2 |
+| 0x4 | Vertex normal index | uint16 | 2 |
