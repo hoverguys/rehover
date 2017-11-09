@@ -34,10 +34,10 @@ Texture* TextureResource::Load() {
 
 	auto mipmap = t->mipmaps ? GX_TRUE : GX_FALSE;
 
-	GX_InitTexObj(t->object, t->data, t->width, t->height, t->format, GX_CLAMP, GX_CLAMP, mipmap);
+	GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, GX_CLAMP, GX_CLAMP, mipmap);
 
 	if (mipmap) {
-		GX_InitTexObjLOD(t->object, GX_LINEAR, GX_LINEAR, t->minlod, t->maxlod, 0, 0, 0, GX_ANISO_1);
+		GX_InitTexObjLOD(&t->object, GX_LINEAR, GX_LINEAR, t->minlod, t->maxlod, 0, 0, 0, GX_ANISO_1);
 	}
 
 	loaded = true;

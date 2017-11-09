@@ -4,9 +4,6 @@
 
 class Texture {
 public:
-	Texture();
-	~Texture();
-
 	/*! \brief Bind the texture to a texture mapping slot
 	 *  \param texmapid What slot to bind the texture to
 	 */
@@ -15,7 +12,7 @@ public:
 protected:
 	friend class TextureResource;
 
-	GXTexObj* object;
+	GXTexObj object;
 	unsigned char* data;
 	unsigned short format;
 	unsigned int width, height;

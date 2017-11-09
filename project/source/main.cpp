@@ -1,19 +1,19 @@
 /* SDK Libraries */
 #include <gccore.h>
-#include <stdio.h>
-#include <math.h>
 #include <gctypes.h>
+#include <math.h>
+#include <stdio.h>
 
+#include "Game.h"
+#include "rendering/Camera.h"
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
 #include "resources/ResourceLoader.h"
-#include "rendering/Camera.h"
-#include "Game.h"
+#include "resources/TextureResource.h"
 
 #include <entityx/entityx.h>
 
 namespace ex = entityx;
-
 
 bool isRunning;
 void OnResetCalled();
@@ -28,24 +28,30 @@ int main() {
 
 	Game game;
 
-	//DEBUG: Load hardcoded model
-	auto resource = ResourceLoader::Load<MeshResource>("assets/models/hovercraft.obj");
-	Mesh* mesh = resource->Load();
-	
+	// DEBUG: Load hardcoded model
+	auto meshresource = ResourceLoader::Load<MeshResource>("assets/models/hovercraft.obj");
+	Mesh* mesh = meshresource->Load();
+
 	game.init(mesh);
 
-	//DEBUG Camera
-	Camera* camera = new Camera( { 0, 0, -10 }, { 0, 0, 0 });
+	// DEBUG: Load hardcoded texture
+	auto texresource = ResourceLoader::Load<TextureResource>("assets/textures/hovercraftGlobal.png");
+	Texture* texture = texresource->Load();
+
+	texture->Bind(GX_TEXMAP0);
+
+	// DEBUG Camera
+	Camera* camera = new Camera({0, 0, -10}, {0, 0, 0});
 	camera->SetActive();
 
 	isRunning = TRUE;
 	unsigned int frame = 0;
 	while (isRunning) {
-		
-		//DEBUG Move Camera
-		camera->Move({cos(frame * 0.01f) * 10, 5, sin(frame * 0.01f) * 10}, { 0, 0, 0 });
 
-		//DEBUG Render matrices
+		// DEBUG Move Camera
+		camera->Move({cos(frame * 0.01f) * 10, 5, sin(frame * 0.01f) * 10}, {0, 0, 0});
+
+		// DEBUG Render matrices
 		Mtx modelviewMtx, modelviewInverseMtx, objectMtx;
 		guMtxIdentity(objectMtx);
 		guMtxConcat(*camera->GetActiveMtx(), objectMtx, modelviewMtx);
@@ -66,6 +72,4 @@ int main() {
 	return 0;
 }
 
-void OnResetCalled() {
-	isRunning = FALSE;
-}
+void OnResetCalled() { isRunning = FALSE; }
