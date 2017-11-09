@@ -39,7 +39,7 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 	bounds := tex.Bounds()
 	width := bounds.Max.X - bounds.Min.X
 	height := bounds.Max.Y - bounds.Min.X
-	mipmap := byte((options.MaxLOD & 0xf) | (options.MinLOD & 0xf))
+	mipmap := byte((options.MaxLOD << 8) | (options.MinLOD & 0xf))
 
 	fmtfn, ok := fmtEncoders[options.Format]
 	if !ok {
