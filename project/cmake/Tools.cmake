@@ -21,11 +21,17 @@ if(NOT GCPACKER)
     message(WARNING "Could not find gcpacker")
 endif()
 
+# Check for texconv
+find_program(TEXCONV texconv ${TOOLBIN})
+if(NOT TEXCONV)
+    message(WARNING "Could not find texconv")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TOOLS DEFAULT_MSG
-                                  OBJCONV BENTO GCPACKER)
+                                  OBJCONV BENTO GCPACKER TEXCONV)
 
-mark_as_advanced(OBJCONV BENTO TOOLBIN)
+mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TOOLBIN)
 
 if(TOOLS_FOUND)
     message(STATUS "All tools found")
@@ -59,6 +65,34 @@ function(convert_models output)
         list(APPEND MODELS ${MODEL_BMB_PATH}/${__BMB_FILE_NAME})
     endforeach()
     set(${output} ${MODELS} PARENT_SCOPE)
+endfunction()
+
+# Convert one or more image files to BTB
+# The <output> variable contains the list of the converted textures
+# Usage:
+#     convert_textures(<output> <tex1> [<tex2> ..])
+function(convert_textures output)
+    # Make directory
+    set(TEXTURE_BTB_PATH ${CMAKE_CURRENT_BINARY_DIR}/textures_btb)
+    set(TEXTURES "")
+    file(MAKE_DIRECTORY ${TEXTURE_BTB_PATH})
+
+    # Process all the given models
+    foreach(__file ${ARGN})
+        # Get output filename
+        get_filename_component(__file_wd ${__file} NAME)
+        string(REGEX REPLACE ".[^.]+$" ".btb" __BTB_FILE_NAME ${__file_wd})
+        # Schedule objconv to run
+        add_custom_command(OUTPUT ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
+            COMMAND ${TEXCONV} -in ${__file} -out ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
+            DEPENDS ${__file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+            ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
+        # Append new file to output array
+        list(APPEND TEXTURES ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
+    endforeach()
+    set(${output} ${TEXTURES} PARENT_SCOPE)
 endfunction()
 
 # Embed arbitrary files into the final binaries
@@ -127,7 +161,7 @@ function(add_resource_pack target)
 
     # Process all the given resources
     foreach(_name ${ARGN})
-        if(_name STREQUAL "BIN" OR _name STREQUAL "MODEL")
+        if(_name STREQUAL "BIN" OR _name STREQUAL "MODEL" OR _name STREQUAL "TEXTURE")
             set(_filetype "${_name}")
         else()
             # Check what type is currently active
@@ -136,10 +170,15 @@ function(add_resource_pack target)
                 file(APPEND "${_filelist}" "${_name},${CMAKE_CURRENT_LIST_DIR}/${_name}\n")
                 list(APPEND _depends "${CMAKE_CURRENT_LIST_DIR}/${_name}")
             elseif(_filetype STREQUAL "MODEL")
-                # Call convert_model(..) and add target path
+                # Call convert_models(..) and add target path
                 convert_models(MODEL "${_name}")
                 file(APPEND "${_filelist}" "${_name},${MODEL}\n")
                 list(APPEND _depends ${MODEL})
+            elseif(_filetype STREQUAL "TEXTURE")
+                # Call convert_textures(..) and add target path
+                convert_textures(TEXTURE "${_name}")
+                file(APPEND "${_filelist}" "${_name},${TEXTURE}\n")
+                list(APPEND _depends ${TEXTURE})
             endif()
         endif()
     endforeach()

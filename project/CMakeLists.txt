@@ -23,7 +23,9 @@ add_port_libraries(rehover entityx)
 
 # Create resource pack
 add_resource_pack(rehover-data
-	MODEL assets/models/hovercraft.obj
+	MODEL   assets/models/hovercraft.obj
+	TEXTURE assets/textures/hovercraftGlobal.png
+	        assets/textures/hovercraftShade.png
 )
 
 if(EMBED_RESOURCES)
