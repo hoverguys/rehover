@@ -1,3 +1,4 @@
 emulator
 build
 .vscode
+.clang-format
