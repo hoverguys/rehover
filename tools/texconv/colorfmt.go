@@ -20,6 +20,11 @@ const (
 	ColorFmtRGBA8 ColorFmt = "RGBA8"
 )
 
+// Color formats IDs (try to match libogc)
+var fmtid = map[ColorFmt]uint8{
+	ColorFmtRGBA8: 6,
+}
+
 // Description of all supported formats
 var allfmt = map[ColorFmt]string{
 	ColorFmtRGBA8: "Full 8bpc color (A8R8G8B8)",

@@ -42,8 +42,26 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 |--------|------|-----------|----------------|
 | 0x0 | Texture width | uint16 | 2 |
 | 0x2 | Texture height | uint16 | 2 |
-| 0x4 | Mipmaps | byte | 1 |
-| 0x5 | *reserved* | ? | 3 |
+| 0x4 | Color format | uint8 | 1 |
+| 0x5 | Mipmaps | byte | 1 |
+| 0x6 | *reserved* | ? | 2 |
+
+### Color format
+
+| ID | Format name |
+|----|-------------|
+| 0x0 | I4 |
+| 0x1 | I8 |
+| 0x2 | IA4 |
+| 0x3 | IA8 |
+| 0x4 | RGB565 |
+| 0x5 | RGB5A3 |
+| 0x6 | RGBA8 |
+| 0x7 | A8 |
+| 0x8 | CI4 |
+| 0x9 | CI8 |
+| 0xA | CI14 |
+| 0xE | CMPR (DXT1) |
 
 ### Mipmaps
 

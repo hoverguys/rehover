@@ -41,16 +41,17 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 	height := bounds.Max.Y - bounds.Min.X
 	mipmap := byte((options.MaxLOD & 0xf) | (options.MinLOD & 0xf))
 
-	// Write header
-	binary.Write(out, endianess, uint16(width))
-	binary.Write(out, endianess, uint16(height))
-	binary.Write(out, endianess, mipmap)
-	binary.Write(out, endianess, []byte{0, 0, 0}) // Reserved bytes
-
 	fmtfn, ok := fmtEncoders[options.Format]
 	if !ok {
 		return fmt.Errorf("Unknown color format: %s (see -h for available formats)", options.Format)
 	}
+
+	// Write header
+	binary.Write(out, endianess, uint16(width))
+	binary.Write(out, endianess, uint16(height))
+	binary.Write(out, endianess, fmtid[options.Format])
+	binary.Write(out, endianess, mipmap)
+	binary.Write(out, endianess, []byte{0, 0}) // Reserved bytes
 
 	fmtfn(tex, out, FormatOptions{
 		Endianess: endianess,
