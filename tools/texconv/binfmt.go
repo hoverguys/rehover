@@ -16,23 +16,12 @@ const (
 	EndianessBig    Endianess = "big"    // Big endian (PPC)
 )
 
-// ColorFmt represents a color format (for GC textures)
-type ColorFmt string
-
-// All supported color formats
-const (
-	ColorFmtRGBA8 ColorFmt = "RGBA8"
-)
-
-// Description of all supported formats
-var allfmt = map[ColorFmt]string{
-	ColorFmtRGBA8: "Full 8bpc color (A8R8G8B8)",
-}
-
 // TextureOptions contains all the available options to tune the output texture
 type TextureOptions struct {
 	Endianess Endianess
 	Format    ColorFmt
+	MaxLOD    int
+	MinLOD    int
 }
 
 // SaveTexture takes a parsed image file and writes it in binary format using a provided byte order
@@ -47,17 +36,25 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 		return fmt.Errorf("Unknown endianess: %s (supported: big, little)", options.Endianess)
 	}
 
-	// Write header
-	binary.Write()
+	bounds := tex.Bounds()
+	width := bounds.Max.X - bounds.Min.X
+	height := bounds.Max.Y - bounds.Min.X
+	mipmap := byte((options.MaxLOD & 0xf) | (options.MinLOD & 0xf))
 
-	switch options.Format {
-	case ColorFmtRGBA8:
-		// ...
-	default:
+	// Write header
+	binary.Write(out, endianess, uint16(width))
+	binary.Write(out, endianess, uint16(height))
+	binary.Write(out, endianess, mipmap)
+	binary.Write(out, endianess, []byte{0, 0, 0}) // Reserved bytes
+
+	fmtfn, ok := fmtEncoders[options.Format]
+	if !ok {
 		return fmt.Errorf("Unknown color format: %s (see -h for available formats)", options.Format)
 	}
 
-	// ...
+	fmtfn(tex, out, FormatOptions{
+		Endianess: endianess,
+	})
 
 	return nil
 }

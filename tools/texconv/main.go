@@ -24,6 +24,8 @@ func main() {
 	outpath := flag.String("out", "-", "Output file (- for STDOUT)")
 	endianess := flag.String("endianess", "big", "Endianess of values (valid values: big, small)")
 	format := flag.String("fmt", "RGBA8", "Output color format (see below for full list)")
+	maxlod := flag.Int("maxlod", 0, "Maximum mipmap level (0-10)")
+	minlod := flag.Int("minlod", 0, "Minimum mipmap level (0-10)")
 	flag.Parse()
 
 	// Get input reader
@@ -53,6 +55,8 @@ func main() {
 	checkErr(SaveTexture(img, out, TextureOptions{
 		Endianess: Endianess(*endianess),
 		Format:    ColorFmt(*format),
+		MaxLOD:    *maxlod,
+		MinLOD:    *minlod,
 	}), "Error while saving output texture")
 }
 
