@@ -16,7 +16,7 @@ public:
 	Mesh* Load();
 	void Initialize() override;
 private:
-    MeshResourceHeader* header;
+	MeshResourceHeader* header;
 	Mesh* internal;
 	bool loaded;
 };
