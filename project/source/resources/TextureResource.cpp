@@ -34,6 +34,7 @@ Texture* TextureResource::Load() {
 
 	auto mipmap = t->mipmaps ? GX_TRUE : GX_FALSE;
 
+	memset(&t->object, 0, sizeof(GXTexObj));
 	GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, GX_CLAMP, GX_CLAMP, mipmap);
 
 	if (mipmap) {

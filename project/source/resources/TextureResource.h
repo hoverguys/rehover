@@ -6,7 +6,7 @@
 struct TextureResourceHeader {
 	unsigned short width;      /*< Texture width  */
 	unsigned short height;     /*< Texture height */
-	unsigned short format;     /*< Color format */
+	unsigned char format;     /*< Color format */
 	unsigned short maxlod : 4; /*< Max LOD (0-10) */
 	unsigned short minlod : 4; /*< Min LOD (0-10) */
 	unsigned long _reserved : 16;
