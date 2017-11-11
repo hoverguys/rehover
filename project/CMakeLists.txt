@@ -10,7 +10,7 @@ include(PrecompiledHeader)
 include(GitVersion)
 
 # Options
-set(EMBED_RESOURCES false CACHE BOOL "Embed resource pack into the binary")
+set(EMBED_RESOURCES true CACHE BOOL "Embed resource pack into the binary")
 
 # Sources
 file(GLOB_RECURSE SOURCE_FILES source/*)
