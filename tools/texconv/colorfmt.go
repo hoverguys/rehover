@@ -37,9 +37,9 @@ var fmtEncoders = map[ColorFmt]colorFmtEncoder{
 }
 
 func encodeRGBA8(tex image.Image, out io.Writer, options FormatOptions) {
-	bounds := tex.Bounds()
-	width := bounds.Max.X - bounds.Min.X
-	height := bounds.Max.Y - bounds.Min.X
+	size := tex.Bounds().Size()
+	width := size.X
+	height := size.Y
 
 	rows := int(math.Ceil(float64(height) / 4))
 	cols := int(math.Ceil(float64(width) / 4))

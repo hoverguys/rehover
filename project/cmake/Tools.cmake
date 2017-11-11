@@ -185,7 +185,7 @@ function(add_resource_pack target)
 
     # Create resource pack target
     add_custom_command(OUTPUT ${_resfile}
-                       COMMAND ${GCPACKER} -list ${_filelist} -out ${_resfile}
+                       COMMAND ${GCPACKER} -verbose -list ${_filelist} -out ${_resfile}
                        DEPENDS ${_depends}
                        COMMENT "Generating resource pack ${_fname}"
                        VERBATIM)

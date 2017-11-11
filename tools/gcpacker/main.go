@@ -17,6 +17,7 @@ func main() {
 	list := flag.String("list", "resources.txt", "Path to resource list")
 	outpath := flag.String("out", "-", "Output file (- for stdout)")
 	ignoreconflict := flag.Bool("ignoreconflict", false, "Ignore conflicts (why would you do that)")
+	verbose := flag.Bool("verbose", false, "Print all files that are being packed")
 	flag.Parse()
 
 	// Get output writer
@@ -48,6 +49,7 @@ func main() {
 
 	packer := NewPacker(out, PackerOptions{
 		IgnoreConflicts: *ignoreconflict,
+		Verbose:         *verbose,
 	})
 	checkErr(packer.Pack(resources), "Error while generating GCR file")
 }

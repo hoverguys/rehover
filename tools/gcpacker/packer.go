@@ -10,6 +10,7 @@ import (
 // PackerOptions is a list of options that can change the packer's behavior
 type PackerOptions struct {
 	IgnoreConflicts bool // Ignore conflicts (does not give a fatal error on conflict)
+	Verbose         bool // Print all files that are being packed (including offset and hash)
 }
 
 // Packer encodes a list of files into a single GCR file
@@ -31,9 +32,10 @@ func NewPacker(writer io.WriteSeeker, options PackerOptions) *Packer {
 func (p *Packer) Pack(files []ResourceFile) error {
 	header := make(ResourceHeader, len(files))
 	headersize := getHeaderSize(len(files))
+	offset := 32 * ((headersize-1)/32 + 1)
 
 	// Skip headers for now (write zeroes)
-	empty := make([]byte, headersize, headersize)
+	empty := make([]byte, offset, offset)
 	_, err := p.handle.Write(empty)
 	if err != nil {
 		return fmt.Errorf("Error while writing padding data for header: %s", err.Error())
@@ -46,8 +48,8 @@ func (p *Packer) Pack(files []ResourceFile) error {
 	hashmap := map[uint32]string{}
 
 	// Start embedding files
-	offset := 32 * ((headersize-1)/32 + 1)
 	for index, res := range files {
+
 		// Open file
 		file, err := os.Open(res.File)
 		if err != nil {
@@ -98,6 +100,10 @@ func (p *Packer) Pack(files []ResourceFile) error {
 			Hash:   filehash,
 			Offset: offset,
 			Length: length,
+		}
+
+		if p.options.Verbose {
+			fmt.Fprintf(os.Stderr, "%s -> %s\n", res.Identifier, header[index])
 		}
 
 		// Set new offset
