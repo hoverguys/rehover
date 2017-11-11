@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-constexpr unsigned int padto32B(unsigned int len) { return 32 * ((sizeof(len) - 1) / 32 + 1); }
+constexpr unsigned int padto32B(unsigned int len) { return 32 * ((len - 1) / 32 + 1); }
 
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
