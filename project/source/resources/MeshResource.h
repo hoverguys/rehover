@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Resource.h"
 #include "../rendering/Mesh.h"
+#include "Resource.h"
 
 struct MeshResourceHeader {
 	unsigned short vcount;  /*< Vertex count        */
@@ -15,6 +15,7 @@ public:
 	MeshResource(void* base, unsigned int size) : Resource(base, size) {}
 	Mesh* Load();
 	void Initialize() override;
+
 private:
 	MeshResourceHeader* header;
 	Mesh* internal;

@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 #include "rendering/Graphics.h"
-#include "resources/ResourceLoader.h"
 #include "resources/MeshResource.h"
+#include "resources/ResourceLoader.h"
 #include "resources/TextureResource.h"
 
 #include "Game.h"
@@ -45,6 +45,4 @@ int main() {
 	return 0;
 }
 
-void OnResetCalled() {
-	isRunning = false;
-}
+void OnResetCalled() { isRunning = false; }

@@ -2,9 +2,9 @@
 #include "../rendering/Mesh.h"
 
 namespace Components {
-    struct Renderable {
-        Renderable(Mesh* mesh) : mesh(mesh) {}
-        
-        Mesh* mesh;
-    };
+struct Renderable {
+	Renderable(Mesh* mesh) : mesh(mesh) {}
+
+	Mesh* mesh;
 };
+}; // namespace Components

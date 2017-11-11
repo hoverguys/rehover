@@ -1,8 +1,8 @@
 #include "graphics.h"
 
 /* SDK libs */
-#include <string.h>
 #include <malloc.h>
+#include <string.h>
 
 f32 Graphics::frameTime = 0;
 void* Graphics::xfb[2] = {NULL, NULL};
@@ -19,14 +19,14 @@ void Graphics::Init() {
 
 	/* Get render mode */
 	rmode = VIDEO_GetPreferredMode(NULL); //&TVPal528Int;
-	
+
 	/* Try to get the framerate */
 	Graphics::frameTime = 1.f / Graphics::GetFramerate();
 
 	/* Setup frame buffers */
 	fbi = 0;
-	xfb[0] = (u32 *)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-	xfb[1] = (u32 *)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
+	xfb[0] = (u32*)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
+	xfb[1] = (u32*)MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 
 	/* Clean buffers */
 	VIDEO_ClearFrameBuffer(rmode, xfb[0], COLOR_BLACK);
@@ -72,7 +72,7 @@ void Graphics::Init() {
 	GX_Init(gpfifo, DEFAULT_FIFO_SIZE);
 
 	/* Clear the background to black and clear the Z buf */
-	GXColor background = { 0xa0, 0x00, 0xf0, 0xff };
+	GXColor background = {0xa0, 0x00, 0xf0, 0xff};
 	GX_SetCopyClear(background, GX_MAX_Z24);
 
 	GX_SetDispCopyYScale(GX_GetYScaleFactor(rmode->efbHeight, rmode->xfbHeight));
@@ -119,17 +119,11 @@ void Graphics::Done() {
 	fbi ^= 1;
 }
 
-GXRModeObj* Graphics::GetMode() {
-	return rmode;
-}
+GXRModeObj* Graphics::GetMode() { return rmode; }
 
-f32 Graphics::GetAspectRatio() {
-	return aspectRatio;
-}
+f32 Graphics::GetAspectRatio() { return aspectRatio; }
 
-void Graphics::Set2DMode() {
-	GX_LoadProjectionMtx(orthographicMatrix, GX_ORTHOGRAPHIC);
-}
+void Graphics::Set2DMode() { GX_LoadProjectionMtx(orthographicMatrix, GX_ORTHOGRAPHIC); }
 
 void Graphics::SetViewport(f32 xOrig, f32 yOrig, f32 wd, f32 ht, f32 nearZ, f32 farZ) {
 	GX_SetScissor(xOrig, yOrig, wd, ht);
@@ -144,12 +138,10 @@ u32 Graphics::GetFramerate() {
 	case VI_NTSC:
 	case VI_EURGB60:
 	case VI_DEBUG:
-	case VI_MPAL:
-		return 60;
+	case VI_MPAL: return 60;
 	case VI_PAL:
 	case VI_DEBUG_PAL:
-	default:
-		return 50;
+	default: return 50;
 	}
 }
 
@@ -157,13 +149,11 @@ u32 Graphics::GetGenericVideoMode() {
 	u32 tvmode = rmode->viTVMode >> 2;
 	switch (tvmode) {
 	case VI_NTSC:
-	case VI_DEBUG:
-		return VI_NTSC;
+	case VI_DEBUG: return VI_NTSC;
 	case VI_PAL:
 	case VI_DEBUG_PAL:
 	case VI_MPAL:
 	case VI_EURGB60:
-	default:
-		return VI_PAL;
+	default: return VI_PAL;
 	}
 }

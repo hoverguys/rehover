@@ -1,14 +1,14 @@
 #pragma once
-#include <entityx/entityx.h>
 #include "rendering/Mesh.h"
+#include <entityx/entityx.h>
 
 namespace ex = entityx;
 
 class Game : public ex::EntityX {
 public:
-  explicit Game();
-  void init(Mesh* mesh);
-  void update(ex::TimeDelta dt);
+	explicit Game();
+	void init(Mesh* mesh);
+	void update(ex::TimeDelta dt);
 
-  ex::Entity hovercraft;
+	ex::Entity hovercraft;
 };
