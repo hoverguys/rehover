@@ -19,6 +19,9 @@ int main() {
 	/* Setup reset function */
 	SYS_SetResetCallback(OnResetCalled);
 
+	// DEBUG: Enable USBGecko
+	CON_EnableGecko(1, 0);
+
 	Graphics::Init();
 	ResourceLoader::LoadPack("rehover_data.gcr");
 
