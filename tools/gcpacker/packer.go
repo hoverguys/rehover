@@ -46,7 +46,7 @@ func (p *Packer) Pack(files []ResourceFile) error {
 	hashmap := map[uint32]string{}
 
 	// Start embedding files
-	offset := headersize
+	offset := 32 * ((headersize-1)/32 + 1)
 	for index, res := range files {
 		// Open file
 		file, err := os.Open(res.File)
@@ -62,7 +62,7 @@ func (p *Packer) Pack(files []ResourceFile) error {
 
 		// Get file length and padded length (to 4 byte boundaries)
 		length := uint32(info.Size())
-		paddedlen := 4 * ((length-1)/4 + 1)
+		paddedlen := 32 * ((length-1)/32 + 1)
 
 		// Write file
 		_, err = io.CopyN(p.handle, file, int64(length))

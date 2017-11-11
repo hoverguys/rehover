@@ -47,11 +47,12 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 	}
 
 	// Write header
+	const headerSize = 6
 	binary.Write(out, endianess, uint16(width))
 	binary.Write(out, endianess, uint16(height))
 	binary.Write(out, endianess, fmtid[options.Format])
 	binary.Write(out, endianess, mipmap)
-	binary.Write(out, endianess, []byte{0, 0}) // Reserved bytes
+	binary.Write(out, endianess, 32-headerSize) // Pad to 32B
 
 	fmtfn(tex, out, FormatOptions{
 		Endianess: endianess,
