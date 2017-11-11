@@ -24,3 +24,6 @@ SOFTWARE.
 
 All assets (textures, models, etc) are provided under CC BY 4.0, full text (available in versions for humans and lawyers) available at the following URL:
 https://creativecommons.org/licenses/by/4.0/
+
+This project uses [entityx](https://github.com/alecthomas/entityx), which is licensed under MIT.
+You can find the full text copy in `LICENSE-entityx.txt` included in this project. 
