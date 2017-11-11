@@ -124,7 +124,7 @@ function(embed_resources target)
        
         # Call bento
         add_custom_command(OUTPUT ${RES_OBJ_PATH}/${__BIN_FILE_NAME}.s
-                           COMMAND ${BENTO} -in ${__file} -name ${__BIN_FILE_NAME} -headerpath ${RES_HEADER_PATH} -objectpath ${RES_OBJ_PATH}
+                           COMMAND ${BENTO} -in ${__file} -align 32 -name ${__BIN_FILE_NAME} -headerpath ${RES_HEADER_PATH} -objectpath ${RES_OBJ_PATH}
                            DEPENDS ${__file}
                            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
         add_library(${__BIN_FILE_NAME} ${RES_OBJ_PATH}/${__BIN_FILE_NAME}.s)
