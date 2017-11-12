@@ -13,11 +13,11 @@ struct MeshResourceHeader {
 class MeshResource : public Resource {
 public:
 	MeshResource(void* base, unsigned int size) : Resource(base, size) {}
-	Mesh* Load();
+	std::shared_ptr<Mesh> Load();
 	void Initialize() override;
 
 private:
 	MeshResourceHeader* header;
-	Mesh* internal;
+	std::shared_ptr<Mesh> internal;
 	bool loaded;
 };

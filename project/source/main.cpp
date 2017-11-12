@@ -27,11 +27,11 @@ int main() {
 
 	// DEBUG: Load hardcoded model
 	auto meshresource = ResourceLoader::Load<MeshResource>("models/hovercraft.obj");
-	Mesh* mesh = meshresource->Load();
+	auto mesh = meshresource->Load();
 
 	// DEBUG: Load hardcoded texture
 	auto texresource = ResourceLoader::Load<TextureResource>("textures/checkerboard.png");
-	Texture* texture = texresource->Load();
+	auto texture = texresource->Load();
 	texture->Bind(GX_TEXMAP0);
 
 	Game game;

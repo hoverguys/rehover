@@ -16,11 +16,11 @@ struct TextureResourceHeader {
 class TextureResource : public Resource {
 public:
 	TextureResource(void* base, unsigned int size) : Resource(base, size) {}
-	Texture* Load();
+	std::shared_ptr<Texture> Load();
 	void Initialize() override;
 
 private:
 	TextureResourceHeader* header;
-	Texture* internal;
+	std::shared_ptr<Texture> internal;
 	bool loaded;
 };

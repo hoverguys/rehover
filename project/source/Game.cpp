@@ -19,7 +19,7 @@ Game::Game() {
 	systems.configure();
 }
 
-void Game::init(Mesh* mesh) {
+void Game::init(std::shared_ptr<Mesh> mesh) {
 	// Camera
 	auto camera = entities.create();
 	camera.assign<cp::Transform>(cp::Transform({0, 3, 10}));

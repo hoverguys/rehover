@@ -14,7 +14,7 @@ void MeshResource::Initialize() {
 	const unsigned int texOffset = nrmOffset + (sizeof(float) * 3 * header->ncount);
 	const unsigned int indOffset = texOffset + (sizeof(float) * 2 * header->vtcount);
 
-	Mesh* m = new Mesh();
+	auto m = std::make_shared<Mesh>();
 
 	m->positionArray = (float*)(base + posOffset);
 	m->normalArray = (float*)(base + nrmOffset);
@@ -25,7 +25,7 @@ void MeshResource::Initialize() {
 	internal = m;
 }
 
-Mesh* MeshResource::Load() {
+std::shared_ptr<Mesh> MeshResource::Load() {
 	// Early out
 	if (loaded) {
 		return internal;

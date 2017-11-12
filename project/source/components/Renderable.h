@@ -3,8 +3,8 @@
 
 namespace Components {
 struct Renderable {
-	Renderable(Mesh* mesh) : mesh(mesh) {}
+	Renderable(std::shared_ptr<Mesh> mesh) : mesh(mesh) {}
 
-	Mesh* mesh;
+	std::shared_ptr<Mesh> mesh;
 };
 } // namespace Components

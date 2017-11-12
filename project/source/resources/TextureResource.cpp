@@ -10,7 +10,7 @@ void TextureResource::Initialize() {
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
 	printf("Loading texture (%dx%d fmt %d) at offset %x\n", header->width, header->height, header->format, data);
 
-	Texture* t = new Texture();
+	auto t = std::make_shared<Texture>();
 
 	t->width = header->width;
 	t->height = header->height;
@@ -26,7 +26,7 @@ void TextureResource::Initialize() {
 	internal = t;
 }
 
-Texture* TextureResource::Load() {
+std::shared_ptr<Texture> TextureResource::Load() {
 	if (loaded) {
 		return internal;
 	}
