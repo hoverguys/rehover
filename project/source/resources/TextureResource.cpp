@@ -50,7 +50,7 @@ std::shared_ptr<Texture> TextureResource::Load() {
 		break;
 	case 2:
 		filterTex = useMipmaps ? GX_LIN_MIP_NEAR : GX_LINEAR;
-		filterMip = GX_NEAR;
+		filterMip = GX_LINEAR;
 		break;
 	case 3:
 		filterTex = GX_LIN_MIP_LIN;

@@ -4,7 +4,7 @@ set(ASSETS
 		models/hovercraft.obj
 		models/plane.obj
 	TEXTURE
-		RGB5A3 textures/hovercraftGlobal.png
-		       textures/hovercraftShade.png
-		REPEAT textures/checkerboard.png
+		RGB5A3 CLAMP  BILINEAR textures/hovercraftGlobal.png
+		RGB5A3 CLAMP  BILINEAR textures/hovercraftShade.png
+		RGB5A3 REPEAT NEAR     textures/checkerboard.png
 )
