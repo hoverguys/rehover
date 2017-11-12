@@ -33,4 +33,4 @@ void InputSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::Ti
 #ifdef WII
 // TODO Wiimote support
 #endif
-};
+}

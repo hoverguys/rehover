@@ -7,4 +7,4 @@ struct Renderable {
 
 	Mesh* mesh;
 };
-}; // namespace Components
+} // namespace Components

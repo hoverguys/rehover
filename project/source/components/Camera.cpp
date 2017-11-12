@@ -24,4 +24,4 @@ void Camera::SetPerspective(float fov, float nearPlane, float farPlane) {
 	float aspectRatio = viewport.width / viewport.height;
 	guPerspective(perspectiveMtx, fov, aspectRatio, nearPlane, farPlane);
 }
-}; // namespace Components
+} // namespace Components

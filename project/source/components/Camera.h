@@ -22,4 +22,4 @@ public:
 	CameraViewport viewport;
 	Mtx44 perspectiveMtx;
 };
-}; // namespace Components
+} // namespace Components

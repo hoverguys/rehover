@@ -13,4 +13,4 @@ struct Hovercraft {
 class HovercraftSystem : public ex::System<HovercraftSystem> {
 	void update(ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) override;
 };
-}; // namespace Behaviours
+} // namespace Behaviours

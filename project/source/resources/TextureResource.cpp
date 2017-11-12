@@ -8,8 +8,7 @@
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
-	printf("Texture data offset %x + %x\n", address, header->dataOffset);
-	printf("Loading texture data from offset %x\n", &data);
+	printf("Loading texture (%dx%d fmt %d) at offset %x\n", header->width, header->height, header->format, data);
 
 	Texture* t = new Texture();
 

@@ -16,5 +16,5 @@ void HovercraftSystem::update(ex::EntityManager& es, ex::EventManager& events, e
 		ex::ComponentHandle<cp::Transform> camera_trans = hovercraft.camera.component<cp::Transform>();
 		camera_trans->Lookat(transform->position);
 	});
-};
-}; // namespace Behaviours
+}
+} // namespace Behaviours

@@ -22,7 +22,7 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 		// Render
 		RenderScene(cameraMatrix, es, events, dt);
 	});
-};
+}
 
 void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(

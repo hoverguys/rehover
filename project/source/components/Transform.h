@@ -19,4 +19,4 @@ private:
 	guQuaternion rotation;
 	Mtx matrix;
 };
-}; // namespace Components
+} // namespace Components

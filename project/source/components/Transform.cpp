@@ -1,6 +1,6 @@
 #include "Transform.h"
-#include <math.h>
 #include "../utils/math.h"
+#include <math.h>
 
 namespace Components {
 Mtx& Transform::GetMatrix() {
@@ -22,4 +22,4 @@ void Transform::Lookat(guVector target) {
 	guLookAt(temp, &position, &up, &target);
 	c_guQuatMtx(&rotation, temp);
 }
-}; // namespace Components
+} // namespace Components
