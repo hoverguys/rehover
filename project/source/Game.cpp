@@ -37,7 +37,7 @@ void Game::init(std::shared_ptr<Mesh> mesh) {
 
 	// DEBUG: Load hardcoded model
 	auto terrainres = ResourceLoader::Load<MeshResource>("models/plane.obj");
-	Mesh* terrainmesh = terrainres->Load();
+	auto terrainmesh = terrainres->Load();
 
 	// Static
 	auto staticHovercraft = entities.create();
