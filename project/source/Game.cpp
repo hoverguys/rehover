@@ -5,6 +5,7 @@
 #include "components/Transform.h"
 #include "input/HovercraftController.h"
 #include "systems/RenderSystem.h"
+#include "systems/BehaviourSystem.h"
 
 #include "resources/MeshResource.h"
 #include "resources/TextureResource.h"
@@ -16,7 +17,7 @@ namespace bh = Behaviours;
 
 Game::Game() {
 	systems.add<InputSystem>();
-	systems.add<bh::HovercraftSystem>();
+	systems.add<BehaviourSystem<bh::Hovercraft>>();
 	systems.add<RenderSystem>();
 	systems.configure();
 }
