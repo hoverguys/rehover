@@ -23,7 +23,7 @@ add_port_libraries(rehover entityx)
 
 # Create resource pack
 include(../Assets)
-add_resource_pack(rehover-data ${ASSETS})
+add_resource_pack(rehover-data ${ASSETS_PREFIX} ${ASSETS})
 
 if(EMBED_RESOURCES)
 	get_property(RESOURCEFILE TARGET rehover-data PROPERTY OUTPUT_NAME)

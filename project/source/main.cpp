@@ -26,11 +26,11 @@ int main() {
 	ResourceLoader::LoadPack("rehover_data.gcr");
 
 	// DEBUG: Load hardcoded model
-	auto meshresource = ResourceLoader::Load<MeshResource>("assets/models/hovercraft.obj");
+	auto meshresource = ResourceLoader::Load<MeshResource>("models/hovercraft.obj");
 	Mesh* mesh = meshresource->Load();
 
 	// DEBUG: Load hardcoded texture
-	auto texresource = ResourceLoader::Load<TextureResource>("assets/textures/hovercraftGlobal.png");
+	auto texresource = ResourceLoader::Load<TextureResource>("textures/hovercraftGlobal.png");
 	Texture* texture = texresource->Load();
 	texture->Bind(GX_TEXMAP0);
 

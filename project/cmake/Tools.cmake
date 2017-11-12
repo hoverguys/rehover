@@ -143,13 +143,14 @@ function(embed_resources target)
 endfunction()
 
 # Create a resource pack with one or more files inside
+# <prefix> is the assets folder, including trailing slash
 # <target> is the resulting resource pack target
 # Usage:
-#     add_resource_pack(<target> <type> <res1> [[<type2> <res2> ..])
+#     add_resource_pack(<target> <prefix> <type> <res1> [[<type2> <res2> ..])
 # All supported types:
 #     BIN - Binary, embed as it is
 #   MODEL - Model, use convert_models(..)
-function(add_resource_pack target)
+function(add_resource_pack target prefix)
     set(_filelist "${CMAKE_CURRENT_BINARY_DIR}/${target}_res.txt")
     set(_fname ${target}.gcr)
     set(_resfile "${CMAKE_CURRENT_BINARY_DIR}/${_fname}")
@@ -170,16 +171,16 @@ function(add_resource_pack target)
             # Check what type is currently active
             if(_filetype STREQUAL "BIN")
                 # Include file as it is, fix relative path
-                file(APPEND "${_filelist}" "${_name},${CMAKE_CURRENT_LIST_DIR}/${_name}\n")
-                list(APPEND _depends "${CMAKE_CURRENT_LIST_DIR}/${_name}")
+                file(APPEND "${_filelist}" "${_name},${CMAKE_CURRENT_LIST_DIR}/${prefix}${_name}\n")
+                list(APPEND _depends "${CMAKE_CURRENT_LIST_DIR}/${prefix}${_name}")
             elseif(_filetype STREQUAL "MODEL")
                 # Call convert_models(..) and add target path
-                convert_models(MODEL "${_name}")
+                convert_models(MODEL "${prefix}${_name}")
                 file(APPEND "${_filelist}" "${_name},${MODEL}\n")
                 list(APPEND _depends ${MODEL})
             elseif(_filetype STREQUAL "TEXTURE")
                 # Call convert_textures(..) and add target path
-                convert_textures(TEXTURE ${_txtfmt} "${_name}")
+                convert_textures(TEXTURE ${_txtfmt} "${prefix}${_name}")
                 file(APPEND "${_filelist}" "${_name},${TEXTURE}\n")
                 list(APPEND _depends ${TEXTURE})
             endif()

@@ -1,7 +1,8 @@
+set(ASSETS_PREFIX assets/)
 set(ASSETS
 	MODEL
-		assets/models/hovercraft.obj
+		models/hovercraft.obj
 	TEXTURE
-		RGB5A3 assets/textures/hovercraftGlobal.png
-		       assets/textures/hovercraftShade.png
+		RGB5A3 textures/hovercraftGlobal.png
+		       textures/hovercraftShade.png
 )
