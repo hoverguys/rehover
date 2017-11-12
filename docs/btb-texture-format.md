@@ -45,7 +45,8 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 | 0x2 | Texture height | uint16 | 2 |
 | 0x4 | Color format | uint8 | 1 |
 | 0x5 | Mipmaps | byte | 1 |
-| 0x6 | Texture data offset | uint32 | 4 |
+| 0x6 | Wrap + Filters | byte | 1 |
+| 0x8 | Texture data offset | uint32 | 4 |
 | 0xA | Texture palette offset (optional) | uint32 | 4 |
 
 ### Color format
@@ -64,6 +65,28 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 | 0x9 | CI8 |
 | 0xA | CI14 |
 | 0xE | CMPR (DXT1) |
+
+### Wrap + Filters
+
+| Bit(s) | Field |
+|------|-------|
+| 0x0 - 0x2 | S Wrap |
+| 0x3 - 0x5 | T Wrap |
+| 0x6 | Texture filter |
+| 0x7 | Mipmap filter |
+
+Valid values for wrapping modes:
+| Value | Wrap mode |
+|-------|-----------|
+|0x0|Clamp|
+|0x1|Repeat|
+|0x2|Mirror|
+
+Valid values for filters:
+| Value | Wrap mode |
+|-------|-----------|
+|0x0|Near|
+|0x1|Linear|
 
 ### Mipmaps
 

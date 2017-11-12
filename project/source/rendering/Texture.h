@@ -12,10 +12,11 @@ public:
 protected:
 	friend class TextureResource;
 
-	GXTexObj object;
+	GXTexObj object = {0};
 	unsigned char* data;
 	unsigned short format;
 	unsigned int width, height;
-	bool mipmaps;
 	unsigned short minlod, maxlod;
+	unsigned char wrapS, wrapT;
+	unsigned char filterMode;
 };

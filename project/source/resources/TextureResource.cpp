@@ -8,18 +8,19 @@
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
-	printf("Loading texture (%dx%d fmt %d) at offset %x\n", header->width, header->height, header->format, data);
+	printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %x\n", header->width, header->height,
+	       header->format, header->wrapS, header->wrapT, header->filter, data);
 
 	auto t = std::make_shared<Texture>();
 
 	t->width = header->width;
 	t->height = header->height;
 	t->format = header->format;
-	t->mipmaps = header->maxlod != 0 || header->minlod != 0;
-	if (t->mipmaps) {
-		t->maxlod = header->maxlod;
-		t->minlod = header->minlod;
-	}
+	t->wrapS = header->wrapS;
+	t->wrapT = header->wrapT;
+	t->filterMode = header->filter;
+	t->maxlod = header->maxlod;
+	t->minlod = header->minlod;
 	t->data = data;
 
 	loaded = false;
@@ -33,14 +34,32 @@ std::shared_ptr<Texture> TextureResource::Load() {
 
 	auto& t = internal;
 
-	auto mipmap = t->mipmaps ? GX_TRUE : GX_FALSE;
+	auto useMipmaps = t->minlod + t->maxlod != 0;
+	auto filterTex = GX_LINEAR;
+	auto filterMip = GX_LINEAR;
+	auto useTrilinear = useMipmaps && t->filterMode == 3 ? GX_TRUE : GX_FALSE;
 
-	memset(&t->object, 0, sizeof(GXTexObj));
-	GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, GX_CLAMP, GX_CLAMP, mipmap);
-
-	if (mipmap) {
-		GX_InitTexObjLOD(&t->object, GX_LINEAR, GX_LINEAR, t->minlod, t->maxlod, 0, 0, 0, GX_ANISO_1);
+	switch (t->filterMode) {
+	case 0:
+		filterTex = useMipmaps ? GX_NEAR_MIP_NEAR : GX_NEAR;
+		filterMip = GX_NEAR;
+		break;
+	case 1:
+		filterTex = useMipmaps ? GX_NEAR_MIP_LIN : GX_NEAR;
+		filterMip = GX_LINEAR;
+		break;
+	case 2:
+		filterTex = useMipmaps ? GX_LIN_MIP_NEAR : GX_LINEAR;
+		filterMip = GX_NEAR;
+		break;
+	case 3:
+		filterTex = GX_LIN_MIP_LIN;
+		filterMip = GX_LINEAR;
+		break;
 	}
+
+	GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, t->wrapS, t->wrapT, useTrilinear);
+	GX_InitTexObjLOD(&t->object, filterTex, filterMip, t->minlod, t->maxlod, 0, 0, 0, GX_ANISO_1);
 
 	loaded = true;
 	return internal;

@@ -6,5 +6,5 @@ set(ASSETS
 	TEXTURE
 		RGB5A3 textures/hovercraftGlobal.png
 		       textures/hovercraftShade.png
-		       textures/checkerboard.png
+		REPEAT textures/checkerboard.png
 )

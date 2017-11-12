@@ -22,8 +22,10 @@ func main() {
 	}
 	path := flag.String("in", "-", "Image file to convert (- for STDIN)")
 	outpath := flag.String("out", "-", "Output file (- for STDOUT)")
-	endianess := flag.String("endianess", "big", "Endianess of values (valid values: big, small)")
-	format := flag.String("fmt", "RGBA8", "Output color format (see below for full list)")
+	endianess := flag.String("endianess", string(EndianessBig), "Endianess of values (valid values: big, small)")
+	wrap := flag.String("wrap", string(WrapClamp), "Wrapping strategy (valid values: clamp, repeat, mirror)")
+	filter := flag.String("filter", string(FilterTrilinear), "Filter (valid values: near, bilinear, trilinear)")
+	format := flag.String("fmt", string(ColorFmtRGBA8), "Output color format (see below for full list)")
 	maxlod := flag.Int("maxlod", 0, "Maximum mipmap level (0-10)")
 	minlod := flag.Int("minlod", 0, "Minimum mipmap level (0-10)")
 	flag.Parse()
@@ -60,6 +62,8 @@ func main() {
 		Format:    ColorFmt(*format),
 		MaxLOD:    *maxlod,
 		MinLOD:    *minlod,
+		Wrap:      WrapStrategy(*wrap),
+		Filter:    Filter(*filter),
 	}), "Error while saving output texture")
 }
 
