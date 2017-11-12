@@ -73,6 +73,7 @@ func SaveTexture(tex image.Image, out io.WriteSeeker, options TextureOptions) er
 	//	case <FORMAT>
 	//	endianess.PutUint32(header[10:], uint32(headerlen)+paletteoffset)
 	//}
+	_ = paletteoffset
 
 	// Write header to file
 	// Write header
