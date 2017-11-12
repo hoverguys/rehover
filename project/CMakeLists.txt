@@ -22,11 +22,8 @@ add_default_libraries(rehover ogc)
 add_port_libraries(rehover entityx)
 
 # Create resource pack
-add_resource_pack(rehover-data
-	MODEL   assets/models/hovercraft.obj
-	TEXTURE assets/textures/hovercraftGlobal.png
-	        assets/textures/hovercraftShade.png
-)
+include(../Assets)
+add_resource_pack(rehover-data ${ASSETS})
 
 if(EMBED_RESOURCES)
 	get_property(RESOURCEFILE TARGET rehover-data PROPERTY OUTPUT_NAME)

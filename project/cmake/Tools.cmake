@@ -70,9 +70,9 @@ endfunction()
 # Convert one or more image files to BTB
 # The <output> variable contains the list of the converted textures
 # Usage:
-#     convert_textures(<output> <tex1> [<tex2> ..])
-function(convert_textures output)
-    # Make directory
+#     convert_textures(<output> <fmt> <tex1> [<tex2> ..])
+function(convert_textures output fmt)
+    # Make director
     set(TEXTURE_BTB_PATH ${CMAKE_CURRENT_BINARY_DIR}/textures_btb)
     set(TEXTURES "")
     file(MAKE_DIRECTORY ${TEXTURE_BTB_PATH})
@@ -84,7 +84,7 @@ function(convert_textures output)
         string(REGEX REPLACE ".[^.]+$" ".btb" __BTB_FILE_NAME ${__file_wd})
         # Schedule objconv to run
         add_custom_command(OUTPUT ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
-            COMMAND ${TEXCONV} -in ${__file} -out ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
+            COMMAND ${TEXCONV} -in ${__file} -fmt ${fmt} -out ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
             DEPENDS ${__file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
         set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
@@ -154,6 +154,7 @@ function(add_resource_pack target)
     set(_fname ${target}.gcr)
     set(_resfile "${CMAKE_CURRENT_BINARY_DIR}/${_fname}")
     set(_filetype "BIN")
+    set(_txtfmt "RGBA8")
     set(_depends ${_filelist})
 
     # Create resource list
@@ -161,8 +162,10 @@ function(add_resource_pack target)
 
     # Process all the given resources
     foreach(_name ${ARGN})
-        if(_name STREQUAL "BIN" OR _name STREQUAL "MODEL" OR _name STREQUAL "TEXTURE")
+        if(_name MATCHES "BIN|MODEL|TEXTURE")
             set(_filetype "${_name}")
+        elseif(_name MATCHES "I4|I8|IA4|IA8|RGB565|RGB5A3|RGBA8|A8|CI4|CI8|CI14|CMPR")
+            set(_txtfmt "${_name}")
         else()
             # Check what type is currently active
             if(_filetype STREQUAL "BIN")
@@ -176,7 +179,7 @@ function(add_resource_pack target)
                 list(APPEND _depends ${MODEL})
             elseif(_filetype STREQUAL "TEXTURE")
                 # Call convert_textures(..) and add target path
-                convert_textures(TEXTURE "${_name}")
+                convert_textures(TEXTURE ${_txtfmt} "${_name}")
                 file(APPEND "${_filelist}" "${_name},${TEXTURE}\n")
                 list(APPEND _depends ${TEXTURE})
             endif()
