@@ -30,7 +30,7 @@ int main() {
 	Mesh* mesh = meshresource->Load();
 
 	// DEBUG: Load hardcoded texture
-	auto texresource = ResourceLoader::Load<TextureResource>("textures/hovercraftGlobal.png");
+	auto texresource = ResourceLoader::Load<TextureResource>("textures/checkerboard.png");
 	Texture* texture = texresource->Load();
 	texture->Bind(GX_TEXMAP0);
 
