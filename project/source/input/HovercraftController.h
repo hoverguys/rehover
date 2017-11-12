@@ -9,16 +9,16 @@ protected:
 
 public:
 	/*! All actions that can be performed while controlling an hovercraft */
-	enum Action {
-		ActionJump /*< Jump action */
+	enum class Action {
+		Jump /*< Jump action */
 	};
 
 	/*! All analog motions that can be performed */
-	enum Motion {
-		MotionThrottle, /*< Acceleration */
-		MotionPitch,	/*< Pitch */
-		MotionBrake,    /*< Deceleration */
-		MotionTurn      /*< Turning */
+	enum class Motion {
+		Throttle, /*< Acceleration */
+		Pitch,    /*< Pitch */
+		Brake,    /*< Deceleration */
+		Turn      /*< Turning */
 	};
 
 	/*! \brief Check if the player is trying to perform an action

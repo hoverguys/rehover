@@ -16,16 +16,16 @@
 const bool GCHovercraftController::GetAction(HovercraftController::Action action) const {
 	// TODO Make button mapping configurable in the future
 	switch (action) {
-	case ActionJump: return controller->IsDown(PAD_BUTTON_A);
+	case Action::Jump: return controller->IsDown(PAD_BUTTON_A);
 	}
 }
 
 short GCHovercraftController::GetAxis(HovercraftController::Motion axis) const {
 	// TODO Make axis mapping configurable in the future
 	switch (axis) {
-	case MotionThrottle: return controller->TriggerR();
-	case MotionBrake: return controller->TriggerL();
-	case MotionTurn: return controller->AnalogX();
-	case MotionPitch: return controller->AnalogY();
+	case Motion::Throttle: return controller->TriggerR();
+	case Motion::Brake: return controller->TriggerL();
+	case Motion::Turn: return controller->AnalogX();
+	case Motion::Pitch: return controller->AnalogY();
 	}
 }
