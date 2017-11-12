@@ -19,7 +19,7 @@ Game::Game() {
 void Game::init(Mesh* mesh) {
 	// Camera
 	auto camera = entities.create();
-	camera.assign<cp::Transform>(cp::Transform({0, 0, 10}));
+	camera.assign<cp::Transform>(cp::Transform({0, 3, 10}));
 	camera.assign<cp::Camera>(cp::Camera());
 
 	// Controller (for hovercraft)
@@ -31,6 +31,11 @@ void Game::init(Mesh* mesh) {
 	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(mesh));
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
+
+	// Static
+	auto staticHovercraft = entities.create();
+	staticHovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
+	staticHovercraft.assign<cp::Renderable>(cp::Renderable(mesh));
 }
 
 void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }
