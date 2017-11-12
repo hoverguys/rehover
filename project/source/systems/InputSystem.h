@@ -1,16 +1,25 @@
 #pragma once
 #include "../input/GCController.h"
 #include <entityx/entityx.h>
-#include <map>
+#include <memory>
+#include <ogc/pad.h>
 
 namespace ex = entityx;
 
 class InputSystem : public ex::System<InputSystem> {
+private:
 	/*! All connected pads, as bitset */
 	unsigned long gcConnectedPads;
 
 	/*! All gamecube pads instances */
-	std::map<unsigned short, GCController> gcControllers;
+	std::shared_ptr<GCController> gcControllers[PAD_CHANMAX];
+
+public:
+	/*! \brief Provide a gamecube controller
+	 *  \param id Pad slot #
+	 *  \return Shared pointer of an GCController instance
+	 */
+	std::shared_ptr<GCController> GetController(unsigned short padId) const;
 
 	// EntityX methods
 	void configure(ex::EntityManager& entities, ex::EventManager& events) override;

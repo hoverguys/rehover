@@ -3,25 +3,27 @@
 #include "components/Camera.h"
 #include "components/Renderable.h"
 #include "components/Transform.h"
-#include "systems/InputSystem.h"
+#include "input/HovercraftController.h"
 #include "systems/RenderSystem.h"
 
 namespace cp = Components;
 namespace bh = Behaviours;
 
 Game::Game() {
-	systems.add<InputSystem>();
+	input = systems.add<InputSystem>();
 	systems.add<bh::HovercraftSystem>();
 	systems.add<RenderSystem>();
 	systems.configure();
 }
 
 void Game::init(Mesh* mesh) {
+	// Controller (for hovercraft)
+	auto controller = std::make_shared<GCHovercraftController>(input->GetController(0));
 	// Hovercraft
 	hovercraft = entities.create();
 	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(mesh));
-	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft());
+	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller});
 
 	// Camera
 	ex::Entity camera = entities.create();
