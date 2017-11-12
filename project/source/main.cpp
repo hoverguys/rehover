@@ -25,17 +25,8 @@ int main() {
 	Graphics::Init();
 	ResourceLoader::LoadPack("rehover_data.gcr");
 
-	// DEBUG: Load hardcoded model
-	auto meshresource = ResourceLoader::Load<MeshResource>("models/hovercraft.obj");
-	auto mesh = meshresource->Load();
-
-	// DEBUG: Load hardcoded texture
-	auto texresource = ResourceLoader::Load<TextureResource>("textures/checkerboard.png");
-	auto texture = texresource->Load();
-	texture->Bind(GX_TEXMAP0);
-
 	Game game;
-	game.init(mesh);
+	game.init();
 
 	isRunning = true;
 	while (isRunning) {

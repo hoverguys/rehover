@@ -39,6 +39,17 @@ void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventM
 		    guMtxTranspose(modelviewInverseMtx, modelviewInverseMtx);
 		    GX_LoadNrmMtxImm(modelviewInverseMtx, GX_PNMTX0);
 
+			auto material = renderable.material;
+			if (material) {
+				auto textures = material->textures;
+
+				for ( int i=0; i < textures.size(); i++ ) {
+					if (textures[i]) {
+						textures[i]->Bind(i);
+					}
+				}
+			}
+
 		    renderable.mesh->Render();
 	    });
 }

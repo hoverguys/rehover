@@ -9,6 +9,6 @@ namespace ex = entityx;
 class Game : public ex::EntityX {
 public:
 	explicit Game();
-	void init(std::shared_ptr<Mesh> mesh);
+	void init();
 	void update(ex::TimeDelta dt);
 };
