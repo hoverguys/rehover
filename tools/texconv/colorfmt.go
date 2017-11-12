@@ -30,13 +30,13 @@ var allfmt = map[ColorFmt]string{
 	ColorFmtRGBA8: "Full 8bpc color (A8R8G8B8)",
 }
 
-type colorFmtEncoder func(tex image.Image, out io.Writer, options FormatOptions)
+type colorFmtEncoder func(tex image.Image, out io.Writer, options FormatOptions) (paletteOffset uint32, err error)
 
 var fmtEncoders = map[ColorFmt]colorFmtEncoder{
 	ColorFmtRGBA8: encodeRGBA8,
 }
 
-func encodeRGBA8(tex image.Image, out io.Writer, options FormatOptions) {
+func encodeRGBA8(tex image.Image, out io.Writer, options FormatOptions) (paletteOffset uint32, err error) {
 	size := tex.Bounds().Size()
 	width := size.X
 	height := size.Y
@@ -68,7 +68,12 @@ func encodeRGBA8(tex image.Image, out io.Writer, options FormatOptions) {
 			}
 
 			// Write block data
-			out.Write(block[:])
+			_, err := out.Write(block[:])
+			if err != nil {
+				return 0, err
+			}
 		}
 	}
+
+	return 0, nil
 }

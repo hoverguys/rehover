@@ -31,10 +31,11 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 
 ## File format
 
-| Name | Data type | Length (bytes) |
-|------|-----------|----------------|
-| Header | BTB header | 8 |
-| Texture data | texture data | ? |
+| Offset | Name | Data type | Length (bytes) |
+|--------|------|-----------|----------------|
+| 0x0 | Header | BTB header | 14 |
+| 0x20 | Texture data | texture data | ? |
+| ? | Palette data | palette data (optional) | ? |
 
 ## Header format
 
@@ -44,7 +45,8 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 | 0x2 | Texture height | uint16 | 2 |
 | 0x4 | Color format | uint8 | 1 |
 | 0x5 | Mipmaps | byte | 1 |
-| 0x6 | *reserved* | ? | 2 |
+| 0x6 | Texture data offset | uint32 | 4 |
+| 0xA | Texture palette offset (optional) | uint32 | 4 |
 
 ### Color format
 

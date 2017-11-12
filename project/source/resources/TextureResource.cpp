@@ -5,12 +5,11 @@
 #include <stdio.h>
 #include <string.h>
 
-constexpr unsigned int padto32B(unsigned int len) { return 32 * ((len - 1) / 32 + 1); }
-
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
-	unsigned char* data = static_cast<unsigned char*>(address) + padto32B(sizeof(TextureResourceHeader));
-	printf("Loading texture data from offset %x", &data);
+	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
+	printf("Texture data offset %x + %x\n", address, header->dataOffset);
+	printf("Loading texture data from offset %x\n", &data);
 
 	Texture* t = new Texture();
 

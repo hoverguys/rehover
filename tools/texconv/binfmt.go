@@ -25,7 +25,7 @@ type TextureOptions struct {
 }
 
 // SaveTexture takes a parsed image file and writes it in binary format using a provided byte order
-func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
+func SaveTexture(tex image.Image, out io.WriteSeeker, options TextureOptions) error {
 	var endianess binary.ByteOrder
 	switch options.Endianess {
 	case EndianessLittle:
@@ -36,9 +36,9 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 		return fmt.Errorf("Unknown endianess: %s (supported: big, little)", options.Endianess)
 	}
 
-	bounds := tex.Bounds()
-	width := bounds.Max.X - bounds.Min.X
-	height := bounds.Max.Y - bounds.Min.X
+	size := tex.Bounds().Size()
+	width := size.X
+	height := size.Y
 	mipmap := byte((options.MaxLOD << 8) | (options.MinLOD & 0xf))
 
 	fmtfn, ok := fmtEncoders[options.Format]
@@ -46,21 +46,45 @@ func SaveTexture(tex image.Image, out io.Writer, options TextureOptions) error {
 		return fmt.Errorf("Unknown color format: %s (see -h for available formats)", options.Format)
 	}
 
-	// Write header
-	const headerSize = 6
-	binary.Write(out, endianess, uint16(width))
-	binary.Write(out, endianess, uint16(height))
-	binary.Write(out, endianess, fmtid[options.Format])
-	binary.Write(out, endianess, mipmap)
+	// Make header
+	header := make([]byte, 32, 32)
+	endianess.PutUint16(header[0:], uint16(width))
+	endianess.PutUint16(header[2:], uint16(height))
+	header[4] = fmtid[options.Format]
+	header[5] = mipmap
 
-	// Pad to 32B
-	padlen := 32 - headerSize
-	padding := make([]byte, padlen, padlen)
+	// Write padding for now
+	headerlen := len(header)
+	padding := make([]byte, headerlen, headerlen)
 	binary.Write(out, endianess, padding)
 
-	fmtfn(tex, out, FormatOptions{
+	paletteoffset, err := fmtfn(tex, out, FormatOptions{
 		Endianess: endianess,
 	})
+	if err != nil {
+		return fmt.Errorf("Error encoding and writing texture data: %s", err.Error())
+	}
+
+	// Add data offsets to header
+	endianess.PutUint32(header[6:], uint32(headerlen))
+
+	// Add palette offset if color fmt has it
+	//switch (options.Format) {
+	//	case <FORMAT>
+	//	endianess.PutUint32(header[10:], uint32(headerlen)+paletteoffset)
+	//}
+
+	// Write header to file
+	// Write header
+	_, err = out.Seek(0, io.SeekStart)
+	if err != nil {
+		return fmt.Errorf("Error while seeking to top: %s", err.Error())
+	}
+
+	_, err = out.Write(header)
+	if err != nil {
+		return fmt.Errorf("Error while writing GCR header: %s", err.Error())
+	}
 
 	return nil
 }
