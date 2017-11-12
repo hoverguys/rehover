@@ -26,5 +26,6 @@ short GCHovercraftController::GetAxis(HovercraftController::Motion axis) const {
 	case MotionThrottle: return controller->TriggerR();
 	case MotionBrake: return controller->TriggerL();
 	case MotionTurn: return controller->AnalogX();
+	case MotionPitch: return controller->AnalogY();
 	}
 }

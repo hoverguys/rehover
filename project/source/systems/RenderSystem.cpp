@@ -10,7 +10,14 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	es.each<cp::Transform, cp::Camera>([&](ex::Entity entity, cp::Transform& transform, cp::Camera& camera) {
 		// Setup camera
 		SetupCamera(camera);
-		Mtx& cameraMatrix = transform.GetMatrix();
+		Mtx& lookat = transform.GetMatrix();
+		guVector target = {0, 0, -1};
+		guVecMultiply(lookat, &target, &target);
+
+		// Create proper look at matrix
+		Mtx cameraMatrix;
+		guVector up = {0,1,0};
+		guLookAt(cameraMatrix, &transform.position, &up, &target);
 
 		// Render
 		RenderScene(cameraMatrix, es, events, dt);
@@ -20,17 +27,17 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
-		    Mtx& objectMtx = transform.GetMatrix();
+		    Mtx& modelMtx = transform.GetMatrix();
 
 		    // Positional matrix with camera
 		    Mtx modelviewMtx, modelviewInverseMtx;
-		    guMtxConcat(cameraMtx, objectMtx, modelviewMtx);
+		    guMtxConcat(cameraMtx, modelMtx, modelviewMtx);
 		    GX_LoadPosMtxImm(modelviewMtx, GX_PNMTX0);
 
 		    // Normals
 		    guMtxInverse(modelviewMtx, modelviewInverseMtx);
-		    guMtxTranspose(modelviewInverseMtx, modelviewMtx);
-		    GX_LoadNrmMtxImm(modelviewMtx, GX_PNMTX0);
+		    guMtxTranspose(modelviewInverseMtx, modelviewInverseMtx);
+		    GX_LoadNrmMtxImm(modelviewInverseMtx, GX_PNMTX0);
 
 		    renderable.mesh->Render();
 	    });

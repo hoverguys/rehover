@@ -4,7 +4,7 @@
 namespace Components {
 struct Transform {
 	Transform(guVector position) : Transform(position, {0, 0, 0, 1}) {}
-	Transform(guVector position, guQuaternion rotation) : position(position), rotation(rotation), scale({0, 0, 0}) {}
+	Transform(guVector position, guQuaternion rotation) : position(position), rotation(rotation), scale({1, 1, 1}) {}
 
 	void SetRotation(guVector rotation);
 	void SetRotation(guQuaternion rotation);

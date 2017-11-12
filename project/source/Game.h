@@ -11,7 +11,4 @@ public:
 	explicit Game();
 	void init(Mesh* mesh);
 	void update(ex::TimeDelta dt);
-
-	ex::Entity hovercraft;
-	std::shared_ptr<InputSystem> input;
 };

@@ -10,25 +10,27 @@ namespace cp = Components;
 namespace bh = Behaviours;
 
 Game::Game() {
-	input = systems.add<InputSystem>();
+	systems.add<InputSystem>();
 	systems.add<bh::HovercraftSystem>();
 	systems.add<RenderSystem>();
 	systems.configure();
 }
 
 void Game::init(Mesh* mesh) {
+	// Camera
+	auto camera = entities.create();
+	camera.assign<cp::Transform>(cp::Transform({0, 0, 10}));
+	camera.assign<cp::Camera>(cp::Camera());
+
 	// Controller (for hovercraft)
+	auto input = systems.system<InputSystem>();
 	auto controller = std::make_shared<GCHovercraftController>(input->GetController(0));
+
 	// Hovercraft
-	hovercraft = entities.create();
+	auto hovercraft = entities.create();
 	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(mesh));
-	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller});
-
-	// Camera
-	ex::Entity camera = entities.create();
-	camera.assign<cp::Transform>(cp::Transform({0, 0, -10}));
-	camera.assign<cp::Camera>(cp::Camera());
+	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
 }
 
 void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }

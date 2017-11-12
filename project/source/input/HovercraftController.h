@@ -16,6 +16,7 @@ public:
 	/*! All analog motions that can be performed */
 	enum Motion {
 		MotionThrottle, /*< Acceleration */
+		MotionPitch,	/*< Pitch */
 		MotionBrake,    /*< Deceleration */
 		MotionTurn      /*< Turning */
 	};
