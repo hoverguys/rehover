@@ -1,6 +1,7 @@
 #include "MeshResource.h"
 
 #include <malloc.h>
+#include <memory>
 #include <ogc/gx.h>
 #include <stdio.h>
 #include <string.h>
