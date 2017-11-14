@@ -30,7 +30,7 @@ type FileHeader struct {
 }
 
 func (f FileHeader) String() string {
-	return fmt.Sprintf("%d (offset: %x | %d bytes)", f.Hash, f.Offset, f.Length)
+	return fmt.Sprintf("%x (offset: %x | %d bytes)", f.Hash, f.Offset, f.Length)
 }
 
 // FileHeaderSize is the size of a single file entry in the GCR header
