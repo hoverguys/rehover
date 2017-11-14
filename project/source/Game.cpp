@@ -4,13 +4,14 @@
 #include "components/Renderable.h"
 #include "components/Transform.h"
 #include "input/HovercraftController.h"
-#include "systems/RenderSystem.h"
 #include "systems/BehaviourSystem.h"
+#include "systems/RenderSystem.h"
 
-#include "resources/MeshResource.h"
-#include "resources/TextureResource.h"
-#include "resources/ResourceLoader.h"
 #include "rendering/Material.h"
+#include "resources/MeshResource.h"
+#include "resources/ResourceLoader.h"
+#include "resources/ShaderResource.h"
+#include "resources/TextureResource.h"
 
 namespace cp = Components;
 namespace bh = Behaviours;
@@ -38,8 +39,16 @@ void Game::init() {
 
 	auto hovercraftDiffRes = ResourceLoader::Load<TextureResource>("textures/hovercraftGlobal.png");
 	auto hovercraftDiffTex = hovercraftDiffRes->Load();
+	auto hovercraftShadeRes = ResourceLoader::Load<TextureResource>("textures/hovercraftShade.png");
+	auto hovercraftShadeTex = hovercraftShadeRes->Load();
+	auto hovercraftShaderBin = ResourceLoader::Load<ShaderResource>("shader/hovercraft.bin");
+	auto hovercraftShader = hovercraftShaderBin->Load();
 	auto hovercraftMat = std::make_shared<Material>();
-	hovercraftMat->textures = {hovercraftDiffTex};
+	hovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
+	hovercraftMat->shader = hovercraftShader;
+	hovercraftMat->uniforms = {
+	    {0xff, 0x29, 0x5b, 0xff} // Color 0
+	};
 
 	auto hovercraft = entities.create();
 	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
@@ -50,6 +59,12 @@ void Game::init() {
 	auto staticHovercraft = entities.create();
 	staticHovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
 	staticHovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh));
+	auto statichovercraftMat = std::make_shared<Material>();
+	statichovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
+	statichovercraftMat->shader = hovercraftShader;
+	statichovercraftMat->uniforms = {
+	    {0xac, 0xff, 0x29, 0xff} // Color 0
+	};
 
 	// DEBUG: Load hardcoded model
 	auto terrainRes = ResourceLoader::Load<MeshResource>("models/plane.obj");
@@ -63,7 +78,7 @@ void Game::init() {
 	// Terrain
 	auto terrain = entities.create();
 	terrain.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
-	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, checkerMat) );
+	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, checkerMat));
 }
 
 void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }

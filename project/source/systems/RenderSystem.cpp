@@ -16,7 +16,7 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 
 		// Create proper look at matrix
 		Mtx cameraMatrix;
-		guVector up = {0,1,0};
+		guVector up = {0, 1, 0};
 		guLookAt(cameraMatrix, &transform.position, &up, &target);
 
 		// Render
@@ -39,16 +39,28 @@ void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventM
 		    guMtxTranspose(modelviewInverseMtx, modelviewInverseMtx);
 		    GX_LoadNrmMtxImm(modelviewInverseMtx, GX_PNMTX0);
 
-			auto material = renderable.material;
-			if (material) {
-				auto textures = material->textures;
+		    auto material = renderable.material;
+		    if (material) {
+			    auto shader = material->shader;
+			    if (shader) {
+				    // Setup shader
+				    shader->Use();
 
-				for ( int i=0; i < textures.size(); i++ ) {
-					if (textures[i]) {
-						textures[i]->Bind(i);
-					}
-				}
-			}
+				    // Setup shader uniforms
+				    auto settings = material->uniforms;
+				    GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
+				    GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
+			    } else {
+				    Shader::Default();
+			    }
+
+			    auto textures = material->textures;
+			    for (int i = 0; i < textures.size(); i++) {
+				    if (textures[i]) {
+					    textures[i]->Bind(i);
+				    }
+			    }
+		    }
 
 		    renderable.mesh->Render();
 	    });

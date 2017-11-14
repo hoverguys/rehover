@@ -6,6 +6,10 @@ public:
 	 */
 	void Use();
 
+	/*! \brief Reset to a default shader
+	 */
+	static void Default();
+
 protected:
 	friend class ShaderResource;
 
