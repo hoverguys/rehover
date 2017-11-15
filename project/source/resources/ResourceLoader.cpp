@@ -1,4 +1,5 @@
 #include "ResourceLoader.h"
+#include "EmbeddedResource.h"
 
 #include <stdio.h>
 
@@ -11,11 +12,6 @@ struct PackEntry {
 	unsigned int offset;
 	unsigned int size;
 };
-
-#ifdef EMBED_RESOURCES
-#include <rehover_data_gcr.h>
-const unsigned char* ResourceLoader::embedded = rehover_data_gcr_txt;
-#endif
 
 ResourceLoader::FileMap ResourceLoader::files;
 ResourceLoader::ResourceMap ResourceLoader::cache;
@@ -30,7 +26,7 @@ void ResourceLoader::LoadPack(const char* path) {
 	printf("Loading pack from file %s\n", path);
 #else
 	unsigned char* address = (unsigned char*)rehover_data_gcr_txt;
-	printf("Loading pack from memory @ 0x%08x\n", address);
+	printf("Loading pack from memory @ %p\n", address);
 #endif
 
 	// Set header pointer
@@ -38,7 +34,7 @@ void ResourceLoader::LoadPack(const char* path) {
 	printf("Pack contains %d file(s)\n", header->fileCount);
 
 	address += sizeof(PackHeader);
-	for (int i = 0; i < header->fileCount; ++i, address += sizeof(PackEntry)) {
+	for (unsigned int i = 0; i < header->fileCount; ++i, address += sizeof(PackEntry)) {
 		PackEntry* entry = reinterpret_cast<PackEntry*>(address);
 
 		auto info = std::pair<unsigned int, unsigned int>(entry->offset, entry->size);

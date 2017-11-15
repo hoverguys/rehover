@@ -64,7 +64,7 @@ std::shared_ptr<Mesh> MeshResource::Load() {
 
 	/* Fill the list with indices */
 	GX_Begin(GX_TRIANGLES, GX_VTXFMT0, indicesCount);
-	for (int i = 0; i < indicesCount; i++) {
+	for (unsigned int i = 0; i < indicesCount; i++) {
 		MeshIndex index = internal->indexArray[i];
 		GX_Position1x16(index.vertex);
 		GX_Normal1x16(index.normal);

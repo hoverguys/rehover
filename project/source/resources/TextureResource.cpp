@@ -8,7 +8,7 @@
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
-	printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %x\n", header->width, header->height,
+	printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %p\n", header->width, header->height,
 	       header->format, header->wrapS, header->wrapT, header->filter, data);
 
 	auto t = std::make_shared<Texture>();

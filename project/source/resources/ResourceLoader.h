@@ -30,7 +30,7 @@ public:
 #else
 		unsigned char* address = (unsigned char*)embedded;
 		address += info.first; // Add offset
-		printf("Loading file %08x from memory at address: 0x%08x\n", hash, address);
+		printf("Loading file %08x from memory at address: %p\n", hash, address);
 #endif
 
 		auto resource = std::make_shared<T>((void*)address, (unsigned int)info.second);
