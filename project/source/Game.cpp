@@ -41,14 +41,12 @@ void Game::init() {
 	auto hovercraftDiffTex = hovercraftDiffRes->Load();
 	auto hovercraftShadeRes = ResourceLoader::Load<TextureResource>("textures/hovercraftShade.png");
 	auto hovercraftShadeTex = hovercraftShadeRes->Load();
-	auto hovercraftShaderBin = ResourceLoader::Load<ShaderResource>("shader/hovercraft.bin");
+	auto hovercraftShaderBin = ResourceLoader::Load<ShaderResource>("shaders/hovercraft.bin");
 	auto hovercraftShader = hovercraftShaderBin->Load();
 	auto hovercraftMat = std::make_shared<Material>();
 	hovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
 	hovercraftMat->shader = hovercraftShader;
-	hovercraftMat->uniforms = {
-	    {0xff, 0x29, 0x5b, 0xff} // Color 0
-	};
+	hovercraftMat->uniforms.color0 = {0xff, 0x29, 0x5b, 0xff};
 
 	auto hovercraft = entities.create();
 	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
@@ -56,15 +54,13 @@ void Game::init() {
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
 
 	// Static
-	auto staticHovercraft = entities.create();
-	staticHovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
-	staticHovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh));
 	auto statichovercraftMat = std::make_shared<Material>();
 	statichovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
 	statichovercraftMat->shader = hovercraftShader;
-	statichovercraftMat->uniforms = {
-	    {0xac, 0xff, 0x29, 0xff} // Color 0
-	};
+	statichovercraftMat->uniforms.color0 = {0xac, 0xff, 0x29, 0xff};
+	auto staticHovercraft = entities.create();
+	staticHovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
+	staticHovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, statichovercraftMat));
 
 	// DEBUG: Load hardcoded model
 	auto terrainRes = ResourceLoader::Load<MeshResource>("models/plane.obj");

@@ -48,6 +48,7 @@ void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventM
 
 				    // Setup shader uniforms
 				    auto settings = material->uniforms;
+				    GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0xff, 0xff, 0xff, 0xff});
 				    GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
 				    GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
 			    } else {
