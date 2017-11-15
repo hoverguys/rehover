@@ -18,6 +18,7 @@ public:
 		auto file = files.find(hash);
 		if (file == files.end()) {
 			printf("File %08x not found\n", hash);
+			return nullptr;
 		}
 		auto info = file->second;
 
@@ -29,7 +30,7 @@ public:
 #else
 		unsigned char* address = (unsigned char*)embedded;
 		address += info.first; // Add offset
-		printf("Loading from memory @ 0x%08x\n", address);
+		printf("Loading file %08x from memory at address: 0x%08x\n", hash, address);
 #endif
 
 		auto resource = std::make_shared<T>((void*)address, (unsigned int)info.second);
