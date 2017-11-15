@@ -11,14 +11,7 @@
 
 #include "Game.h"
 
-bool isRunning;
-void OnResetCalled();
-
 int main() {
-
-	/* Setup reset function */
-	SYS_SetResetCallback(OnResetCalled);
-
 	// DEBUG: Enable USBGecko
 	CON_EnableGecko(1, 0);
 
@@ -28,8 +21,7 @@ int main() {
 	Game game;
 	game.init();
 
-	isRunning = true;
-	while (isRunning) {
+	while (!SYS_ResetButtonDown ()) {
 		game.update(1.f / Graphics::GetFramerate());
 
 		// Render here
@@ -38,5 +30,3 @@ int main() {
 
 	return 0;
 }
-
-void OnResetCalled() { isRunning = false; }
