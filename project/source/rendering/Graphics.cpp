@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "Graphics.h"
 
 /* SDK libs */
 #include <malloc.h>
