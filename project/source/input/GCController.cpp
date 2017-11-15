@@ -16,17 +16,17 @@ inline float normalize(const float raw, const float deadzone, const float thresh
 
 const bool GCController::IsDown(const unsigned short btnid) const {
 	auto buttons = PAD_ButtonsDown(controllerPort);
-	return buttons & btnid != 0;
+	return buttons & (btnid != 0);
 }
 
 const bool GCController::IsUp(const unsigned short btnid) const {
 	auto buttons = PAD_ButtonsUp(controllerPort);
-	return buttons & btnid != 0;
+	return buttons & (btnid != 0);
 }
 
 const bool GCController::IsHeld(const unsigned short btnid) const {
 	auto buttons = PAD_ButtonsHeld(controllerPort);
-	return buttons & btnid != 0;
+	return buttons & (btnid != 0);
 }
 
 float GCController::AnalogX() const {

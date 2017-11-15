@@ -17,6 +17,7 @@ const bool GCHovercraftController::GetAction(HovercraftController::Action action
 	// TODO Make button mapping configurable in the future
 	switch (action) {
 	case Action::Jump: return controller->IsDown(PAD_BUTTON_A);
+	default: return false;
 	}
 }
 
@@ -27,5 +28,6 @@ float GCHovercraftController::GetAxis(HovercraftController::Motion axis) const {
 	case Motion::Brake: return controller->TriggerL();
 	case Motion::Turn: return controller->AnalogX();
 	case Motion::Pitch: return controller->AnalogY();
+	default: return 0;
 	}
 }
