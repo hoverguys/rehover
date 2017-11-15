@@ -76,6 +76,7 @@ G1 B1 G2 B2 .. G15 B15 G16 B16
 | 0x7 | Mipmap filter |
 
 Valid values for wrapping modes:
+
 | Value | Wrap mode |
 |-------|-----------|
 |0x0|Clamp|
@@ -83,6 +84,7 @@ Valid values for wrapping modes:
 |0x2|Mirror|
 
 Valid values for filters:
+
 | Value | Wrap mode |
 |-------|-----------|
 |0x0|Near|
