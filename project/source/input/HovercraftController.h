@@ -31,7 +31,7 @@ public:
 	 *  \param axis What axis of motion to check for
 	 *  \return true if the player is trying to move along that axis, false otherwise
 	 */
-	virtual short GetAxis(const Motion axis) const = 0;
+	virtual float GetAxis(const Motion axis) const = 0;
 };
 
 class GCHovercraftController : public HovercraftController {
@@ -41,5 +41,5 @@ private:
 public:
 	GCHovercraftController(std::shared_ptr<GCController> input) : controller(input){};
 	const bool GetAction(const Action action) const override;
-	short GetAxis(const Motion axis) const override;
+	float GetAxis(const Motion axis) const override;
 };

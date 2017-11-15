@@ -20,7 +20,7 @@ const bool GCHovercraftController::GetAction(HovercraftController::Action action
 	}
 }
 
-short GCHovercraftController::GetAxis(HovercraftController::Motion axis) const {
+float GCHovercraftController::GetAxis(HovercraftController::Motion axis) const {
 	// TODO Make axis mapping configurable in the future
 	switch (axis) {
 	case Motion::Throttle: return controller->TriggerR();
