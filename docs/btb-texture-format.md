@@ -13,21 +13,7 @@ The texture data is swizzled and tiled according to the color format in order to
 
 ## Color formats
 
-### RGBA8
-
-Blocks are 4x4 pixels
-
-Each block is defines as follow:
-
-```
-LEGEND:
-Rx (red) Gx (green) Bx (blue) Ax (alpha)
-'x' is the xth pixel in the block, assuming each pixel is defined by X+(Y*4)
-
-ENCODING:
-A1 R1 A2 R2 .. A15 R15 A16 R16
-G1 B1 G2 B2 .. G15 B15 G16 B16
-```
+Refer to [this page](http://wiki.tockdom.com/wiki/Image_Formats) for description and specifications for all the color formats
 
 ## File format
 
@@ -98,7 +84,3 @@ Valid values for filters:
 | Lower 4 bits | Maximum LOD level | 0 to 10 (inclusive) |
 
 Setting mipmaps at 0 will disable mipmapping
-
-## References
-
-- [Color formats](http://wiki.tockdom.com/wiki/Image_Formats)
