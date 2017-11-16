@@ -4,10 +4,7 @@
 
 namespace Components {
 Mtx& Transform::GetMatrix() {
-	guMtxIdentity(matrix);
-	c_guMtxQuat(matrix, &rotation);
-	guMtxScaleApply(matrix, matrix, scale.x, scale.y, scale.z);
-	guMtxTransApply(matrix, matrix, position.x, position.y, position.z);
+	Flush();
 	return matrix;
 }
 
@@ -16,10 +13,36 @@ void Transform::SetRotation(guVector rotation) { this->rotation = Math::EulerToQ
 void Transform::SetRotation(guQuaternion rotation) { this->rotation = rotation; }
 
 void Transform::Lookat(guVector target) {
-	guVector up = {0, 1, 0};
-
 	Mtx temp;
-	guLookAt(temp, &position, &up, &target);
+	guLookAt(temp, &position, &Math::worldUp, &target);
 	c_guQuatMtx(&rotation, temp);
+}
+
+void Transform::RotateAxisAngle(guVector axis, float angle) {
+	Mtx angleaxis;
+	guQuaternion deltaq;
+	guMtxRotAxisRad(angleaxis, &axis, angle);
+	c_guQuatMtx(&deltaq, angleaxis);
+	guQuatMultiply(&deltaq, &rotation, &rotation);
+	
+	Flush();
+}
+
+void Transform::Flush() {
+	// Flush local matrix
+	guMtxIdentity(matrix);
+	guQuatNormalize(&rotation, &rotation);
+	c_guMtxQuat(matrix, &rotation);
+	guMtxScaleApply(matrix, matrix, scale.x, scale.y, scale.z);
+	guMtxTransApply(matrix, matrix, position.x, position.y, position.z);
+
+	// Update direction vectors
+	guVecMultiplySR(matrix, &Math::worldUp, &up);
+	guVecMultiplySR(matrix, &Math::worldForward, &forward);
+	guVecMultiplySR(matrix, &Math::worldRight, &right);
+
+	guVecNormalize(&up);
+	guVecNormalize(&forward);
+	guVecNormalize(&right);
 }
 } // namespace Components

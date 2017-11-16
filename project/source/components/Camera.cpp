@@ -2,7 +2,6 @@
 #include "../rendering/Graphics.h"
 
 namespace Components {
-static guVector up = {0, 1, 0};
 Camera::Camera() {
 	SetViewport(0, 0, 1, 1);
 	SetPerspective(60, 0.1f, 300.0f);

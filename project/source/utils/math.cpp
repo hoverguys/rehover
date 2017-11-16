@@ -1,7 +1,12 @@
-#include "math.h"
+#include "./math.h"
 #include <math.h>
 
 namespace Math {
+
+guVector worldUp = { 0, 1, 0 };
+guVector worldForward = { 0, 0, -1 };
+guVector worldRight = { 1, 0, 0 };
+
 guQuaternion EulerToQuaternion(guVector rotation) {
 	guVecScale(&rotation, &rotation, 0.5f);
 
