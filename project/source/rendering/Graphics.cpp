@@ -72,7 +72,7 @@ void Graphics::Init() {
 	GX_Init(gpfifo, DEFAULT_FIFO_SIZE);
 
 	/* Clear the background to black and clear the Z buf */
-	GXColor background = {0xa0, 0x00, 0xf0, 0xff};
+	GXColor background = {0x93, 0xeb, 0xff, 0xff};
 	GX_SetCopyClear(background, GX_MAX_Z24);
 
 	GX_SetDispCopyYScale(GX_GetYScaleFactor(rmode->efbHeight, rmode->xfbHeight));

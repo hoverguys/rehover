@@ -1,11 +1,13 @@
-# Processed with obj-simplify dev | 2017-11-16T20:13:32Z | https://github.com/jonnenauha/obj-simplify
+# Processed with obj-simplify dev | 2017-11-16T22:58:04Z | https://github.com/jonnenauha/obj-simplify
+
+# Exported from Wings 3D 2.1.5
 
 # vertices [4]
 
-v 0 0 0
-v 0 0 1
-v 1 0 0
-v 1 0 1
+v -99.5 0 -99.5
+v -99.5 0 100.5
+v 100.5 0 -99.5
+v 100.5 0 100.5
 
 # normals [1]
 
@@ -13,15 +15,17 @@ vn 0 1 0
 
 # uvs [4]
 
+vt -24.5 -24.5
 vt -24.5 25.5
 vt 25.5 -24.5
 vt 25.5 25.5
-vt -24.5 -24.5
 
 # objects [1]
 
-o plane
+g plane_default
+usemtl default
 
-f 1/1/1 4/2/1 3/3/1
-f 2/4/1 4/2/1 1/1/1
+s 1
+f 1/2/1 4/3/1 3/4/1
+f 2/1/1 4/3/1 1/2/1
 

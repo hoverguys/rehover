@@ -49,32 +49,34 @@ void Game::init() {
 	hovercraftMat->uniforms.color0 = {0xff, 0x29, 0x5b, 0xff};
 
 	auto hovercraft = entities.create();
-	hovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
+	hovercraft.assign<cp::Transform>(cp::Transform({10, 0, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, hovercraftMat));
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
 
-	// Static
-	auto statichovercraftMat = std::make_shared<Material>();
-	statichovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
-	statichovercraftMat->shader = hovercraftShader;
-	statichovercraftMat->uniforms.color0 = {0xac, 0xff, 0x29, 0xff};
-	auto staticHovercraft = entities.create();
-	staticHovercraft.assign<cp::Transform>(cp::Transform({0, 0, 0}));
-	staticHovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, statichovercraftMat));
+	// Terrain
+	auto terrainRes = ResourceLoader::Load<MeshResource>("models/terrain.obj");
+	auto terrainMesh = terrainRes->Load();
+	auto terrainTexRes = ResourceLoader::Load<TextureResource>("textures/terrain.png");
+	auto terrainTex = terrainTexRes->Load();
+	auto terrainMat = std::make_shared<Material>();
+	terrainMat->textures = {terrainTex};
+	auto terrain = entities.create();
+	terrain.assign<cp::Transform>(cp::Transform({0, -1, 0}));
+	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, terrainMat));
 
 	// DEBUG: Load hardcoded model
-	auto terrainRes = ResourceLoader::Load<MeshResource>("models/plane.obj");
-	auto terrainMesh = terrainRes->Load();
+	auto planeRes = ResourceLoader::Load<MeshResource>("models/plane.obj");
+	auto planeMesh = planeRes->Load();
 
 	auto checkerRes = ResourceLoader::Load<TextureResource>("textures/checkerboard.png");
 	auto checkerTex = checkerRes->Load();
 	auto checkerMat = std::make_shared<Material>();
 	checkerMat->textures = {checkerTex};
 
-	// Terrain
-	auto terrain = entities.create();
-	terrain.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
-	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, checkerMat));
+	// Plane / Sea
+	auto plane = entities.create();
+	plane.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
+	plane.assign<cp::Renderable>(cp::Renderable(planeMesh, checkerMat));
 }
 
 void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }

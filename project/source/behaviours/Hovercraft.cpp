@@ -14,19 +14,20 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 
 	// Forward
 	guVector forwardDelta;
-	guVecScale(&transform->forward, &forwardDelta, controller->GetAxis(HovercraftController::Motion::Pitch) * 5.2f * dt);
+	guVecScale(&transform->forward, &forwardDelta,
+	           controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
 	guVecAdd(&transform->position, &forwardDelta, &transform->position);
 
 	// Have camera track hovercraft
 	ex::ComponentHandle<cp::Transform> camera_trans = camera.component<cp::Transform>();
-	
+
 	const float targetHeight = 1.6f;
 	const float cameraHeight = 2.0f;
 	const float cameraDistance = -5.0f;
 	const float t = 1.f / 5.f;
 
 	/* Calculate camera position */
-	guVector posTemp, targetCameraPos = { 0, cameraHeight, 0 };
+	guVector posTemp, targetCameraPos = {0, cameraHeight, 0};
 	guVecScale(&transform->forward, &posTemp, cameraDistance);
 	guVecAdd(&targetCameraPos, &posTemp, &targetCameraPos);
 	guVecAdd(&transform->position, &targetCameraPos, &targetCameraPos);
