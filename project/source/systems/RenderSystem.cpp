@@ -30,19 +30,20 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 
 void RenderSystem::SetupLights(Mtx& cameraMtx, ex::EntityManager& es) {
 	unsigned short lightId = GX_LIGHT0;
-	es.each<cp::Transform, cp::Light>([&](ex::Entity entity, cp::Transform& transform, cp::Light& light) {
-		// Too many lights?
-		if (lightId >= GX_MAXLIGHT) {
-			// We should give an error or something, at least on debug
-			return;
-		}
+	es.each<cp::Transform, cp::DirectionalLight>(
+	    [&](ex::Entity entity, cp::Transform& transform, cp::DirectionalLight& light) {
+		    // Too many lights?
+		    if (lightId >= GX_MAXLIGHT) {
+			    // We should give an error or something, at least on debug
+			    return;
+		    }
 
-		light.Setup(cameraMtx, transform);
-		light.Bind(lightId);
+		    light.Setup(cameraMtx, transform);
+		    light.Bind(lightId);
 
-		// Increase light id (it's a bitmask)
-		lightId = lightId << 1;
-	});
+		    // Increase light id (it's a bitmask)
+		    lightId = lightId << 1;
+	    });
 }
 
 void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {

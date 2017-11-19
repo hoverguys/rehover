@@ -12,16 +12,22 @@ void PointLight::Setup(Mtx& view, const Transform& transform) {
 	guVecMultiply(view, &pos, &pos);
 
 	GX_InitLightColor(&lightobj, color);
-	GX_InitLightPos(&lightobj, pos.x, pos.y, pos.z);
+	GX_InitLightPosv(&lightobj, &pos);
 }
 
 void DirectionalLight::Setup(Mtx& view, const Transform& transform) {
-	guVector dir = transform.forward;
+	guVector pos = transform.position;
+	guVecMultiply(view, &pos, &pos);
 
+	guVector dir = transform.forward;
 	guVecMultiplySR(view, &dir, &dir);
 
+	GX_InitLightAttn(&lightobj, 1, 0, 0, 1, 0.1, 0);
 	GX_InitLightColor(&lightobj, color);
-	GX_InitSpecularDirv(&lightobj, &dir);
+	GX_InitLightPosv(&lightobj, &pos);
+	GX_InitLightDirv(&lightobj, &dir);
+	GX_InitLightSpot(&lightobj, 90.0, GX_SP_OFF);
+	GX_InitLightDistAttn(&lightobj, 1, 1, GX_DA_OFF);
 	GX_InitLightShininess(&lightobj, shininess);
 }
 

@@ -8,7 +8,6 @@
 #include "systems/BehaviourSystem.h"
 #include "systems/RenderSystem.h"
 
-
 #include "rendering/Material.h"
 #include "resources/MeshResource.h"
 #include "resources/ResourceLoader.h"

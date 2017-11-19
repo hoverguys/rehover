@@ -6,7 +6,7 @@ namespace Components {
 class Light {
 protected:
 	Light(GXColor color) : color(color){};
-	GXLightObj lightobj;
+	GXLightObj lightobj = {0};
 
 public:
 	GXColor color;
