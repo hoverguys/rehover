@@ -1,11 +1,13 @@
 #include "Game.h"
 #include "behaviours/Hovercraft.h"
 #include "components/Camera.h"
+#include "components/Light.h"
 #include "components/Renderable.h"
 #include "components/Transform.h"
 #include "input/HovercraftController.h"
 #include "systems/BehaviourSystem.h"
 #include "systems/RenderSystem.h"
+
 
 #include "rendering/Material.h"
 #include "resources/MeshResource.h"
@@ -77,6 +79,13 @@ void Game::init() {
 	auto plane = entities.create();
 	plane.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
 	plane.assign<cp::Renderable>(cp::Renderable(planeMesh, checkerMat));
+
+	// Light
+	auto light = entities.create();
+	light.assign<cp::Transform>(cp::Transform({0, 0, 0}));
+	light.assign<cp::DirectionalLight>(cp::DirectionalLight({0xff, 0xff, 0xff, 0xff}, 0));
 }
 
-void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }
+void Game::update(ex::TimeDelta dt) {
+	systems.update_all(dt);
+}

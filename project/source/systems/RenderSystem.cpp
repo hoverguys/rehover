@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 
 #include "../components/Camera.h"
+#include "../components/Light.h"
 #include "../components/Renderable.h"
 #include "../components/Transform.h"
 
@@ -19,8 +20,28 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 		guVector up = {0, 1, 0};
 		guLookAt(cameraMatrix, &transform.position, &up, &target);
 
+		// Setup lights
+		SetupLights(cameraMatrix, es);
+
 		// Render
 		RenderScene(cameraMatrix, es, events, dt);
+	});
+}
+
+void RenderSystem::SetupLights(Mtx& cameraMtx, ex::EntityManager& es) {
+	unsigned short lightId = GX_LIGHT0;
+	es.each<cp::Transform, cp::Light>([&](ex::Entity entity, cp::Transform& transform, cp::Light& light) {
+		// Too many lights?
+		if (lightId >= GX_MAXLIGHT) {
+			// We should give an error or something, at least on debug
+			return;
+		}
+
+		light.Setup(cameraMtx, transform);
+		light.Bind(lightId);
+
+		// Increase light id (it's a bitmask)
+		lightId = lightId << 1;
 	});
 }
 
@@ -48,7 +69,7 @@ void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventM
 
 				    // Setup shader uniforms
 				    auto settings = material->uniforms;
-				    GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0xff, 0xff, 0xff, 0xff});
+				    GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0x00, 0x00, 0x00, 0x00});
 				    GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
 				    GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
 			    } else {
