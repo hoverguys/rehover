@@ -10,13 +10,13 @@ class Vector {
 
     void Normalize();
     Vector Normalized() const;
-    Vector Cross(Vector other) const;
-    float Dot(Vector other) const;
+    Vector Cross(const Vector& other) const;
+    float Dot(const Vector& other) const;
     float Magnitude() const;
     float SqrMagnitude() const;
 
-    Vector operator* (const float& scale);
-    Vector operator+ (const Vector& other);
-    Vector operator- (const Vector& other);
+    Vector operator* (const float& scale) const;
+    Vector operator+ (const Vector& other) const;
+    Vector operator- (const Vector& other) const;
     operator guVector() const;
 };

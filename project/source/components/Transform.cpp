@@ -3,7 +3,7 @@
 #include <math.h>
 
 namespace Components {
-Matrix Transform::GetMatrix() {
+const Matrix& Transform::GetMatrix() {
 	Flush();
 	return matrix;
 }

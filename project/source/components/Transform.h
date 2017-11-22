@@ -13,7 +13,7 @@ struct Transform {
 	void Lookat(Vector target);
 	void RotateAxisAngle(Vector axis, float angle);
 
-	Matrix GetMatrix();
+	const Matrix& GetMatrix();
 
 	Vector position;
 	Vector scale;

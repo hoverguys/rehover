@@ -4,12 +4,11 @@
 #include <math.h>
 
 Matrix Matrix::Identity() {
-    Matrix identity;
-    identity.internal = {
+    const Matrix identity = Matrix({
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
-    };
+    });
 
     return identity;
 }
@@ -19,8 +18,7 @@ Matrix Matrix::LookAt(Vector cameraOrigin, Vector cameraUp, Vector cameraTarget)
     Vector right = cameraUp.Cross(look).Normalized();
     Vector up = look.Cross(right);
 
-    Matrix lookat;
-    lookat.internal = {
+    const Matrix lookat = Matrix({
         right.x,
         right.y,
         right.z,
@@ -35,14 +33,12 @@ Matrix Matrix::LookAt(Vector cameraOrigin, Vector cameraUp, Vector cameraTarget)
         look.y,
         look.z,
         -( cameraOrigin.x * look.x + cameraOrigin.y * look.y + cameraOrigin.z * look.z )
-    };
+    });
 
     return lookat;
 }
 
 Matrix Matrix::AxisAngle(Vector axis, float angle) {
-    Matrix angleaxis;
-	
 	float s = sinf(angle);
 	float c = cosf(angle);
 	float t = 1.0f - c;
@@ -52,7 +48,7 @@ Matrix Matrix::AxisAngle(Vector axis, float angle) {
 	float ySq = axis.y * axis.y;
 	float zSq = axis.z * axis.z;
 
-    angleaxis.internal = {
+    const Matrix angleaxis = Matrix({
         ( t * xSq )   + ( c ),
         ( t * axis.x * axis.y ) - ( s * axis.z ),
         ( t * axis.x * axis.z ) + ( s * axis.y ),
@@ -67,12 +63,12 @@ Matrix Matrix::AxisAngle(Vector axis, float angle) {
         ( t * axis.y * axis.z ) + ( s * axis.x ),
         ( t * zSq )   + ( c ),
         0.0f
-    };
+    });
 
     return angleaxis;
 }
 
-void Matrix::Scale(Vector scale) {
+void Matrix::Scale(const Vector& scale) {
     for (int i=0; i < 4; ++i) {
         internal[i] *= scale.x;
     }
@@ -86,7 +82,7 @@ void Matrix::Scale(Vector scale) {
     }
 }
 
-void Matrix::Translate(Vector delta) {
+void Matrix::Translate(const Vector& delta) {
 	internal[3] += delta.x;
 	internal[7] += delta.y;
 	internal[11] += delta.z;
@@ -106,26 +102,28 @@ void Matrix::Inverse() {
     }
 
     float rcpdet = 1.0f / det;
-    Matrix temp;
+    Matrix tmp = Matrix({
+         (internal[5] * internal[10] - internal[9] * internal[6]) * rcpdet,
+        -(internal[1] * internal[10] - internal[9] * internal[2]) * rcpdet,
+         (internal[1] * internal[6] - internal[5] * internal[2]) * rcpdet,
+        0.0f,
 
-    temp.internal[0] =  (internal[5] * internal[10] - internal[9] * internal[6]) * rcpdet;
-    temp.internal[1] = -(internal[1] * internal[10] - internal[9] * internal[2]) * rcpdet;
-    temp.internal[2] =  (internal[1] * internal[6] - internal[5] * internal[2]) * rcpdet;
+        -(internal[4] * internal[10] - internal[8] * internal[6]) * rcpdet,
+         (internal[0] * internal[10] - internal[8] * internal[2]) * rcpdet,
+        -(internal[0] * internal[6] - internal[4] * internal[2]) * rcpdet,
+        0.0f,
 
-    temp.internal[4] = -(internal[4] * internal[10] - internal[8] * internal[6]) * rcpdet;
-    temp.internal[5] =  (internal[0] * internal[10] - internal[8] * internal[2]) * rcpdet;
-    temp.internal[6] = -(internal[0] * internal[6] - internal[4] * internal[2]) * rcpdet;
+         (internal[4] * internal[9] - internal[8] * internal[5]) * rcpdet,
+        -(internal[0] * internal[9] - internal[8] * internal[1]) * rcpdet,
+         (internal[0] * internal[5] - internal[4] * internal[1]) * rcpdet,
+         0.0f
+    });
 
-    temp.internal[8] =  (internal[4] * internal[9] - internal[8] * internal[5]) * rcpdet;
-    temp.internal[9] = -(internal[0] * internal[9] - internal[8] * internal[1]) * rcpdet;
-    temp.internal[10] = (internal[0] * internal[5] - internal[4] * internal[1]) * rcpdet;
+    tmp.internal[3]  = -tmp.internal[0] * internal[3] - tmp.internal[1] * internal[7] - tmp.internal[2] * internal[11];
+    tmp.internal[7]  = -tmp.internal[4] * internal[3] - tmp.internal[5] * internal[7] - tmp.internal[6] * internal[11];
+    tmp.internal[11] = -tmp.internal[8] * internal[3] - tmp.internal[9] * internal[7] - tmp.internal[10] * internal[11];
 
-    temp.internal[3]  = -temp.internal[0] * internal[3] - temp.internal[1] * internal[7] - temp.internal[2] * internal[11];
-    temp.internal[7]  = -temp.internal[4] * internal[3] - temp.internal[5] * internal[7] - temp.internal[6] * internal[11];
-    temp.internal[11] = -temp.internal[8] * internal[3] - temp.internal[9] * internal[7] - temp.internal[10] * internal[11];
-
-    //TODO std::move?
-    internal = temp.internal;
+    internal = std::move(tmp.internal);
 }
 
 Matrix Matrix::Inversed() const {
@@ -135,8 +133,7 @@ Matrix Matrix::Inversed() const {
 }
 
 void Matrix::Transpose() {
-    Matrix temp;
-    temp.internal = {
+    const Matrix tmp = Matrix({
         internal[0],
         internal[4],
         internal[8],
@@ -149,13 +146,12 @@ void Matrix::Transpose() {
         internal[6],
         internal[10],
         0.0f
-    };
+    });
 
-    //TODO std::move?
-    internal = temp.internal;
+    internal = std::move(tmp.internal);
 }
 
-Vector Matrix::Multiply(Vector vec) const {
+Vector Matrix::Multiply(const Vector& vec) const {
 	Vector result;
     result.x = internal[0] * vec.x + internal[1] * vec.y + internal[2] * vec.z + internal[3];
     result.y = internal[4] * vec.x + internal[5] * vec.y + internal[6] * vec.z + internal[7];
@@ -164,7 +160,7 @@ Vector Matrix::Multiply(Vector vec) const {
     return result;
 }
 
-Vector Matrix::MultiplySR(Vector vec) const {
+Vector Matrix::MultiplySR(const Vector& vec) const {
     Vector result;
     result.x = internal[0] * vec.x + internal[1] * vec.y + internal[2] * vec.z;
     result.y = internal[4] * vec.x + internal[5] * vec.y + internal[6] * vec.z;
@@ -173,9 +169,8 @@ Vector Matrix::MultiplySR(Vector vec) const {
     return result;
 }
 
-Matrix Matrix::operator* (const Matrix& o) {
-    Matrix result;
-    result.internal = {
+Matrix Matrix::operator* (const Matrix& o) const {
+    const Matrix result = Matrix({
         internal[0] * o.internal[0] + internal[1] * o.internal[4] + internal[2] * o.internal[8],
         internal[0] * o.internal[1] + internal[1] * o.internal[5] + internal[2] * o.internal[9],
         internal[0] * o.internal[2] + internal[1] * o.internal[6] + internal[2] * o.internal[10],
@@ -190,7 +185,7 @@ Matrix Matrix::operator* (const Matrix& o) {
         internal[8] * o.internal[1] + internal[9] * o.internal[5] + internal[10] * o.internal[9],
         internal[8] * o.internal[2] + internal[9] * o.internal[6] + internal[10] * o.internal[10],
         internal[8] * o.internal[3] + internal[9] * o.internal[7] + internal[10] * o.internal[11] + internal[11]
-    }; 
+    }); 
  
     return result;
 }
@@ -200,28 +195,29 @@ Quaternion Matrix::ToQuaternion() const {
 
     const float diag = internal[0] + internal[5] + internal[10] + 1;
     const float scale = sqrtf(diag) * 2.0f;
+    const float rcpscale = 1.0f / scale;
 
 	if(diag > 0.0f) {
-		result.x = (internal[9] - internal[6]) / scale;
-		result.y = (internal[2] - internal[8]) / scale;
-		result.z = (internal[4] - internal[1]) / scale;
+		result.x = (internal[9] - internal[6]) *rcpscale;
+		result.y = (internal[2] - internal[8]) *rcpscale;
+		result.z = (internal[4] - internal[1]) *rcpscale;
 		result.w = 0.25f * scale;
 	} else {
 		if(internal[0] > internal[5] && internal[0] > internal[10]) {
 			result.x = 0.25f * scale;
-			result.y = (internal[1] + internal[4]) / scale;
-			result.z = (internal[8] + internal[2]) / scale;
-			result.w = (internal[9] - internal[6]) / scale;
+			result.y = (internal[1] + internal[4]) * rcpscale;
+			result.z = (internal[8] + internal[2]) * rcpscale;
+			result.w = (internal[9] - internal[6]) * rcpscale;
 		} else if(internal[5] > internal[10]) {
-			result.x = (internal[1] + internal[4]) / scale;
+			result.x = (internal[1] + internal[4]) * rcpscale;
 			result.y = 0.25f * scale;
-			result.z = (internal[6] + internal[9]) / scale;
-			result.w = (internal[2] - internal[8]) / scale;
+			result.z = (internal[6] + internal[9]) * rcpscale;
+			result.w = (internal[2] - internal[8]) * rcpscale;
 		} else {
-			result.x = (internal[2] + internal[8]) / scale;
-			result.y = (internal[6] + internal[9]) / scale;
+			result.x = (internal[2] + internal[8]) * rcpscale;
+			result.y = (internal[6] + internal[9]) * rcpscale;
 			result.z = 0.25f * scale;
-			result.w = (internal[4] - internal[1]) / scale;
+			result.w = (internal[4] - internal[1]) * rcpscale;
 		}
 	}
 
