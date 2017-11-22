@@ -17,6 +17,7 @@ void MeshResource::Initialize() {
 
 	auto m = std::make_shared<Mesh>();
 
+	// TODO: Different casting?
 	m->positionArray = (float*)(base + posOffset);
 	m->normalArray = (float*)(base + nrmOffset);
 	m->uvArray = (float*)(base + texOffset);
