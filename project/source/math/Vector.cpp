@@ -14,15 +14,15 @@ Vector Vector::Normalized() const {
     return normalized;
 }
 
-Vector Vector::Cross(Vector other) const {
-    return Vector{
+Vector Vector::Cross(const Vector& other) const {
+    return Vector(
         (y * other.z) - (z * other.y),
         (z * other.x) - (x * other.z),
         (x * other.y) - (y * other.x)
-    };
+    );
 }
 
-float Vector::Dot(Vector other) const {
+float Vector::Dot(const Vector& other) const {
     return (x * other.x) + (y * other.y) + (z * other.z);
 }
 
@@ -34,15 +34,15 @@ float Vector::SqrMagnitude() const {
     return x * x + y * y + z * z;
 }
 
-Vector Vector::operator* (const float& scale) {
+Vector Vector::operator* (const float& scale) const {
     return Vector(x * scale, y * scale, z * scale);
 }
 
-Vector Vector::operator+ (const Vector& other) {
+Vector Vector::operator+ (const Vector& other) const {
     return Vector(x + other.x, y + other.y, z + other.z);
 }
 
-Vector Vector::operator- (const Vector& other) {
+Vector Vector::operator- (const Vector& other) const {
     return Vector(x - other.x, y - other.y, z - other.z);
 }
 

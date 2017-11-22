@@ -6,14 +6,15 @@ class Vector;
 
 class Matrix {
 public:
-    Matrix() {printf("*");};
+    Matrix() {};
+    Matrix(std::array<float, 3*4> data) : internal(data) {}
 
     static Matrix Identity();
     static Matrix LookAt(Vector origin, Vector up, Vector target);
     static Matrix AxisAngle(Vector axis, float angle);
 
-    void Scale(Vector scale);
-    void Translate(Vector delta);
+    void Scale(const Vector& scale);
+    void Translate(const Vector& delta);
 
     //TODO: Swap func here?
     void Inverse();
@@ -21,10 +22,10 @@ public:
     void Transpose();
     Matrix Transposed() const;
 
-    Vector Multiply(Vector vec) const;
-    Vector MultiplySR(Vector vec) const;
+    Vector Multiply(const Vector& vec) const;
+    Vector MultiplySR(const Vector& vec) const;
 
-    Matrix operator* (const Matrix& other);
+    Matrix operator* (const Matrix& other) const;
 
     Quaternion ToQuaternion() const;
     void ToNative(Mtx matrix) const;

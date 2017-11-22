@@ -31,7 +31,7 @@ void ResourceLoader::LoadPack(const char* path) {
 
 	// Set header pointer
 	PackHeader* header = reinterpret_cast<PackHeader*>(address);
-	printf("Pack contains %d file(s)\n", header->fileCount);
+	printf("Pack contains %u file(s)\n", header->fileCount);
 
 	address += sizeof(PackHeader);
 	for (unsigned int i = 0; i < header->fileCount; ++i, address += sizeof(PackEntry)) {

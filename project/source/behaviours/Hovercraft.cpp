@@ -25,32 +25,13 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	const float t = 1.f / 5.f;
 
 	/* Calculate camera position */
-	Vector posTemp;
-	Vector targetCameraPos = {0, cameraHeight, 0};
-	
-	//guVecScale(&transform->forward, &posTemp, cameraDistance);
-	//guVecAdd(&targetCameraPos, &posTemp, &targetCameraPos);
-	//guVecAdd(&transform->position, &targetCameraPos, &targetCameraPos);
-	posTemp = transform->forward * cameraDistance;
-	targetCameraPos = targetCameraPos + posTemp;
-	targetCameraPos = targetCameraPos + transform->position;
+	const Vector targetCameraPos = transform->position + (transform->forward * cameraDistance) + Vector(0, cameraHeight, 0);
 
 	/* Calculate camera target */
-	Vector targetPos;
-	//guVecScale(&transform->up, &targetPos, targetHeight);
-	//guVecAdd(&targetPos, &transform->position, &targetPos);
-	targetPos = transform->up * targetHeight;
-	targetPos = targetPos + transform->position;
+	const Vector targetPos = transform->position + (transform->up * targetHeight);
 
 	/* Lerp between old camera position and target */
-	Vector camPos;
-	//guVecSub(&targetCameraPos, &camera_trans->position, &camPos);
-	//guVecScale(&camPos, &camPos, t);
-	//guVecAdd(&camera_trans->position, &camPos, &camera_trans->position);
-	camPos = targetCameraPos - camera_trans->position;
-	camPos = camPos * t;
-	camera_trans->position = camera_trans->position + camPos;
-
+	camera_trans->position = camera_trans->position + (targetCameraPos - camera_trans->position) * t;
 	camera_trans->Lookat(targetPos);
 }
 

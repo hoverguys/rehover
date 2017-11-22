@@ -12,11 +12,12 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	es.each<cp::Transform, cp::Camera>([&](ex::Entity entity, cp::Transform& transform, cp::Camera& camera) {
 		// Setup camera
 		SetupCamera(camera);
-		Matrix lookat = transform.GetMatrix();
-		Vector target = lookat.Multiply(Math::worldForward);
+		
+		const Matrix& lookat = transform.GetMatrix();
+		const Vector target = lookat.Multiply(Math::worldForward);
 
 		// Create proper look at matrix
-		Matrix cameraMatrix = Matrix::LookAt(transform.position, Math::worldUp, target);
+		const Matrix cameraMatrix = Matrix::LookAt(transform.position, Math::worldUp, target);
 
 		// Setup lights
 		SetupLights(cameraMatrix, es);
@@ -26,7 +27,7 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	});
 }
 
-void RenderSystem::SetupLights(Matrix cameraMtx, ex::EntityManager& es) {
+void RenderSystem::SetupLights(const Matrix& cameraMtx, ex::EntityManager& es) {
 	unsigned short lightId = GX_LIGHT0;
 	es.each<cp::Transform, cp::DirectionalLight>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::DirectionalLight& light) {
@@ -44,7 +45,7 @@ void RenderSystem::SetupLights(Matrix cameraMtx, ex::EntityManager& es) {
 	    });
 }
 
-void RenderSystem::RenderScene(Matrix cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
+void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
 		    Matrix modelMtx = transform.GetMatrix();

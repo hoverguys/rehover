@@ -10,21 +10,21 @@ protected:
 
 public:
 	GXColor color;
-	virtual void Setup(Matrix view, const Transform& transform) = 0;
+	virtual void Setup(const Matrix& view, const Transform& transform) = 0;
 	void Bind(unsigned short slot);
 };
 
 class PointLight : public Light {
 public:
 	PointLight(const GXColor color) : Light(color){};
-	void Setup(Matrix view, const Transform& transform) override;
+	void Setup(const Matrix& view, const Transform& transform) override;
 };
 
 class DirectionalLight : public Light {
 public:
 	float shininess;
 	DirectionalLight(const GXColor color, const float shininess = 0) : Light(color), shininess(shininess){};
-	void Setup(Matrix view, const Transform& transform) override;
+	void Setup(const Matrix& view, const Transform& transform) override;
 };
 
 } // namespace Components
