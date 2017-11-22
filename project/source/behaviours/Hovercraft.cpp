@@ -13,10 +13,8 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	transform->RotateAxisAngle(Math::worldUp, deltaRotation);
 
 	// Forward
-	guVector forwardDelta;
-	guVecScale(&transform->forward, &forwardDelta,
-	           controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
-	guVecAdd(&transform->position, &forwardDelta, &transform->position);
+	Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
+	transform->position = transform->position + throttle;
 
 	// Have camera track hovercraft
 	ex::ComponentHandle<cp::Transform> camera_trans = camera.component<cp::Transform>();
@@ -27,21 +25,31 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	const float t = 1.f / 5.f;
 
 	/* Calculate camera position */
-	guVector posTemp, targetCameraPos = {0, cameraHeight, 0};
-	guVecScale(&transform->forward, &posTemp, cameraDistance);
-	guVecAdd(&targetCameraPos, &posTemp, &targetCameraPos);
-	guVecAdd(&transform->position, &targetCameraPos, &targetCameraPos);
+	Vector posTemp;
+	Vector targetCameraPos = {0, cameraHeight, 0};
+	
+	//guVecScale(&transform->forward, &posTemp, cameraDistance);
+	//guVecAdd(&targetCameraPos, &posTemp, &targetCameraPos);
+	//guVecAdd(&transform->position, &targetCameraPos, &targetCameraPos);
+	posTemp = transform->forward * cameraDistance;
+	targetCameraPos = targetCameraPos + posTemp;
+	targetCameraPos = targetCameraPos + transform->position;
 
 	/* Calculate camera target */
-	guVector targetPos;
-	guVecScale(&transform->up, &targetPos, targetHeight);
-	guVecAdd(&targetPos, &transform->position, &targetPos);
+	Vector targetPos;
+	//guVecScale(&transform->up, &targetPos, targetHeight);
+	//guVecAdd(&targetPos, &transform->position, &targetPos);
+	targetPos = transform->up * targetHeight;
+	targetPos = targetPos + transform->position;
 
 	/* Lerp between old camera position and target */
-	guVector camPos;
-	guVecSub(&targetCameraPos, &camera_trans->position, &camPos);
-	guVecScale(&camPos, &camPos, t);
-	guVecAdd(&camera_trans->position, &camPos, &camera_trans->position);
+	Vector camPos;
+	//guVecSub(&targetCameraPos, &camera_trans->position, &camPos);
+	//guVecScale(&camPos, &camPos, t);
+	//guVecAdd(&camera_trans->position, &camPos, &camera_trans->position);
+	camPos = targetCameraPos - camera_trans->position;
+	camPos = camPos * t;
+	camera_trans->position = camera_trans->position + camPos;
 
 	camera_trans->Lookat(targetPos);
 }

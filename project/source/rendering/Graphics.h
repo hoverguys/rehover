@@ -21,6 +21,10 @@ public:
 	 */
 	static void Done();
 
+	/*! \brief Wait for vblank
+	 */
+	static void Wait();
+
 	/*! \brief Load 2D ortho matrix for sprite/font rendering
 	 */
 	static void Set2DMode();

@@ -115,8 +115,11 @@ void Graphics::Done() {
 	}
 
 	VIDEO_Flush();
-	VIDEO_WaitVSync();
 	fbi ^= 1;
+}
+
+void Graphics::Wait() {
+	VIDEO_WaitVSync();
 }
 
 GXRModeObj* Graphics::GetMode() { return rmode; }

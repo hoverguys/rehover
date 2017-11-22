@@ -6,21 +6,16 @@ void Light::Bind(unsigned short slot) {
 	GX_LoadLightObj(&lightobj, slot);
 }
 
-void PointLight::Setup(Mtx& view, const Transform& transform) {
-	guVector pos = transform.position;
-
-	guVecMultiply(view, &pos, &pos);
+void PointLight::Setup(Matrix view, const Transform& transform) {
+	Vector pos = view.Multiply(transform.position);
 
 	GX_InitLightColor(&lightobj, color);
 	GX_InitLightPosv(&lightobj, &pos);
 }
 
-void DirectionalLight::Setup(Mtx& view, const Transform& transform) {
-	guVector pos = transform.position;
-	guVecMultiply(view, &pos, &pos);
-
-	guVector dir = transform.forward;
-	guVecMultiplySR(view, &dir, &dir);
+void DirectionalLight::Setup(Matrix view, const Transform& transform) {
+	Vector pos = view.Multiply(transform.position);
+	Vector dir = view.MultiplySR(transform.forward);
 
 	GX_InitLightAttn(&lightobj, 1, 0, 0, 1, 0.1, 0);
 	GX_InitLightColor(&lightobj, color);

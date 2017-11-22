@@ -1,28 +1,30 @@
 #pragma once
-#include <ogc/gu.h>
+#include "../math/Quaternion.h"
+#include "../math/Matrix.h"
+#include "../math/Vector.h"
 
 namespace Components {
 struct Transform {
-	Transform(guVector position) : Transform(position, {0, 0, 0, 1}) {}
-	Transform(guVector position, guQuaternion rotation) : position(position), scale({1, 1, 1}), rotation(rotation) {}
+	Transform(Vector position) : Transform(position, {0, 0, 0, 1}) {}
+	Transform(Vector position, Quaternion rotation) : position(position), scale({1, 1, 1}), rotation(rotation) {}
 
-	void SetRotation(guVector rotation);
-	void SetRotation(guQuaternion rotation);
-	void Lookat(guVector target);
-	void RotateAxisAngle(guVector axis, float angle);
+	void SetRotation(Vector rotation);
+	void SetRotation(Quaternion rotation);
+	void Lookat(Vector target);
+	void RotateAxisAngle(Vector axis, float angle);
 
-	Mtx& GetMatrix();
+	Matrix GetMatrix();
 
-	guVector position;
-	guVector scale;
+	Vector position;
+	Vector scale;
 
-	guVector forward;
-	guVector right;
-	guVector up;
+	Vector forward;
+	Vector right;
+	Vector up;
 
 private:
-	guQuaternion rotation;
-	Mtx matrix;
+	Quaternion rotation;
+	Matrix matrix;
 
 	void Flush();
 };

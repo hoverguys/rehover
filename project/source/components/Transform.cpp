@@ -3,46 +3,38 @@
 #include <math.h>
 
 namespace Components {
-Mtx& Transform::GetMatrix() {
+Matrix Transform::GetMatrix() {
 	Flush();
 	return matrix;
 }
 
-void Transform::SetRotation(guVector rotation) { this->rotation = Math::EulerToQuaternion(rotation); }
+void Transform::SetRotation(Vector rotation) { this->rotation = Math::EulerToQuaternion(rotation); }
 
-void Transform::SetRotation(guQuaternion rotation) { this->rotation = rotation; }
+void Transform::SetRotation(Quaternion rotation) { this->rotation = rotation; }
 
-void Transform::Lookat(guVector target) {
-	Mtx temp;
-	guLookAt(temp, &position, &Math::worldUp, &target);
-	c_guQuatMtx(&rotation, temp);
+void Transform::Lookat(Vector target) {
+	Matrix temp = Matrix::LookAt(position, Math::worldUp, target);
+	rotation = temp.ToQuaternion();
 }
 
-void Transform::RotateAxisAngle(guVector axis, float angle) {
-	Mtx angleaxis;
-	guQuaternion deltaq;
-	guMtxRotAxisRad(angleaxis, &axis, angle);
-	c_guQuatMtx(&deltaq, angleaxis);
-	guQuatMultiply(&deltaq, &rotation, &rotation);
+void Transform::RotateAxisAngle(Vector axis, float angle) {
+	Matrix angleaxis = Matrix::AxisAngle(axis, angle);
+	Quaternion deltaq = angleaxis.ToQuaternion();
+	rotation = deltaq * rotation;
 	
 	Flush();
 }
 
 void Transform::Flush() {
 	// Flush local matrix
-	guMtxIdentity(matrix);
-	guQuatNormalize(&rotation, &rotation);
-	c_guMtxQuat(matrix, &rotation);
-	guMtxScaleApply(matrix, matrix, scale.x, scale.y, scale.z);
-	guMtxTransApply(matrix, matrix, position.x, position.y, position.z);
+	rotation.Normalize();
+	matrix = rotation.ToMatrix();
+	matrix.Scale(scale);
+	matrix.Translate(position);
 
 	// Update direction vectors
-	guVecMultiplySR(matrix, &Math::worldUp, &up);
-	guVecMultiplySR(matrix, &Math::worldForward, &forward);
-	guVecMultiplySR(matrix, &Math::worldRight, &right);
-
-	guVecNormalize(&up);
-	guVecNormalize(&forward);
-	guVecNormalize(&right);
+	up = matrix.MultiplySR(Math::worldUp).Normalized();
+	forward = matrix.MultiplySR(Math::worldForward).Normalized();
+	right = matrix.MultiplySR(Math::worldRight).Normalized();
 }
 } // namespace Components

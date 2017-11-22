@@ -4,6 +4,7 @@
 #include "../components/Light.h"
 #include "../components/Renderable.h"
 #include "../components/Transform.h"
+#include "../utils/math.h"
 
 namespace cp = Components;
 
@@ -11,14 +12,11 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	es.each<cp::Transform, cp::Camera>([&](ex::Entity entity, cp::Transform& transform, cp::Camera& camera) {
 		// Setup camera
 		SetupCamera(camera);
-		Mtx& lookat = transform.GetMatrix();
-		guVector target = {0, 0, -1};
-		guVecMultiply(lookat, &target, &target);
+		Matrix lookat = transform.GetMatrix();
+		Vector target = lookat.Multiply(Math::worldForward);
 
 		// Create proper look at matrix
-		Mtx cameraMatrix;
-		guVector up = {0, 1, 0};
-		guLookAt(cameraMatrix, &transform.position, &up, &target);
+		Matrix cameraMatrix = Matrix::LookAt(transform.position, Math::worldUp, target);
 
 		// Setup lights
 		SetupLights(cameraMatrix, es);
@@ -28,7 +26,7 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	});
 }
 
-void RenderSystem::SetupLights(Mtx& cameraMtx, ex::EntityManager& es) {
+void RenderSystem::SetupLights(Matrix cameraMtx, ex::EntityManager& es) {
 	unsigned short lightId = GX_LIGHT0;
 	es.each<cp::Transform, cp::DirectionalLight>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::DirectionalLight& light) {
@@ -46,20 +44,22 @@ void RenderSystem::SetupLights(Mtx& cameraMtx, ex::EntityManager& es) {
 	    });
 }
 
-void RenderSystem::RenderScene(Mtx& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
+void RenderSystem::RenderScene(Matrix cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
-		    Mtx& modelMtx = transform.GetMatrix();
+		    Matrix modelMtx = transform.GetMatrix();
 
 		    // Positional matrix with camera
-		    Mtx modelviewMtx, modelviewInverseMtx;
-		    guMtxConcat(cameraMtx, modelMtx, modelviewMtx);
-		    GX_LoadPosMtxImm(modelviewMtx, GX_PNMTX0);
+			Mtx nativeTemp;
+			Matrix modelviewMtx = cameraMtx * modelMtx;
+			modelviewMtx.ToNative(nativeTemp);
+		    GX_LoadPosMtxImm(nativeTemp, GX_PNMTX0);
 
 		    // Normals
-		    guMtxInverse(modelviewMtx, modelviewInverseMtx);
-		    guMtxTranspose(modelviewInverseMtx, modelviewInverseMtx);
-		    GX_LoadNrmMtxImm(modelviewInverseMtx, GX_PNMTX0);
+			Matrix modelviewInverseMtx = modelviewMtx.Inversed();
+			modelviewInverseMtx.Transpose();
+			modelviewInverseMtx.ToNative(nativeTemp);
+		    GX_LoadNrmMtxImm(nativeTemp, GX_PNMTX0);
 
 		    auto material = renderable.material;
 		    if (material) {

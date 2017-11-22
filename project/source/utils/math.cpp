@@ -3,12 +3,12 @@
 
 namespace Math {
 
-guVector worldUp = { 0, 1, 0 };
-guVector worldForward = { 0, 0, -1 };
-guVector worldRight = { 1, 0, 0 };
+Vector worldUp = { 0, 1, 0 };
+Vector worldForward = { 0, 0, -1 };
+Vector worldRight = { 1, 0, 0 };
 
-guQuaternion EulerToQuaternion(guVector rotation) {
-	guVecScale(&rotation, &rotation, 0.5f);
+Quaternion EulerToQuaternion(Vector rotation) {
+	rotation = rotation * 0.5f;
 
 	float c1, s1, c2, s2, c3, s3;
 
@@ -21,7 +21,7 @@ guQuaternion EulerToQuaternion(guVector rotation) {
 	float c1c2 = c1 * c2;
 	float s1s2 = s1 * s3;
 
-	guQuaternion result;
+	Quaternion result;
 	result.w = c1c2 * c3 - s1s2 * s3;
 	result.x = c1c2 * s3 + s1s2 * c3;
 	result.y = s1 * c2 * c3 + c1 * s2 * s3;

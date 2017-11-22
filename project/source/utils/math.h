@@ -1,9 +1,10 @@
 #pragma once
 #include "ogc/gu.h"
-
+#include "../math/Vector.h"
+#include "../math/Quaternion.h"
 namespace Math {
-    extern guVector worldUp;
-    extern guVector worldForward;
-    extern guVector worldRight;
-    guQuaternion EulerToQuaternion(guVector rotation);
+    extern Vector worldUp;
+    extern Vector worldForward;
+    extern Vector worldRight;
+    Quaternion EulerToQuaternion(Vector rotation);
 }
