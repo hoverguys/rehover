@@ -2,14 +2,32 @@
 <html>
 
 <head>
-	<title>rehover metrics and debug info</title>
-	<link rel="stylesheet" href="/static/style.css" />
+	<title>Rehover metrics and debug info</title>
+	<link rel="stylesheet" href="/static/css/style.css" />
 </head>
 
 <body>
-	<script src="/static/ws.js"></script>
+	<main id="main"></main>
+	<!-- Load libs -->
+	<script src="/static/js/ws.js"></script>
+	<!-- Load widgets -->
+	<script src="/static/js/widgets/console.js"></script>
+	<!-- Main script -->
 	<script>
+		window.addEventListener("load", () => {
+			// Setup logger
+			let logger = new Logger(document.location.host);
 
+			/*
+			 * Widgets
+			 */
+
+			let main = document.getElementById("main");
+
+			// Add console
+			let consolewgt = new ConsoleWidget(main);
+			logger.subscribe("console", consolewgt.writeLine);
+		});
 	</script>
 </body>
 
