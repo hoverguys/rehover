@@ -12,7 +12,7 @@ struct MeshResourceHeader {
 
 class MeshResource : public Resource {
 public:
-	MeshResource(void* base, unsigned int size) : Resource(base, size) {}
+	MeshResource(void* base, unsigned int size) : Resource(base, size), header(nullptr), loaded(false) {}
 	std::shared_ptr<Mesh> Load();
 	void Initialize() override;
 

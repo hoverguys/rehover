@@ -39,7 +39,7 @@ private:
 	std::shared_ptr<GCController> controller;
 
 public:
-	GCHovercraftController(std::shared_ptr<GCController> input) : controller(input){};
+	GCHovercraftController(const std::shared_ptr<GCController>& input) : controller(input){};
 	const bool GetAction(const Action action) const override;
 	float GetAxis(const Motion axis) const override;
 };

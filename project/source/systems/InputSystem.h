@@ -15,6 +15,8 @@ private:
 	std::shared_ptr<GCController> gcControllers[PAD_CHANMAX];
 
 public:
+	InputSystem() : gcConnectedPads(0) {}
+
 	/*! \brief Provide a gamecube controller
 	 *  \param id Pad slot #
 	 *  \return Shared pointer of an GCController instance

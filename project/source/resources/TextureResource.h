@@ -20,7 +20,7 @@ struct TextureResourceHeader {
 
 class TextureResource : public Resource {
 public:
-	TextureResource(void* base, unsigned int size) : Resource(base, size) {}
+	TextureResource(void* base, unsigned int size) : Resource(base, size), header(nullptr), loaded(false) {}
 	std::shared_ptr<Texture> Load();
 	void Initialize() override;
 
