@@ -29,12 +29,14 @@ void Transform::Flush() {
 	// Flush local matrix
 	rotation.Normalize();
 	matrix = rotation.ToMatrix();
+
+	// Update direction vectors with rotation
+	up = matrix.MultiplySR(Math::worldUp);
+	forward = matrix.MultiplySR(Math::worldForward);
+	right = matrix.MultiplySR(Math::worldRight);
+
+	// Scale and translate
 	matrix.Scale(scale);
 	matrix.Translate(position);
-
-	// Update direction vectors
-	up = matrix.MultiplySR(Math::worldUp).Normalized();
-	forward = matrix.MultiplySR(Math::worldForward).Normalized();
-	right = matrix.MultiplySR(Math::worldRight).Normalized();
 }
 } // namespace Components

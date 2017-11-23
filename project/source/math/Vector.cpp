@@ -27,7 +27,7 @@ float Vector::Dot(const Vector& other) const {
 }
 
 float Vector::Magnitude() const {
-    return sqrtf(x * x + y * y + z * z);
+    return sqrt(x * x + y * y + z * z);
 }
 
 float Vector::SqrMagnitude() const {

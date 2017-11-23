@@ -51,7 +51,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 SET(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available" )
 
-set(ARCH "-mcpu=750 -meabi -mhard-float")
+set(ARCH "-mcpu=750 -meabi -mhard-float -mpaired -mmultiple")
 set(WARNINGS "-Wall -Werror=return-type")
 set(CMAKE_C_FLAGS "${ARCH} -ffast-math --pedantic ${WARNINGS}" CACHE STRING "C flags")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-exceptions -fno-rtti" CACHE STRING "C++ flags")
