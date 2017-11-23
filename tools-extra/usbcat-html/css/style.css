@@ -1,5 +1,6 @@
 body {
-	background-color: #eeecec;
+	background-color: #252525;
+	color: rgb(235, 235, 235);
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -17,9 +18,10 @@ section {
 }
 
 .console {
-	background: #fafafa;
+	background: #181818;
 	min-width: 100px;
 	min-height: 100px;
+	max-height: 50vh;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -32,8 +34,29 @@ section {
 	flex-grow: 0;
 	font-weight: 300;
 	padding: 5pt 10pt;
+	border-bottom: 1px solid rgb(37, 37, 37);
+	margin: 0;
 }
 
 .console article {
 	flex: 1;
+	overflow: auto;
+}
+
+.console article p {
+	font-size: 10pt;
+	display: flex;
+	padding: 3pt 5pt;
+	margin:0;
+}
+
+.console article p:nth-child(odd) {
+	background-color: #201e20;
+}
+
+.console article p div {
+	min-width: 40pt;
+	text-align: right;
+	color: rgb(157, 117, 224);
+	padding: 0 5pt;
 }

@@ -8,6 +8,9 @@
 
 <body>
 	<main id="main"></main>
+	<!-- Load deps -->
+	<link rel="stylesheet" href="/static/vendor/vis.min.css" />
+	<script src="/static/vendor/vis.min.js"></script>
 	<!-- Load libs -->
 	<script src="/static/js/ws.js"></script>
 	<!-- Load widgets -->
@@ -26,7 +29,7 @@
 
 			// Add console
 			let consolewgt = new ConsoleWidget(main);
-			logger.subscribe("console", consolewgt.writeLine);
+			logger.subscribe("console", consolewgt.writeLine.bind(consolewgt));
 		});
 	</script>
 </body>
