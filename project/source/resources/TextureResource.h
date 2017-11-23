@@ -20,12 +20,12 @@ struct TextureResourceHeader {
 
 class TextureResource : public Resource {
 public:
-	TextureResource(void* base, unsigned int size) : Resource(base, size), header(nullptr), loaded(false) {}
+	TextureResource(void* base, unsigned int size) : Resource(base, size) {}
 	std::shared_ptr<Texture> Load();
 	void Initialize() override;
 
 private:
-	TextureResourceHeader* header;
+	TextureResourceHeader* header = nullptr;
+	bool loaded = false;
 	std::shared_ptr<Texture> internal;
-	bool loaded;
 };
