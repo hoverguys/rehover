@@ -14,7 +14,7 @@ private:
 	const float TriggerMultiplier = 1.0f / MaxTriggerThreshold;
 
 public:
-	GCController(const unsigned short port) : controllerPort(port) {}
+	explicit GCController(const unsigned short port) : controllerPort(port) {}
 
 	const bool IsUp(const unsigned short btn) const;
 	const bool IsDown(const unsigned short btn) const;

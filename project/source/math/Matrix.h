@@ -7,7 +7,7 @@ class Vector;
 class Matrix {
 public:
     Matrix() {};
-    Matrix(std::array<float, 3*4> data) : internal(data) {}
+    explicit Matrix(std::array<float, 3*4> data) : internal(data) {}
 
     static Matrix Identity();
     static Matrix LookAt(Vector origin, Vector up, Vector target);

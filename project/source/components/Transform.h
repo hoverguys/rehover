@@ -5,8 +5,8 @@
 
 namespace Components {
 struct Transform {
-	Transform(Vector position) : Transform(position, {0, 0, 0, 1}) {}
-	Transform(Vector position, Quaternion rotation) : position(position), scale({1, 1, 1}), rotation(rotation) {}
+	explicit Transform(Vector position) : Transform(position, {0, 0, 0, 1}) {}
+	explicit Transform(Vector position, Quaternion rotation) : position(position), scale({1, 1, 1}), rotation(rotation) {}
 
 	void SetRotation(Vector rotation);
 	void SetRotation(Quaternion rotation);
