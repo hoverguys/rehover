@@ -11,8 +11,9 @@ void InputSystem::configure(ex::EntityManager& entities, ex::EventManager& event
 	// Initialize pad subsystem(s)
 	PAD_Init();
 #ifdef WII
-	WPAD_Init();
-	WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC);
+// TODO Wiimote support
+// WPAD_Init();
+// WPAD_SetDataFormat(WPAD_CHAN_ALL, WPAD_FMT_BTNS_ACC);
 #endif
 
 	// Initialize GC controllers
