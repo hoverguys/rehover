@@ -5,7 +5,7 @@
 namespace Components {
 class Light {
 protected:
-	explicit Light(GXColor color) : color(color){};
+	explicit Light(const GXColor color) : color(color){};
 	GXLightObj lightobj = {0};
 
 public:
@@ -16,14 +16,14 @@ public:
 
 class PointLight : public Light {
 public:
-	PointLight(const GXColor color) : Light(color){};
+	explicit PointLight(const GXColor color) : Light(color){};
 	void Setup(const Matrix& view, const Transform& transform) override;
 };
 
 class DirectionalLight : public Light {
 public:
 	float shininess;
-	DirectionalLight(const GXColor color, const float shininess = 0) : Light(color), shininess(shininess){};
+	explicit DirectionalLight(const GXColor color, const float shininess = 0) : Light(color), shininess(shininess){};
 	void Setup(const Matrix& view, const Transform& transform) override;
 };
 
