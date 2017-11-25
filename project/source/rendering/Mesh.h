@@ -1,4 +1,5 @@
 #pragma once
+#include "../math/Vector.h"
 
 struct MeshIndex {
 	short unsigned int vertex;
@@ -16,11 +17,11 @@ public:
 protected:
 	friend class MeshResource;
 
-	float* positionArray;
-	float* normalArray;
-	float* uvArray;
-	MeshIndex* indexArray;
+	Vector* positionArray = nullptr;
+	Vector* normalArray = nullptr;
+	float* uvArray = nullptr;
+	MeshIndex* indexArray = nullptr;
 
-	void* displayList;
-	unsigned int displayListSize;
+	void* displayList = nullptr;
+	unsigned int displayListSize = 0;
 };
