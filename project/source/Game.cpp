@@ -81,7 +81,7 @@ void Game::init() {
 
 	// Light
 	auto light = entities.create();
-	light.assign<cp::Transform>(cp::Transform({0, 0, 0}));
+	light.assign<cp::Transform>(cp::Transform({0, 0, 0}))->Lookat({0, -1, -1});
 	light.assign<cp::DirectionalLight>(cp::DirectionalLight({0xff, 0xff, 0xff, 0xff}, 0));
 }
 

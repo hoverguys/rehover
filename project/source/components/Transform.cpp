@@ -15,6 +15,8 @@ void Transform::SetRotation(Quaternion rotation) { this->rotation = rotation; }
 void Transform::Lookat(Vector target) {
 	Matrix temp = Matrix::LookAt(position, Math::worldUp, target);
 	rotation = temp.ToQuaternion();
+	
+	Flush();
 }
 
 void Transform::RotateAxisAngle(Vector axis, float angle) {
