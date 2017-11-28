@@ -26,7 +26,7 @@ Game::Game() {
 void Game::init() {
 	// Camera
 	auto camera = entities.create();
-	camera.assign<cp::Transform>(cp::Transform({0, 3, 10}));
+	camera.assign<cp::Transform>(cp::Transform({0, 20, 10}));
 	camera.assign<cp::Camera>(cp::Camera());
 
 	// Controller (for hovercraft)
@@ -73,8 +73,16 @@ void Game::init() {
 
 	// Terrain
 	auto terrain = entities.create();
-	terrain.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
+	terrain.assign<cp::Transform>(cp::Transform({0, 0, -5}))->scale = {10, 10, 10};
 	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, checkerMat));
+
+	auto rainbowRes = ResourceLoader::Load<TextureResource>("textures/rainbow.png");
+	auto rainbowTex = rainbowRes->Load();
+	auto rainbowMat = std::make_shared<Material>();
+	rainbowMat->textures = {rainbowTex};
+	auto ter2 = entities.create();
+	ter2.assign<cp::Transform>(cp::Transform({-10, 0, -5}))->scale = {10, 10, 10};
+	ter2.assign<cp::Renderable>(cp::Renderable(terrainMesh, rainbowMat));
 }
 
 void Game::update(ex::TimeDelta dt) { systems.update_all(dt); }

@@ -6,7 +6,8 @@ set(ASSETS
 	TEXTURE
 		IA8 CLAMP  BILINEAR textures/hovercraftGlobal.png
 		IA8 CLAMP  BILINEAR textures/hovercraftShade.png
-		I4  REPEAT NEAR     textures/checkerboard.png
+		CMPR CLAMP NEAR     textures/checkerboard.png
+		RGBA8  CLAMP NEAR     textures/rainbow.png
 	BIN
 		shaders/hovercraft.bin
 )

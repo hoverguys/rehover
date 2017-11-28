@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"io"
+	"os"
 )
 
 // Endianess represents a byte order
@@ -90,6 +91,8 @@ func SaveTexture(tex image.Image, out io.WriteSeeker, options TextureOptions) er
 	if !ok {
 		return fmt.Errorf("Unknown color format: %s (see -h for available formats)", options.Format)
 	}
+
+	fmt.Fprintf(os.Stderr, "Encoding options: Format \"%s\" Wrapping \"%s\" Filter \"%s\"\n", allfmt[options.Format], options.Wrap, options.Filter)
 
 	// Make header
 	header := make([]byte, 32, 32)

@@ -55,7 +55,6 @@ func main() {
 	fmt.Fprintf(os.Stderr, "Image detected as: %s\n", srcformat)
 	size := img.Bounds().Size()
 	fmt.Fprintf(os.Stderr, "Size: %d x %d\n", size.X, size.Y)
-	fmt.Fprintf(os.Stderr, "Encoding as: %s\n", *format)
 
 	checkErr(SaveTexture(img, out, TextureOptions{
 		Endianess: Endianess(*endianess),
