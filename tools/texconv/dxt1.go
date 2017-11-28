@@ -10,8 +10,8 @@ import (
 func encodeDXT1Block(tex image.Image, blockPoint image.Point, options FormatOptions) (out [8]byte) {
 	// List all colors to compress
 	colors := [16]color.Color{}
-	for x := 0; x < 4; x++ {
-		for y := 0; y < 4; y++ {
+	for y := 0; y < 4; y++ {
+		for x := 0; x < 4; x++ {
 			colors[x+y*4] = tex.At(blockPoint.X+x, blockPoint.Y+y)
 		}
 	}
