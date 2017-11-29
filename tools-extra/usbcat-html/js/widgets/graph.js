@@ -3,7 +3,7 @@ class GraphWidget extends Widget {
 		super(parent, title);
 
 		let canvas = document.createElement("canvas");
-		parent.appendChild(canvas);
+		this.container.appendChild(canvas);
 
 		if (!("options" in options)) {
 			options.options = {
