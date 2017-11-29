@@ -1,9 +1,9 @@
 /* SDK Libraries */
+#include "ogc/lwp_watchdog.h"
 #include <gccore.h>
 #include <gctypes.h>
 #include <math.h>
 #include <stdio.h>
-#include "ogc/lwp_watchdog.h"
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
@@ -22,7 +22,7 @@ int main() {
 	Game game;
 	game.init();
 
-	while (!SYS_ResetButtonDown ()) {
+	while (!SYS_ResetButtonDown()) {
 		// Logic
 		auto updateStart = gettime();
 		game.update(1.f / Graphics::GetFramerate());
@@ -35,7 +35,7 @@ int main() {
 		// Metrics
 		auto updateDelta = ticks_to_nanosecs(diff_ticks(updateStart, updateEnd));
 		auto frameDelta = ticks_to_nanosecs(diff_ticks(updateEnd, graphicsEnd));
-		printf("frame took %llu9 nanosecs logic took %llu9\n", frameDelta, updateDelta);
+		printf(":frametime frame:%llu9 logic:%llu9\n", frameDelta, updateDelta);
 
 		Graphics::Wait();
 	}

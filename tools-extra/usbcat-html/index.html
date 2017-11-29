@@ -9,12 +9,13 @@
 <body>
 	<main id="main"></main>
 	<!-- Load deps -->
-	<link rel="stylesheet" href="/static/vendor/vis.min.css" />
-	<script src="/static/vendor/vis.min.js"></script>
+	<script src="/static/vendor/Chart.bundle.js"></script>
 	<!-- Load libs -->
 	<script src="/static/js/ws.js"></script>
+	<script src="/static/js/widget.js"></script>
 	<!-- Load widgets -->
 	<script src="/static/js/widgets/console.js"></script>
+	<script src="/static/js/widgets/graph.js"></script>
 	<!-- Main script -->
 	<script>
 		window.addEventListener("load", () => {
@@ -27,9 +28,51 @@
 
 			let main = document.getElementById("main");
 
-			// Add console
-			let consolewgt = new ConsoleWidget(main);
-			logger.subscribe("console", consolewgt.writeLine.bind(consolewgt));
+			// Console
+			let consolewgt = new ConsoleWidget(main, "Debug messages");
+			logger.subscribe("console", (txt) => consolewgt.writeLine(txt));
+
+			// Frametime graph
+			let timewgt = new GraphWidget(main, "Frame time", {
+				type: "line",
+				options: {
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					},
+					elements: {
+						line: {
+							tension: 0
+						}
+					}
+				}
+			});
+			timewgt.addSet("frame", {
+				label: "Frame time",
+				backgroundColor: 'rgb(155, 99, 132)',
+				borderColor: 'rgb(155, 99, 132)'
+			});
+			timewgt.addSet("logic", {
+				label: "Logic time",
+				backgroundColor: 'rgb(155, 125, 32)',
+				borderColor: 'rgb(155, 125, 32)'
+			});
+			logger.subscribe("frametime", (txt) => {
+				// Get each part
+				let parts = txt.Text.split(" ");
+
+				// Array -> Object
+				let points = {};
+				parts.forEach((x) => {
+					let [key, value] = x.split(":");
+					points[key] = parseInt(value);
+				});
+
+				// Add to graph
+				timewgt.addPoints(Date.now(), points);
+			});
+
 		});
 	</script>
 </body>

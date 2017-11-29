@@ -6,18 +6,19 @@ body {
 
 main {
 	display: flex;
-	align-items: center;
+	align-items: stretch;
 	justify-content: center;
 }
 
 section {
 	display: flex;
-	align-items: center;
+	align-items: stretch;
 	justify-content: center;
 	flex: 1;
+	margin: 2px;
 }
 
-.console {
+.widget {
 	background: #181818;
 	min-width: 100px;
 	min-height: 100px;
@@ -28,7 +29,7 @@ section {
 	align-items: stretch;
 }
 
-.console header {
+.widget header {
 	font-size: 11pt;
 	flex: 1;
 	flex-grow: 0;
@@ -38,23 +39,23 @@ section {
 	margin: 0;
 }
 
-.console article {
+.widget article {
 	flex: 1;
 	overflow: auto;
 }
 
-.console article p {
+.widget article p {
 	font-size: 10pt;
 	display: flex;
 	padding: 3pt 5pt;
 	margin:0;
 }
 
-.console article p:nth-child(odd) {
+.widget article p:nth-child(odd) {
 	background-color: #201e20;
 }
 
-.console article p div {
+.widget article p div {
 	min-width: 40pt;
 	text-align: right;
 	color: rgb(157, 117, 224);

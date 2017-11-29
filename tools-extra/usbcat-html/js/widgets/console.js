@@ -1,18 +1,12 @@
-class ConsoleWidget {
-	constructor(parent) {
-		let section = document.createElement("section");
-		section.className = "console";
-		// Console header
-		let header = document.createElement("header");
-		header.appendChild(document.createTextNode("Debug messages"));
-		section.appendChild(header);
+class ConsoleWidget extends Widget {
+	constructor(parent, title) {
+		super(parent, title)
+
 		// Console content
 		this.msglist = document.createElement("article");
-		section.appendChild(this.msglist);
+		this.container.appendChild(this.msglist);
 
 		this.base = Date.now();
-
-		parent.appendChild(section);
 	}
 
 	writeLine(data) {
