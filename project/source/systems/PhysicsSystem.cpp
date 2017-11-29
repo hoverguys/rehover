@@ -30,7 +30,7 @@ void PhysicsSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::
 	});
 }
 
-Vector PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Vector& position, const Vector& delta) {
+Vector PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Vector position, const Vector& delta) {
 	// STEP
 	/*
 		test = origin + delta
@@ -42,5 +42,15 @@ Vector PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Vect
 
 		result = test * model matrix
 	*/
+	es.each<cp::Transform, cp::MeshCollider>([&](ex::Entity entity, cp::Transform& transform, cp::MeshCollider& collider) {
+		const Matrix& modelMtx = transform.GetMatrix();
+		const Matrix& inversedMtx = modelMtx.Inversed();
+
+		Vector localPosition = inversedMtx.Multiply(position);
+		// Debug move position over X relative to object
+		// localPosition = localPosition + Vector(0.01f, 0, 0);
+		position = modelMtx.Multiply(localPosition);
+	});
+
 	return position + delta;
 }

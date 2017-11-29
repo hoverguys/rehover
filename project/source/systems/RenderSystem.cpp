@@ -48,11 +48,11 @@ void RenderSystem::SetupLights(const Matrix& cameraMtx, ex::EntityManager& es) {
 void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
-		    Matrix modelMtx = transform.GetMatrix();
+		    const Matrix& modelMtx = transform.GetMatrix();
 
 		    // Positional matrix with camera
 			Mtx nativeTemp;
-			Matrix modelviewMtx = cameraMtx * modelMtx;
+			const Matrix modelviewMtx = cameraMtx * modelMtx;
 			modelviewMtx.ToNative(nativeTemp);
 		    GX_LoadPosMtxImm(nativeTemp, GX_PNMTX0);
 

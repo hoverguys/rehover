@@ -5,6 +5,7 @@
 #include "components/Renderable.h"
 #include "components/Transform.h"
 #include "components/Rigidbody.h"
+#include "components/MeshCollider.h"
 #include "input/HovercraftController.h"
 
 #include "systems/BehaviourSystem.h"
@@ -66,9 +67,11 @@ void Game::init() {
 	auto terrainTex = terrainTexRes->Load();
 	auto terrainMat = std::make_shared<Material>();
 	terrainMat->textures = {terrainTex};
+
 	auto terrain = entities.create();
 	terrain.assign<cp::Transform>(cp::Transform({0, 0, 0}));
 	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, terrainMat));
+	terrain.assign<cp::MeshCollider>(cp::MeshCollider(terrainMesh));
 
 	// DEBUG: Load hardcoded model
 	auto planeRes = ResourceLoader::Load<MeshResource>("models/plane.obj");
