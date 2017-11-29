@@ -1,8 +1,6 @@
 #pragma once
 #include <array>
-
-class Quaternion;
-class Vector;
+#include "Math.h"
 
 class Matrix {
 public:

@@ -1,5 +1,5 @@
 #include "Transform.h"
-#include "../utils/math.h"
+#include "../math/Math.h"
 #include <math.h>
 
 namespace Components {
@@ -8,7 +8,7 @@ const Matrix& Transform::GetMatrix() {
 	return matrix;
 }
 
-void Transform::SetRotation(Vector rotation) { this->rotation = Math::EulerToQuaternion(rotation); }
+void Transform::SetRotation(Vector rotation) { this->rotation = Quaternion::FromEuler(rotation); }
 
 void Transform::SetRotation(Quaternion rotation) { this->rotation = rotation; }
 

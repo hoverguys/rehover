@@ -1,6 +1,6 @@
 #include "Hovercraft.h"
 #include "../components/Transform.h"
-#include "../utils/math.h"
+#include "../math/Math.h"
 
 namespace cp = Components;
 

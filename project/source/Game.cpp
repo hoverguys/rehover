@@ -5,8 +5,10 @@
 #include "components/Renderable.h"
 #include "components/Transform.h"
 #include "input/HovercraftController.h"
+
 #include "systems/BehaviourSystem.h"
 #include "systems/RenderSystem.h"
+#include "systems/PhysicsSystem.h"
 
 #include "rendering/Material.h"
 #include "resources/MeshResource.h"
@@ -20,6 +22,7 @@ namespace bh = Behaviours;
 Game::Game() {
 	systems.add<InputSystem>();
 	systems.add<BehaviourSystem<bh::Hovercraft>>();
+	systems.add<PhysicsSystem>();
 	systems.add<RenderSystem>();
 	systems.configure();
 }
@@ -86,5 +89,8 @@ void Game::init() {
 }
 
 void Game::update(ex::TimeDelta dt) {
-	systems.update_all(dt);
+	systems.update<InputSystem>(dt);
+	systems.update<BehaviourSystem<bh::Hovercraft>>(dt);
+	systems.update<PhysicsSystem>(dt);
+	systems.update<RenderSystem>(dt);
 }

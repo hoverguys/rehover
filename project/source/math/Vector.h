@@ -1,5 +1,5 @@
 #pragma once
-#include "ogc/gu.h"
+#include "Math.h"
 
 class Vector {
     public:
