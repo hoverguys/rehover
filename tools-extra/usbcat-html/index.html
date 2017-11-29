@@ -58,6 +58,7 @@
 				backgroundColor: 'rgb(155, 125, 32)',
 				borderColor: 'rgb(155, 125, 32)'
 			});
+			let start = Date.now();
 			logger.subscribe("frametime", (txt) => {
 				// Get each part
 				let parts = txt.Text.split(" ");
@@ -70,7 +71,7 @@
 				});
 
 				// Add to graph
-				timewgt.addPoints(Date.now(), points);
+				timewgt.addPoints((Date.now() - start) / 1000, points);
 			});
 
 		});

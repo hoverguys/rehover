@@ -1,5 +1,5 @@
 class GraphWidget extends Widget {
-	constructor(parent, title, options = {}) {
+	constructor(parent, title, options = {}, maxLength = 100) {
 		super(parent, title);
 
 		let canvas = document.createElement("canvas");
@@ -18,6 +18,7 @@ class GraphWidget extends Widget {
 		let ctx = canvas.getContext("2d");
 		this.chart = new Chart(ctx, options);
 		this.setmap = {};
+		this.maxLength = maxLength;
 	}
 
 	addSet(setid, options = {}) {
@@ -26,9 +27,10 @@ class GraphWidget extends Widget {
 			options.data = [];
 		}
 		this.chart.data.datasets.push(options);
-		this.chart.update();
+		this.chart.update(0);
 	}
 	addPoints(x, points) {
+		console.log(points);
 		this.chart.data.labels.push(x);
 		for (let pointid in points) {
 			if (!(pointid in this.setmap)) {
@@ -36,6 +38,15 @@ class GraphWidget extends Widget {
 			}
 			this.chart.data.datasets[this.setmap[pointid]].data.push(points[pointid]);
 		}
-		this.chart.update();
+		if (this.chart.data.labels.length > this.maxLength) {
+			this._pop();
+		}
+		this.chart.update(0);
+	}
+	_pop() {
+		this.chart.data.labels.shift();
+		this.chart.data.datasets.forEach((dataset) => {
+			dataset.data.shift();
+		});
 	}
 }
