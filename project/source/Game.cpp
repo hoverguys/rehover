@@ -4,6 +4,7 @@
 #include "components/Light.h"
 #include "components/Renderable.h"
 #include "components/Transform.h"
+#include "components/Rigidbody.h"
 #include "input/HovercraftController.h"
 
 #include "systems/BehaviourSystem.h"
@@ -56,6 +57,7 @@ void Game::init() {
 	hovercraft.assign<cp::Transform>(cp::Transform({10, 0, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, hovercraftMat));
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
+	hovercraft.assign<cp::Rigidbody>();
 
 	// Terrain
 	auto terrainRes = ResourceLoader::Load<MeshResource>("models/terrain.obj");

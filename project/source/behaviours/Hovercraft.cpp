@@ -1,23 +1,25 @@
 #include "Hovercraft.h"
 #include "../components/Transform.h"
+#include "../components/Rigidbody.h"
 #include "../math/Math.h"
 
 namespace cp = Components;
 
 namespace Behaviours {
 void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
-	ex::ComponentHandle<cp::Transform> transform = entity.component<cp::Transform>();
+	auto transform = entity.component<cp::Transform>();
+	auto rigidbody = entity.component<cp::Rigidbody>();
 
 	// Rotate hovercraft
-	float deltaRotation = controller->GetAxis(HovercraftController::Motion::Turn) * 1.2f * dt;
+	const float deltaRotation = controller->GetAxis(HovercraftController::Motion::Turn) * 1.2f * dt;
 	transform->RotateAxisAngle(Math::worldUp, deltaRotation);
 
 	// Forward
-	Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
-	transform->position = transform->position + throttle;
+	const Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
+	rigidbody->velocity = rigidbody->velocity + (throttle * 5);
 
 	// Have camera track hovercraft
-	ex::ComponentHandle<cp::Transform> camera_trans = camera.component<cp::Transform>();
+	auto camera_trans = camera.component<cp::Transform>();
 
 	const float targetHeight = 1.6f;
 	const float cameraHeight = 2.0f;
