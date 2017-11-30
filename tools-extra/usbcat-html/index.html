@@ -67,7 +67,7 @@
 				let points = {};
 				parts.forEach((x) => {
 					let [key, value] = x.split(":");
-					points[key] = parseInt(value);
+					points[key] = parseInt(value) / 1000.0;
 				});
 
 				// Add to graph
