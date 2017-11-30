@@ -2,8 +2,8 @@
 #include "../rendering/Graphics.h"
 
 namespace Components {
-Camera::Camera() {
-	SetViewport(0, 0, 1, 1);
+Camera::Camera(float offsetLeft, float offsetTop, float width, float height) {
+	SetViewport(offsetLeft, offsetTop, width, height);
 	SetPerspective(60, 0.1f, 300.0f);
 }
 

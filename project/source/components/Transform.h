@@ -5,7 +5,7 @@
 
 namespace Components {
 struct Transform {
-	explicit Transform(Vector position, Quaternion rotation = Quaternion(0, 0, 0, 1)) : position(position), scale({1, 1, 1}), rotation(rotation) {}
+	explicit Transform(const Vector& position = Vector(0, 0, 0), const Quaternion& rotation = Quaternion(0, 0, 0, 1)) : position(position), rotation(rotation) {}
 
 	void SetRotation(Vector rotation);
 	void SetRotation(Quaternion rotation);
@@ -15,7 +15,7 @@ struct Transform {
 	const Matrix& GetMatrix();
 
 	Vector position;
-	Vector scale;
+	Vector scale = Vector(1, 1, 1);
 
 	Vector forward;
 	Vector right;

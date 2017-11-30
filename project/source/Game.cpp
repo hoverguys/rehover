@@ -32,7 +32,7 @@ Game::Game() {
 void Game::init() {
 	// Camera
 	auto camera = entities.create();
-	camera.assign<cp::Transform>(cp::Transform({0, 3, 10}));
+	camera.assign<cp::Transform>();
 	camera.assign<cp::Camera>(cp::Camera());
 
 	// Controller (for hovercraft)
@@ -89,7 +89,7 @@ void Game::init() {
 	*/
 	// Light
 	auto light = entities.create();
-	light.assign<cp::Transform>(cp::Transform({0, 0, 0}))->Lookat({0, -1, -0.5f});
+	light.assign<cp::Transform>()->Lookat({0, -1, -0.5f});
 	light.assign<cp::DirectionalLight>(cp::DirectionalLight({0xff, 0xee, 0xee, 0xff}, 0));
 }
 

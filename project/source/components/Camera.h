@@ -11,7 +11,7 @@ struct CameraViewport {
 
 class Camera {
 public:
-	Camera();
+	explicit Camera(float offsetLeft = 0, float offsetTop = 0, float width = 1, float height = 1);
 	void SetViewport(float offsetLeft, float offsetTop, float width, float height);
 	void SetPerspective(float fov, float nearPlane, float farPlane);
 
