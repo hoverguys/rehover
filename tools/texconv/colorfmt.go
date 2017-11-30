@@ -74,10 +74,10 @@ func encodeI4(tex image.Image, out io.Writer, options FormatOptions) (paletteOff
 				color1 := tex.At(tilePoint.X+x*2, tilePoint.Y+y)
 				color2 := tex.At(tilePoint.X+x*2+1, tilePoint.Y+y)
 
-				grey1, _, _, _ := color.GrayModel.Convert(color1).RGBA()
-				grey2, _, _, _ := color.GrayModel.Convert(color2).RGBA()
+				grey1, _, _, _ := rgba8(color.GrayModel.Convert(color1))
+				grey2, _, _, _ := rgba8(color.GrayModel.Convert(color2))
 
-				block[baseIndex] = byte(((grey1 >> 12) << 4) | (grey2 >> 12))
+				block[baseIndex] = (grey1 & 0xf0) | (grey2 >> 4)
 			}
 		}
 		return block
@@ -95,9 +95,9 @@ func encodeI8(tex image.Image, out io.Writer, options FormatOptions) (paletteOff
 
 				// Get color
 				col := tex.At(tilePoint.X+x, tilePoint.Y+y)
-				grey, _, _, _ := color.GrayModel.Convert(col).RGBA()
+				grey, _, _, _ := rgba8(color.GrayModel.Convert(col))
 
-				block[baseIndex] = byte(grey >> 8)
+				block[baseIndex] = grey
 			}
 		}
 		return block
@@ -115,9 +115,9 @@ func encodeIA4(tex image.Image, out io.Writer, options FormatOptions) (paletteOf
 
 				// Get color
 				col := tex.At(tilePoint.X+x, tilePoint.Y+y)
-				grey, _, _, alpha := color.GrayModel.Convert(col).RGBA()
+				grey, _, _, alpha := rgba8(color.GrayModel.Convert(col))
 
-				block[baseIndex] = byte((grey>>12)<<4 | (alpha >> 12))
+				block[baseIndex] = (grey & 0xf0) | (alpha >> 4)
 			}
 		}
 		return block
@@ -137,10 +137,10 @@ func encodeIA8(tex image.Image, out io.Writer, options FormatOptions) (paletteOf
 
 				// Get color (ignore alpha)
 				col := tex.At(tilePoint.X+x, tilePoint.Y+y)
-				grey, _, _, alpha := color.GrayModel.Convert(col).RGBA()
+				grey, _, _, alpha := rgba8(color.GrayModel.Convert(col))
 
 				// Set pixel color
-				color := uint16(grey>>8 | ((alpha >> 8) << 8))
+				color := uint16(uint16(grey) | (uint16(alpha) << 8))
 
 				// Write block data
 				options.Endianess.PutUint16(block[baseIndex*2:], color)
@@ -162,15 +162,15 @@ func encodeRGB565(tex image.Image, out io.Writer, options FormatOptions) (palett
 				baseIndex := x + y*4
 
 				// Get color (ignore alpha)
-				r, g, b, _ := tex.At(tilePoint.X+x, tilePoint.Y+y).RGBA()
+				r, g, b, _ := rgba8(tex.At(tilePoint.X+x, tilePoint.Y+y))
 
 				// Get only the required bits
-				red := r >> 11
-				green := g >> 10
-				blue := b >> 11
+				red := r >> 3
+				green := g >> 2
+				blue := b >> 3
 
 				// Set pixel color
-				color := uint16(blue | (green << 5) | (red << 11))
+				color := uint16(uint16(blue) | (uint16(green) << 5) | (uint16(red) << 11))
 
 				// Write block data
 				options.Endianess.PutUint16(block[baseIndex*2:], color)
@@ -192,23 +192,23 @@ func encodeRGB5A3(tex image.Image, out io.Writer, options FormatOptions) (palett
 				baseIndex := x + y*4
 
 				// Get color
-				r, g, b, a := tex.At(tilePoint.X+x, tilePoint.Y+y).RGBA()
+				r, g, b, a := rgba8(tex.At(tilePoint.X+x, tilePoint.Y+y))
 
 				// Decide between RGB5 and RGB4A3 depending on alpha
 				var color uint16
-				if a < 0xff00 {
+				if a < 0xff {
 					// RGB4A3
-					red := r >> 12
-					green := g >> 12
-					blue := b >> 12
-					alpha := a >> 13
-					color = uint16(blue | (green << 4) | (red << 8) | (alpha << 12))
+					red := r >> 4
+					green := g >> 4
+					blue := b >> 4
+					alpha := a >> 5
+					color = uint16(uint16(blue) | (uint16(green) << 4) | (uint16(red) << 8) | (uint16(alpha) << 12))
 				} else {
 					// RGB5
-					red := r >> 11
-					green := g >> 11
-					blue := b >> 11
-					color = uint16(blue | (green << 5) | (red << 10) | 0x8000)
+					red := r >> 3
+					green := g >> 3
+					blue := b >> 3
+					color = uint16(uint16(blue) | (uint16(green) << 5) | (uint16(red) << 10) | 0x8000)
 				}
 
 				// Write block data
@@ -232,13 +232,13 @@ func encodeRGBA8(tex image.Image, out io.Writer, options FormatOptions) (palette
 				baseIndex := x + y*4
 
 				// Get color
-				r, g, b, a := tex.At(tilePoint.X+x, tilePoint.Y+y).RGBA()
+				r, g, b, a := rgba8(tex.At(tilePoint.X+x, tilePoint.Y+y))
 
 				// Set colors
-				block[baseIndex*2] = byte(a >> 8)
-				block[baseIndex*2+1] = byte(r >> 8)
-				block[32+baseIndex*2] = byte(g >> 8)
-				block[32+baseIndex*2+1] = byte(b >> 8)
+				block[baseIndex*2] = a
+				block[baseIndex*2+1] = r
+				block[32+baseIndex*2] = g
+				block[32+baseIndex*2+1] = b
 			}
 		}
 
@@ -270,4 +270,9 @@ func writeTiles(tex image.Image, out io.Writer, options FormatOptions, tileWidth
 	}
 
 	return nil
+}
+
+func rgba8(c color.Color) (r, g, b, a uint8) {
+	r32, g32, b32, a32 := c.RGBA()
+	return uint8(r32 >> 8), uint8(g32 >> 8), uint8(b32 >> 8), uint8(a32 >> 8)
 }
