@@ -91,7 +91,7 @@ func encodeI8(tex image.Image, out io.Writer, options FormatOptions) (paletteOff
 		for y := 0; y < 4; y++ {
 			for x := 0; x < 8; x++ {
 				// Calculate base index
-				baseIndex := x + y*4
+				baseIndex := x + y*8
 
 				// Get color
 				col := tex.At(tilePoint.X+x, tilePoint.Y+y)
