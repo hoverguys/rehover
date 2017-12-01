@@ -51,35 +51,34 @@ Vector PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Vect
 		
 		const Mesh& mesh = *collider.mesh;
 
-		int below = 0;
-		int box = 0;
-		int hit = 0;
-
 		for (int f = 0; f < mesh.faceCount; ++f) {
 			// Get face indices
-			const MeshIndex& i0 = mesh.indexArray[0];
-			const MeshIndex& i1 = mesh.indexArray[1];
-			const MeshIndex& i2 = mesh.indexArray[2];
+			const int offset = f * 3;
+			const MeshIndex& i0 = mesh.indexArray[offset+0];
+			const MeshIndex& i1 = mesh.indexArray[offset+1];
+			const MeshIndex& i2 = mesh.indexArray[offset+2];
 
 			// Get points and normal from face
 			const Vector& normal = mesh.normalArray[i0.normal];
+
+			// Skip ceilings and walls for now
+			if (normal.y <= 0.1f) {
+				continue;
+			}
+
 			const Vector& v0 = mesh.positionArray[i0.vertex];
 			const Vector& v1 = mesh.positionArray[i1.vertex];
 			const Vector& v2 = mesh.positionArray[i2.vertex];
 
-			const Vector deltaTop = localPosition - (v0);
+			const Vector deltaTop = localPosition - (v0 + Math::worldUp * 0.0f);
 			if (normal.Dot(deltaTop) > 0) {
 				continue;
 			}
 
-			below++;
-
-			const Vector deltaBottom = localPosition - (v0 + Math::worldUp * -100);
+			const Vector deltaBottom = localPosition - (v0 + Math::worldUp * -3.0f);
 			if (normal.Dot(deltaBottom) < 0) {
 				continue;
 			}
-
-			box++;
 
 			const float alpha = 0.5f * (-v1.z * v2.x + v0.z * (-v1.x + v2.x) + v0.x * (v1.z - v2.z) + v1.x * v2.z);
 			const float sign = alpha < 0.0f ? -1.0f : 1.0f;
@@ -87,11 +86,10 @@ Vector PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Vect
     		const float t = (v0.x * v1.z - v0.z * v1.x + (v0.z - v1.z) * localPosition.x + (v1.x - v0.x) * localPosition.z) * sign;
 
 			if (s > 0 && t > 0 && (s + t) < 2 * alpha * sign) {
-				hit++;
+				// In triangle, snap
+				// TODO
 			}
 		}
-
-		//printf("Detected total:%d low:%d box:%d hit:%d\n", mesh.faceCount, below, box, hit);
 
 		// Move player into world space
 		position = modelMtx.Multiply(localPosition);
