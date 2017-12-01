@@ -55,7 +55,7 @@ void Game::init() {
 	hovercraftMat->uniforms.color0 = {0xff, 0x29, 0x5b, 0xff};
 
 	auto hovercraft = entities.create();
-	hovercraft.assign<cp::Transform>(cp::Transform({10, 0, 0}));
+	hovercraft.assign<cp::Transform>(cp::Transform({10, 1, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, hovercraftMat));
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
 	hovercraft.assign<cp::Rigidbody>();

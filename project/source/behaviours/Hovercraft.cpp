@@ -11,12 +11,12 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	auto rigidbody = entity.component<cp::Rigidbody>();
 
 	// Rotate hovercraft
-	const float deltaRotation = controller->GetAxis(HovercraftController::Motion::Turn) * 1.2f * dt;
+	const float deltaRotation = controller->GetAxis(HovercraftController::Motion::Turn) * 3.0f * dt;
 	transform->RotateAxisAngle(Math::worldUp, deltaRotation);
 
 	// Forward
-	const Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 5.2f * dt);
-	rigidbody->velocity = rigidbody->velocity + (throttle * 5);
+	const Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 25.0f * dt);
+	rigidbody->velocity = rigidbody->velocity + throttle;
 
 	// Have camera track hovercraft
 	auto camera_trans = camera.component<cp::Transform>();
