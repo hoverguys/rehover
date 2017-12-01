@@ -22,6 +22,7 @@ void MeshResource::Initialize() {
 	m->normalArray = reinterpret_cast<Vector*>(base + nrmOffset);
 	m->uvArray = reinterpret_cast<float*>(base + texOffset);
 	m->indexArray = reinterpret_cast<MeshIndex*>(base + indOffset);
+	m->faceCount = header->fcount;
 
 	loaded = false;
 	internal = m;

@@ -16,11 +16,13 @@ public:
 
 protected:
 	friend class MeshResource;
+	friend class PhysicsSystem;
 
 	Vector* positionArray = nullptr;
 	Vector* normalArray = nullptr;
 	float* uvArray = nullptr;
 	MeshIndex* indexArray = nullptr;
+	unsigned short int faceCount = 0;
 
 	void* displayList = nullptr;
 	unsigned int displayListSize = 0;
