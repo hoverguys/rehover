@@ -16,6 +16,7 @@ class Vector {
     float SqrMagnitude() const;
 
     Vector operator* (const float& scale) const;
+    Vector operator* (const Vector& scale) const;
     Vector operator+ (const Vector& other) const;
     Vector operator- (const Vector& other) const;
     operator guVector() const;

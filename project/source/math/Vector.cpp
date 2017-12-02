@@ -38,6 +38,10 @@ Vector Vector::operator* (const float& scale) const {
     return Vector(x * scale, y * scale, z * scale);
 }
 
+Vector Vector::operator* (const Vector& scale) const {
+    return Vector(x * scale.x, y * scale.y, z * scale.z);
+}
+
 Vector Vector::operator+ (const Vector& other) const {
     return Vector(x + other.x, y + other.y, z + other.z);
 }

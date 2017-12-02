@@ -2,27 +2,23 @@
 #include "../math/Vector.h"
 
 struct MeshIndex {
-	short unsigned int vertex;
-	short unsigned int uv;
-	short unsigned int normal;
+	const short unsigned int vertex;
+	const short unsigned int uv;
+	const short unsigned int normal;
 };
 
-class Mesh {
-public:
-	Mesh();
+struct Mesh {
+	explicit Mesh(const Vector* vertices, const Vector* normals, const float* uvs, const MeshIndex* indices, const unsigned short int facecount) :
+		vertexArray(vertices), normalArray(normals), uvArray(uvs), indexArray(indices), faceCount(facecount) {}
 	~Mesh();
 
 	void Render();
 
-protected:
-	friend class MeshResource;
-	friend class PhysicsSystem;
-
-	Vector* positionArray = nullptr;
-	Vector* normalArray = nullptr;
-	float* uvArray = nullptr;
-	MeshIndex* indexArray = nullptr;
-	unsigned short int faceCount = 0;
+	const Vector* vertexArray;
+	const Vector* normalArray;
+	const float* uvArray;
+	const MeshIndex* indexArray;
+	const unsigned short int faceCount;
 
 	void* displayList = nullptr;
 	unsigned int displayListSize = 0;

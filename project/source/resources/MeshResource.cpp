@@ -15,14 +15,13 @@ void MeshResource::Initialize() {
 	const unsigned int texOffset = nrmOffset + (sizeof(Vector) * header->ncount);
 	const unsigned int indOffset = texOffset + (sizeof(float) * 2 * header->vtcount);
 
-	auto m = std::make_shared<Mesh>();
-
-	// TODO: Different casting?
-	m->positionArray = reinterpret_cast<Vector*>(base + posOffset);
-	m->normalArray = reinterpret_cast<Vector*>(base + nrmOffset);
-	m->uvArray = reinterpret_cast<float*>(base + texOffset);
-	m->indexArray = reinterpret_cast<MeshIndex*>(base + indOffset);
-	m->faceCount = header->fcount;
+	auto m = std::make_shared<Mesh>(Mesh(
+		reinterpret_cast<Vector*>(base + posOffset),
+		reinterpret_cast<Vector*>(base + nrmOffset),
+		reinterpret_cast<float*>(base + texOffset),
+		reinterpret_cast<MeshIndex*>(base + indOffset),
+		header->fcount
+	));
 
 	loaded = false;
 	internal = m;
@@ -60,7 +59,7 @@ std::shared_ptr<Mesh> MeshResource::Load() {
 	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_NRM, GX_NRM_XYZ, GX_F32, 0);
 	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 
-	GX_SetArray(GX_VA_POS, (void*)internal->positionArray, sizeof(Vector));
+	GX_SetArray(GX_VA_POS, (void*)internal->vertexArray, sizeof(Vector));
 	GX_SetArray(GX_VA_NRM, (void*)internal->normalArray, sizeof(Vector));
 	GX_SetArray(GX_VA_TEX0, (void*)internal->uvArray, 2 * sizeof(float));
 
