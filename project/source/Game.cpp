@@ -55,13 +55,13 @@ void Game::init() {
 	hovercraftMat->uniforms.color0 = {0xff, 0x29, 0x5b, 0xff};
 
 	auto hovercraft = entities.create();
-	hovercraft.assign<cp::Transform>(cp::Transform({10, 1, 0}));
+	hovercraft.assign<cp::Transform>(cp::Transform({0, 1, 0}));
 	hovercraft.assign<cp::Renderable>(cp::Renderable(hovercraftMesh, hovercraftMat));
 	hovercraft.assign<bh::Hovercraft>(bh::Hovercraft{controller, camera});
 	hovercraft.assign<cp::Rigidbody>();
 
 	// Terrain
-	auto terrainRes = ResourceLoader::Load<MeshResource>("models/testmap.obj");
+	auto terrainRes = ResourceLoader::Load<MeshResource>("models/testplane.obj");
 	auto terrainMesh = terrainRes->Load();
 	auto terrainTexRes = ResourceLoader::Load<TextureResource>("textures/testmap.png");
 	auto terrainTex = terrainTexRes->Load();
