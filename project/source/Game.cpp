@@ -61,7 +61,7 @@ void Game::init() {
 	hovercraft.assign<cp::Rigidbody>();
 
 	// Terrain
-	auto terrainRes = ResourceLoader::Load<MeshResource>("models/testplane.obj");
+	auto terrainRes = ResourceLoader::Load<MeshResource>("models/testmap.obj");
 	auto terrainMesh = terrainRes->Load();
 	auto terrainTexRes = ResourceLoader::Load<TextureResource>("textures/testmap.png");
 	auto terrainTex = terrainTexRes->Load();
@@ -73,20 +73,6 @@ void Game::init() {
 	terrain.assign<cp::Renderable>(cp::Renderable(terrainMesh, terrainMat));
 	terrain.assign<cp::MeshCollider>(cp::MeshCollider(terrainMesh));
 
-	// DEBUG: Load hardcoded model
-	auto planeRes = ResourceLoader::Load<MeshResource>("models/plane.obj");
-	auto planeMesh = planeRes->Load();
-
-	auto checkerRes = ResourceLoader::Load<TextureResource>("textures/checkerboard.png");
-	auto checkerTex = checkerRes->Load();
-	auto checkerMat = std::make_shared<Material>();
-	checkerMat->textures = {checkerTex};
-	/*
-	    // Plane / Sea
-	    auto plane = entities.create();
-	    plane.assign<cp::Transform>(cp::Transform({0, 0, 0}))->scale = {10, 10, 10};
-	    plane.assign<cp::Renderable>(cp::Renderable(planeMesh, checkerMat));
-	*/
 	// Light
 	auto light = entities.create();
 	light.assign<cp::Transform>()->Lookat({0, -1, -0.5f});
