@@ -1,10 +1,13 @@
 #include "Rect.h"
 
-void Rect::Move(const Point2D& delta) {
-	start += delta;
-	end += delta;
+std::pair<Vector2D, Vector2D> Rect::Bounds() {
+	return std::pair<Vector2D, Vector2D>(start, start + size);
 }
 
-void Rect::Resize(const Point2D& size) {
-	end += size;
+void Rect::Move(const Vector2D& delta) {
+	start += delta;
+}
+
+void Rect::Resize(const Vector2D& _size) {
+	size += _size;
 }

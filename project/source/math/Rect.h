@@ -1,22 +1,24 @@
 #pragma once
 
-#include "Point2D.h"
+#include "Vector2D.h"
+
+#include <utility>
 
 /*! \brief 2D Rectangle */
 class Rect {
 public:
 	/*! Top-Left corner of the rectangle */
-	Point2D start;
+	Vector2D start;
 
-	/*! Bottom-Right corner of the rectangle */
-	Point2D end;
+	/*! Size of the rectangle */
+	Vector2D size;
 
 	/*! \brief Create a rectangle providing the top-left and bottom-right corner coordinates
 	 *
-	 *  \param start Top left corner
-	 *  \param end   Bottom right corner
+	 *  \param position Origin (top left corner)
+	 *  \param size   Size of the rectangle
 	 */
-	Rect(const Point2D& start, const Point2D& end) : start(start), end(end) {}
+	Rect(const Vector2D& start, const Vector2D& size) : start(start), size(size) {}
 
 	/*! \brief Create a rectangle providing top left coordinates and size
 	 *
@@ -26,25 +28,31 @@ public:
 	 *  \param height Height
 	 */
 	Rect(const float x, const float y, const float width, const float height)
-	    : Rect(Point2D(x, y), Point2D(x + width, y + height)) {}
+	    : Rect(Vector2D(x, y), Vector2D(width, height)) {}
 
-	Rect() : Rect(Point2D(), Point2D()) {}
+	Rect() : Rect(Vector2D(), Vector2D()) {}
 
 	/*! \brief Get width of the rectangle
 	 */
-	float Width() const { return end.x - start.x; }
+	float Width() const { return size.x; }
 
 	/*! \brief Get height of the rectangle
 	 */
-	float Height() const { return end.y - start.y; }
+	float Height() const { return size.y; }
+
+	/*! \brief Get the bounds of the rectangle
+	 *
+	 *  \return The top-left and bottom-right corners as a pair
+	 */
+	std::pair<Vector2D, Vector2D> Bounds();
 
 	/*! \brief Move the rectangle around using a relative point
 	 */
-	void Move(const Point2D& delta);
-	void Move(const float x, const float y) { Move(Point2D(x, y)); }
+	void Move(const Vector2D& delta);
+	void Move(const float x, const float y) { Move(Vector2D(x, y)); }
 
 	/*! \brief Resize the rectangle of a certain width and height
 	 */
-	void Resize(const Point2D& size);
-	void Resize(const float width, const float height) { Resize(Point2D(width, height)); }
+	void Resize(const Vector2D& size);
+	void Resize(const float width, const float height) { Resize(Vector2D(width, height)); }
 };
