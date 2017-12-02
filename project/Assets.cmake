@@ -5,6 +5,7 @@ set(ASSETS
 		models/plane.obj
 		models/terrain.obj
 		models/testmap.obj
+		models/testplane.obj
 	TEXTURE
 		IA8 CLAMP  BILINEAR textures/hovercraftGlobal.png
 		I8  CLAMP  BILINEAR textures/hovercraftShade.png
