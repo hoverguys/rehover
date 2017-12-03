@@ -30,51 +30,51 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 void RenderSystem::SetupLights(const Matrix& cameraMtx, ex::EntityManager& es) {
 	unsigned short lightId = GX_LIGHT0;
 	es.each<cp::Transform, cp::DirectionalLight>(
-	    [&](ex::Entity entity, cp::Transform& transform, cp::DirectionalLight& light) {
-		    // Too many lights?
-		    if (lightId >= GX_MAXLIGHT) {
-			    // We should give an error or something, at least on debug
-			    return;
-		    }
+		[&](ex::Entity entity, cp::Transform& transform, cp::DirectionalLight& light) {
+			// Too many lights?
+			if (lightId >= GX_MAXLIGHT) {
+				// We should give an error or something, at least on debug
+				return;
+			}
 
-		    light.Setup(cameraMtx, transform);
-		    light.Bind(lightId);
+			light.Setup(cameraMtx, transform);
+			light.Bind(lightId);
 
-		    // Increase light id (it's a bitmask)
-		    lightId = lightId << 1;
-	    });
+			// Increase light id (it's a bitmask)
+			lightId = lightId << 1;
+		});
 }
 
 void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events,
-                               ex::TimeDelta dt) {
+							   ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
-	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
-		    const Matrix& modelMtx = transform.GetMatrix();
+		[&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
+			const Matrix& modelMtx = transform.GetMatrix();
 
-		    // Positional matrix with camera
-		    Mtx nativeTemp;
-		    const Matrix modelviewMtx = cameraMtx * modelMtx;
-		    modelviewMtx.ToNative(nativeTemp);
-		    GX_LoadPosMtxImm(nativeTemp, GX_PNMTX0);
+			// Positional matrix with camera
+			Mtx nativeTemp;
+			const Matrix modelviewMtx = cameraMtx * modelMtx;
+			modelviewMtx.ToNative(nativeTemp);
+			GX_LoadPosMtxImm(nativeTemp, GX_PNMTX0);
 
-		    // Normals
-		    Matrix modelviewInverseMtx = modelviewMtx.Inversed();
-		    modelviewInverseMtx.Transpose();
-		    modelviewInverseMtx.ToNative(nativeTemp);
-		    GX_LoadNrmMtxImm(nativeTemp, GX_PNMTX0);
+			// Normals
+			Matrix modelviewInverseMtx = modelviewMtx.Inversed();
+			modelviewInverseMtx.Transpose();
+			modelviewInverseMtx.ToNative(nativeTemp);
+			GX_LoadNrmMtxImm(nativeTemp, GX_PNMTX0);
 
-		    auto material = renderable.material;
-		    if (material) {
-			    material->Use();
-		    }
+			auto material = renderable.material;
+			if (material) {
+				material->Use();
+			}
 
-		    renderable.mesh->Render();
-	    });
+			renderable.mesh->Render();
+		});
 }
 
 void RenderSystem::SetupCamera(cp::Camera& camera) {
 	GX_SetScissor(camera.viewport.offsetLeft, camera.viewport.offsetTop, camera.viewport.width, camera.viewport.height);
 	GX_SetViewport(camera.viewport.offsetLeft, camera.viewport.offsetTop, camera.viewport.width, camera.viewport.height,
-	               0, 1);
+				   0, 1);
 	GX_LoadProjectionMtx(camera.perspectiveMtx, GX_PERSPECTIVE);
 }
