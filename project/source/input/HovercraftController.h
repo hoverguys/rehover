@@ -36,6 +36,7 @@ public:
 
 class GCHovercraftController : public HovercraftController {
 private:
+	/*! Gamecube controller instance */
 	std::shared_ptr<GCController> controller;
 
 public:
