@@ -74,6 +74,12 @@
 				timewgt.addPoints((Date.now() - start) / 1000, points);
 			});
 
+			// Reset widgets when game re-connects
+			logger.subscribe("connection", (txt) => {
+				consolewgt.reset();
+				start = Date.now();
+				timewtg.reset();
+			});
 		});
 	</script>
 </body>

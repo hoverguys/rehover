@@ -19,6 +19,8 @@ class GraphWidget extends Widget {
 		this.chart = new Chart(ctx, options);
 		this.setmap = {};
 		this.maxLength = maxLength;
+
+		this.reset();
 	}
 
 	addSet(setid, options = {}) {
@@ -30,7 +32,6 @@ class GraphWidget extends Widget {
 		this.chart.update(0);
 	}
 	addPoints(x, points) {
-		console.log(points);
 		this.chart.data.labels.push(x);
 		for (let pointid in points) {
 			if (!(pointid in this.setmap)) {
@@ -48,5 +49,12 @@ class GraphWidget extends Widget {
 		this.chart.data.datasets.forEach((dataset) => {
 			dataset.data.shift();
 		});
+	}
+	reset() {
+		this.chart.data.labels = [];
+		this.chart.data.datasets.forEach((dataset) => {
+			dataset.data = [];
+		});
+		this.chart.update(0);
 	}
 }

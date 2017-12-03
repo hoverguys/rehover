@@ -6,7 +6,7 @@ class ConsoleWidget extends Widget {
 		this.msglist = document.createElement("article");
 		this.container.appendChild(this.msglist);
 
-		this.base = Date.now();
+		this.reset();
 	}
 
 	writeLine(data) {
@@ -19,5 +19,12 @@ class ConsoleWidget extends Widget {
 		p.appendChild(document.createTextNode(data.Text));
 		this.msglist.appendChild(p);
 		this.msglist.scrollTop = this.msglist.scrollHeight;
+	}
+
+	reset() {
+		while (this.msglist.firstChild) {
+			this.msglist.removeChild(this.msglist.firstChild);
+		}
+		this.base = Date.now();
 	}
 }
