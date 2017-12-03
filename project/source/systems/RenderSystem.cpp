@@ -65,7 +65,26 @@ void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, e
 
 			auto material = renderable.material;
 			if (material) {
-				material->Use();
+				auto shader = material->shader;
+				if (shader) {
+					// Setup shader
+					shader->Use();
+
+					// Setup shader uniforms
+					auto settings = material->uniforms;
+					GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0x00, 0x00, 0x00, 0x00});
+					GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
+					GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
+				} else {
+					Shader::Default();
+				}
+
+				auto textures = material->textures;
+				for (unsigned int i = 0; i < textures.size(); i++) {
+					if (textures[i]) {
+						textures[i]->Bind(i);
+					}
+				}
 			}
 
 			renderable.mesh->Render();

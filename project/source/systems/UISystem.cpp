@@ -21,7 +21,26 @@ void UISystem::update(ex::EntityManager& es, ex::EventManager& events, ex::TimeD
 
 		auto material = sprite.material;
 		if (material) {
-			material->Use();
+			auto shader = material->shader;
+			if (shader) {
+				// Setup shader
+				shader->Use();
+
+				// Setup shader uniforms
+				auto settings = material->uniforms;
+				GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0x00, 0x00, 0x00, 0x00});
+				GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
+				GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
+			} else {
+				Shader::DefaultUnlit();
+			}
+
+			auto textures = material->textures;
+			for (unsigned int i = 0; i < textures.size(); i++) {
+				if (textures[i]) {
+					textures[i]->Bind(i);
+				}
+			}
 		}
 
 		auto uv = sprite.bounds.Bounds();
@@ -56,4 +75,11 @@ void UISystem::Setup2D() {
 	Mtx dummy;
 	guMtxIdentity(dummy);
 	GX_LoadNrmMtxImm(dummy, GX_PNMTX0);
+
+	// Setup vertex descriptors to use immediate mode
+	GX_ClearVtxDesc();
+	GX_SetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GX_SetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+	GX_SetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 }

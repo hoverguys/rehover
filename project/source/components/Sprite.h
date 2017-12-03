@@ -18,7 +18,7 @@ struct Sprite {
 	Rect bounds;
 
 	explicit Sprite(const Vector2D& size, const std::shared_ptr<Material>& material,
-	                const Rect& bounds = Rect(0, 0, 1, 1))
-	    : size(size), material(material), bounds(bounds){};
+					const Rect& bounds = Rect(0, 0, 1, 1))
+		: size(size), material(material), bounds(bounds){};
 };
 } // namespace Components

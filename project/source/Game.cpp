@@ -5,6 +5,7 @@
 #include "components/MeshCollider.h"
 #include "components/Renderable.h"
 #include "components/Rigidbody.h"
+#include "components/Sprite.h"
 #include "components/Transform.h"
 #include "input/HovercraftController.h"
 
@@ -79,6 +80,11 @@ void Game::init() {
 	auto light = entities.create();
 	light.assign<cp::Transform>()->Lookat({0, -1, -0.5f});
 	light.assign<cp::DirectionalLight>(cp::DirectionalLight({0xff, 0xee, 0xee, 0xff}, 0));
+
+	// Test sprite
+	auto sprite = entities.create();
+	sprite.assign<cp::Transform>(cp::Transform({10, 10, -1}));
+	sprite.assign<cp::Sprite>(cp::Sprite(Vector2D(128, 128), terrainMat));
 }
 
 void Game::update(ex::TimeDelta dt) {
@@ -86,4 +92,5 @@ void Game::update(ex::TimeDelta dt) {
 	systems.update<BehaviourSystem<bh::Hovercraft>>(dt);
 	systems.update<PhysicsSystem>(dt);
 	systems.update<RenderSystem>(dt);
+	systems.update<UISystem>(dt);
 }

@@ -10,6 +10,10 @@ public:
 	 */
 	static void Default();
 
+	/*! \brief Reset to a default unlit shader
+	 */
+	static void DefaultUnlit();
+
 protected:
 	friend class ShaderResource;
 
