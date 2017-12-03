@@ -12,7 +12,7 @@ void RenderSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::T
 	es.each<cp::Transform, cp::Camera>([&](ex::Entity entity, cp::Transform& transform, cp::Camera& camera) {
 		// Setup camera
 		SetupCamera(camera);
-		
+
 		const Matrix& lookat = transform.GetMatrix();
 		const Vector target = lookat.Multiply(Math::worldForward);
 
@@ -45,45 +45,27 @@ void RenderSystem::SetupLights(const Matrix& cameraMtx, ex::EntityManager& es) {
 	    });
 }
 
-void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
+void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events,
+                               ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Renderable>(
 	    [&](ex::Entity entity, cp::Transform& transform, cp::Renderable& renderable) {
 		    const Matrix& modelMtx = transform.GetMatrix();
 
 		    // Positional matrix with camera
-			Mtx nativeTemp;
-			const Matrix modelviewMtx = cameraMtx * modelMtx;
-			modelviewMtx.ToNative(nativeTemp);
+		    Mtx nativeTemp;
+		    const Matrix modelviewMtx = cameraMtx * modelMtx;
+		    modelviewMtx.ToNative(nativeTemp);
 		    GX_LoadPosMtxImm(nativeTemp, GX_PNMTX0);
 
 		    // Normals
-			Matrix modelviewInverseMtx = modelviewMtx.Inversed();
-			modelviewInverseMtx.Transpose();
-			modelviewInverseMtx.ToNative(nativeTemp);
+		    Matrix modelviewInverseMtx = modelviewMtx.Inversed();
+		    modelviewInverseMtx.Transpose();
+		    modelviewInverseMtx.ToNative(nativeTemp);
 		    GX_LoadNrmMtxImm(nativeTemp, GX_PNMTX0);
 
 		    auto material = renderable.material;
 		    if (material) {
-			    auto shader = material->shader;
-			    if (shader) {
-				    // Setup shader
-				    shader->Use();
-
-				    // Setup shader uniforms
-				    auto settings = material->uniforms;
-				    GX_SetChanAmbColor(GX_COLOR0A0, GXColor{0x00, 0x00, 0x00, 0x00});
-				    GX_SetChanMatColor(GX_COLOR0A0, settings.color0);
-				    GX_SetChanMatColor(GX_COLOR1A1, settings.color1);
-			    } else {
-				    Shader::Default();
-			    }
-
-			    auto textures = material->textures;
-			    for (unsigned int i = 0; i < textures.size(); i++) {
-				    if (textures[i]) {
-					    textures[i]->Bind(i);
-				    }
-			    }
+			    material->Use();
 		    }
 
 		    renderable.mesh->Render();

@@ -11,6 +11,7 @@
 #include "systems/BehaviourSystem.h"
 #include "systems/PhysicsSystem.h"
 #include "systems/RenderSystem.h"
+#include "systems/UISystem.h"
 
 #include "rendering/Material.h"
 #include "resources/MeshResource.h"
@@ -26,6 +27,7 @@ Game::Game() {
 	systems.add<BehaviourSystem<bh::Hovercraft>>();
 	systems.add<PhysicsSystem>();
 	systems.add<RenderSystem>();
+	systems.add<UISystem>();
 	systems.configure();
 }
 
