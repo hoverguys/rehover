@@ -1,10 +1,6 @@
 #include "MeshResource.h"
 
-#include <malloc.h>
-#include <memory>
-#include <ogc/gx.h>
-#include <stdio.h>
-#include <string.h>
+#include "../pchheader.h"
 
 void MeshResource::Initialize() {
 	header = static_cast<MeshResourceHeader*>(address);
@@ -43,8 +39,8 @@ std::shared_ptr<Mesh> MeshResource::Load() {
 	const unsigned int dispSize = (((indicesSize + callSize + 63) >> 5) + 1) << 5;
 
 	// Allocate display list
-	internal->displayList = memalign(32, dispSize);
-	memset(internal->displayList, 0, dispSize);
+	internal->displayList = memalign(32, dispSize); //< \todo Consider using std::align
+	std::memset(internal->displayList, 0, dispSize);
 	DCInvalidateRange(internal->displayList, dispSize);
 
 	// Build display list
@@ -76,7 +72,7 @@ std::shared_ptr<Mesh> MeshResource::Load() {
 	/* Close display list */
 	internal->displayListSize = GX_EndDispList();
 	if (internal->displayListSize == 0) {
-		printf("Error: Display list is wrong size [%u]\n", dispSize);
+		std::printf("Error: Display list is wrong size [%u]\n", dispSize);
 		return NULL;
 	}
 

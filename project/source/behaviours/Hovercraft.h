@@ -1,6 +1,7 @@
 #pragma once
+#include "../pchheader.h"
+
 #include "../input/HovercraftController.h"
-#include <entityx/entityx.h>
 
 namespace ex = entityx;
 

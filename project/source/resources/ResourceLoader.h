@@ -1,6 +1,6 @@
 #pragma once
+#include "../pchheader.h"
 #include "Resource.h"
-#include <map>
 
 typedef unsigned int FileHash;
 
@@ -16,7 +16,7 @@ public:
 
 		auto file = files.find(hash);
 		if (file == files.end()) {
-			printf("File %08x not found\n", hash);
+			std::printf("File %08x not found\n", hash);
 			return nullptr;
 		}
 		auto info = file->second;
@@ -24,12 +24,12 @@ public:
 #ifndef EMBED_RESOURCES
 		// Allocate buffer for resource
 		// Load from pack
-		printf("Loading from file");
+		std::printf("Loading from file");
 		return nullptr;
 #else
 		unsigned char* address = (unsigned char*)embedded;
 		address += info.first; // Add offset
-		printf("Loading file %08x from memory at address: %p\n", hash, address);
+		std::printf("Loading file %08x from memory at address: %p\n", hash, address);
 #endif
 
 		auto resource = std::make_shared<T>((void*)address, (unsigned int)info.second);

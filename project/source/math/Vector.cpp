@@ -1,5 +1,4 @@
 #include "Vector.h"
-#include <math.h>
 
 void Vector::Normalize() {
     float rlength = 1.0f / Magnitude();

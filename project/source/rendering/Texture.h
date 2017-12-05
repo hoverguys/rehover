@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ogc/gx.h>
+#include "../pchheader.h"
 
 class Texture {
 public:

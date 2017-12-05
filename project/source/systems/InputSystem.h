@@ -1,8 +1,7 @@
 #pragma once
+#include "../pchheader.h"
+
 #include "../input/GCController.h"
-#include <entityx/entityx.h>
-#include <memory>
-#include <ogc/pad.h>
 
 namespace ex = entityx;
 

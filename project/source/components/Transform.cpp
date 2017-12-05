@@ -1,6 +1,5 @@
 #include "Transform.h"
 #include "../math/Math.h"
-#include <math.h>
 
 namespace Components {
 const Matrix& Transform::GetMatrix() {

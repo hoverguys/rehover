@@ -1,9 +1,5 @@
 #include "Graphics.h"
 
-/* SDK libs */
-#include <malloc.h>
-#include <string.h>
-
 f32 Graphics::frameTime = 0;
 void* Graphics::xfb[2] = {NULL, NULL};
 u32 Graphics::fbi = 0;
@@ -67,8 +63,8 @@ void Graphics::Init() {
 	// CON_InitEx(rmode, 0, 0, rmode->fbWidth, 100);
 
 	/* Init flipper */
-	gpfifo = MEM_K0_TO_K1(memalign(32, DEFAULT_FIFO_SIZE));
-	memset(gpfifo, 0, DEFAULT_FIFO_SIZE);
+	gpfifo = MEM_K0_TO_K1(memalign(32, DEFAULT_FIFO_SIZE)); //< \todo Consider using std::align
+	std::memset(gpfifo, 0, DEFAULT_FIFO_SIZE);
 	GX_Init(gpfifo, DEFAULT_FIFO_SIZE);
 
 	/* Clear the background to black and clear the Z buf */

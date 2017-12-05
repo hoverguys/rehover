@@ -1,15 +1,10 @@
 #include "TextureResource.h"
 
-#include <malloc.h>
-#include <ogc/gx.h>
-#include <stdio.h>
-#include <string.h>
-
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
-	printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %p\n", header->width, header->height,
-	       header->format, header->wrapS, header->wrapT, header->filter, data);
+	std::printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %p\n", header->width, header->height,
+	            header->format, header->wrapS, header->wrapT, header->filter, data);
 
 	auto t = std::make_shared<Texture>();
 

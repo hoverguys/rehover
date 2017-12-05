@@ -1,7 +1,5 @@
 #include "HovercraftController.h"
 
-#include <ogc/pad.h>
-
 /*
  * Gamecube controller
  *

@@ -1,5 +1,6 @@
 #pragma once
-#include <entityx/entityx.h>
+#include "../pchheader.h"
+
 #include "../math/Vector.h"
 
 namespace ex = entityx;

@@ -1,6 +1,6 @@
 #include "Mesh.h"
-#include <malloc.h>
-#include <ogc/gx.h>
+
+#include "../pchheader.h"
 
 Mesh::~Mesh() {
 	if (displayList != nullptr) {

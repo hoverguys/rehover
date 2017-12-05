@@ -1,8 +1,6 @@
 #pragma once
 #include "GCController.h"
 
-#include <memory>
-
 class HovercraftController {
 protected:
 	HovercraftController(){};

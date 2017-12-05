@@ -1,6 +1,6 @@
 #pragma once
 #include "Transform.h"
-#include <ogc/gx.h>
+#include "../pchheader.h"
 
 namespace Components {
 class Light {

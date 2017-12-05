@@ -1,7 +1,6 @@
 #include "Quaternion.h"
 #include "Matrix.h"
 #include "Vector.h"
-#include <math.h>
 
 void Quaternion::Normalize() {
     const float sqrLength = SqrMagnitude();
@@ -9,7 +8,7 @@ void Quaternion::Normalize() {
         // ERROR
         x = y = z = w = 0.0f;
     } else {
-        const float scale = 1.0f / sqrtf(sqrLength);
+        const float scale = 1.0f / std::sqrt(sqrLength);
         x *= scale;
         y *= scale;
         z *= scale;
@@ -58,12 +57,12 @@ Quaternion Quaternion::operator* (const Quaternion& other) const {
 Quaternion Quaternion::FromEuler(const Vector& rotation) {
     const Vector halfrot = rotation * 0.5f;
 
-	const float s1 = sinf(halfrot.x);
-	const float c1 = cosf(halfrot.x);
-	const float s2 = sinf(halfrot.y);
-	const float c2 = cosf(halfrot.y);
-	const float s3 = sinf(halfrot.z);
-	const float c3 = cosf(halfrot.z);
+	const float s1 = std::sin(halfrot.x);
+	const float c1 = std::cos(halfrot.x);
+	const float s2 = std::sin(halfrot.y);
+	const float c2 = std::cos(halfrot.y);
+	const float s3 = std::sin(halfrot.z);
+	const float c3 = std::cos(halfrot.z);
 	const float c1c2 = c1 * c2;
 	const float s1s2 = s1 * s3;
 

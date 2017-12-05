@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../pchheader.h"
+
 class Vector;
 class Quaternion;
 class Matrix;

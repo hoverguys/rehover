@@ -1,7 +1,6 @@
 #include "Matrix.h"
 #include "Vector.h"
 #include "Quaternion.h"
-#include <math.h>
 
 Matrix Matrix::Identity() {
     const Matrix identity = Matrix({
@@ -39,8 +38,8 @@ Matrix Matrix::LookAt(Vector cameraOrigin, Vector cameraUp, Vector cameraTarget)
 }
 
 Matrix Matrix::AxisAngle(Vector axis, float angle) {
-	float s = sinf(angle);
-	float c = cosf(angle);
+	float s = std::sin(angle);
+	float c = std::cos(angle);
 	float t = 1.0f - c;
 	
     axis.Normalize();
@@ -194,7 +193,7 @@ Quaternion Matrix::ToQuaternion() const {
     Quaternion result;
 
     const float diag = internal[0] + internal[5] + internal[10] + 1;
-    const float scale = sqrtf(diag) * 2.0f;
+    const float scale = std::sqrt(diag) * 2.0f;
     const float rcpscale = 1.0f / scale;
 
 	if(diag > 0.0f) {

@@ -1,8 +1,5 @@
 #include "GCController.h"
 
-#include <cmath>
-#include <ogc/pad.h>
-
 inline float clamp(const float value, const float minVal, const float maxVal) {
 	return value < minVal ? minVal : value > maxVal ? maxVal : value;
 }

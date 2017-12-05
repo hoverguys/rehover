@@ -1,9 +1,5 @@
-/* SDK Libraries */
-#include "ogc/lwp_watchdog.h"
-#include <gccore.h>
-#include <gctypes.h>
-#include <math.h>
-#include <stdio.h>
+#include <ogc/lwp_watchdog.h>
+#include "pchheader.h"
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
@@ -35,7 +31,7 @@ int main() {
 		// Metrics
 		auto updateDelta = ticks_to_nanosecs(diff_ticks(updateStart, updateEnd));
 		auto frameDelta = ticks_to_nanosecs(diff_ticks(updateEnd, graphicsEnd));
-		printf(":frametime frame:%llu9 logic:%llu9\n", frameDelta, updateDelta);
+		std::printf(":frametime frame:%llu9 logic:%llu9\n", frameDelta, updateDelta);
 
 		Graphics::Wait();
 	}

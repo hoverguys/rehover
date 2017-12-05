@@ -1,4 +1,6 @@
 #pragma once
+#include "../pchheader.h"
+
 #include "../math/Matrix.h"
 #include "../math/Quaternion.h"
 #include "../math/Vector.h"

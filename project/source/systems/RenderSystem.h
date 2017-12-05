@@ -1,6 +1,7 @@
 #pragma once
+#include "../pchheader.h"
+
 #include "../components/Camera.h"
-#include <entityx/entityx.h>
 #include "../math/Matrix.h"
 
 namespace ex = entityx;

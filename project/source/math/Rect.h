@@ -2,8 +2,6 @@
 
 #include "Vector2D.h"
 
-#include <utility>
-
 /*! \brief 2D Rectangle */
 class Rect {
 public:

@@ -1,8 +1,6 @@
 #include "ResourceLoader.h"
 #include "EmbeddedResource.h"
 
-#include <stdio.h>
-
 struct PackHeader {
 	unsigned int fileCount;
 };
@@ -23,15 +21,15 @@ void ResourceLoader::LoadPack(const char* path) {
 	// libfat for loating
 	packfile = path;
 	unsigned char* address = 0;
-	printf("Loading pack from file %s\n", path);
+	std::printf("Loading pack from file %s\n", path);
 #else
 	unsigned char* address = (unsigned char*)rehover_data_gcr_txt;
-	printf("Loading pack from memory @ %p\n", address);
+	std::printf("Loading pack from memory @ %p\n", address);
 #endif
 
 	// Set header pointer
 	PackHeader* header = reinterpret_cast<PackHeader*>(address);
-	printf("Pack contains %u file(s)\n", header->fileCount);
+	std::printf("Pack contains %u file(s)\n", header->fileCount);
 
 	address += sizeof(PackHeader);
 	for (unsigned int i = 0; i < header->fileCount; ++i, address += sizeof(PackEntry)) {
@@ -39,6 +37,6 @@ void ResourceLoader::LoadPack(const char* path) {
 
 		auto info = std::pair<unsigned int, unsigned int>(entry->offset, entry->size);
 		files.emplace(entry->hash, info);
-		printf("Found file %08x at %u, size %u bytes\n", entry->hash, info.first, info.second);
+		std::printf("Found file %08x at %u, size %u bytes\n", entry->hash, info.first, info.second);
 	}
 }

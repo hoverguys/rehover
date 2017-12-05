@@ -1,8 +1,8 @@
 #pragma once
+#include "pchheader.h"
+
 #include "rendering/Mesh.h"
 #include "systems/InputSystem.h"
-#include <entityx/entityx.h>
-#include <memory>
 
 namespace ex = entityx;
 

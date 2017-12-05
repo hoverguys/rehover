@@ -1,5 +1,6 @@
 #include "Shader.h"
-#include <ogc/gx.h>
+
+#include "../pchheader.h"
 
 void defaultTEV() {
 	// 1 TEV Stage, 1 Texture (current)
