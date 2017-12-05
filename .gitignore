@@ -2,3 +2,4 @@ emulator
 build
 .vscode
 .clang-format
+docs/html
