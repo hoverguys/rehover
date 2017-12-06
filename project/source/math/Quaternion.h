@@ -1,20 +1,50 @@
 #pragma once
 #include "Math.h"
 
+/*! \brief Quaternion class
+ */
 class Quaternion {
 public:
-    float x, y, z, w;
+	float x; /*< X value */
+	float y; /*< Y value */
+	float z; /*< Z value */
+	float w; /*< W value */
 
-    explicit Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
-    explicit Quaternion() : Quaternion(0, 0, 0, 1) {}
+	/*! \brief Create a quaternion from given values
+	 *  \param x X value
+	 *  \param y Y value
+	 *  \param z Z value
+	 *  \param w W value
+	 */
+	explicit Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-    void Normalize();
-    Quaternion Normalized() const;
-    float SqrMagnitude() const;
+	/*! \brief Create a quaternion with no angle or magnitude
+	 */
+	explicit Quaternion() : Quaternion(0, 0, 0, 1) {}
 
-    Matrix ToMatrix() const;
+	/*! \brief Normalize the quaternion in place */
+	void Normalize();
 
-    Quaternion operator* (const Quaternion& other) const;
+	/*! \brief Get a normalized copy of the quaternion
+	 *  \return Normalized quaternion
+	 */
+	Quaternion Normalized() const;
 
-    static Quaternion FromEuler(const Vector& rotation);
+	/*! \brief Get the squared magnitude (length) of the quaternion
+	 *  \return Squared magnitude/length of the quaternion
+	 */
+	float SqrMagnitude() const;
+
+	/*! \brief Get the rotation matrix for the quaternion
+	 *  \return Rotation matrix
+	 */
+	Matrix ToMatrix() const;
+
+	Quaternion operator*(const Quaternion& other) const;
+
+	/*! \brief Create a quaternion from euler angles
+	 *  \param rotation Euler angles
+	 *  \return Quaternion that matches the euler angles
+	 */
+	static Quaternion FromEuler(const Vector& rotation);
 };
