@@ -1,0 +1,17 @@
+Language: Cpp
+IndentWidth: 4
+TabWidth: 4
+DerivePointerAlignment: false
+PointerAlignment: Left
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignEscapedNewlines: Left
+AlignTrailingComments: true
+AllowShortCaseLabelsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: true
+AllowShortFunctionsOnASingleLine: Inline
+BreakBeforeBraces: Attach
+UseTab: ForContinuationAndIndentation
+IndentCaseLabels: false
+ColumnLimit: 120
+Standard: Cpp11
