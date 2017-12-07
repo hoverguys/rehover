@@ -13,7 +13,7 @@ public:
 
 	/*! \brief Create a rectangle providing the top-left and bottom-right corner coordinates
 	 *
-	 *  \param position Origin (top left corner)
+	 *  \param start  Origin (top left corner)
 	 *  \param size   Size of the rectangle
 	 */
 	Rect(const Vector2D& start, const Vector2D& size) : start(start), size(size) {}
@@ -26,7 +26,7 @@ public:
 	 *  \param height Height
 	 */
 	Rect(const float x, const float y, const float width, const float height)
-	    : Rect(Vector2D(x, y), Vector2D(width, height)) {}
+		: Rect(Vector2D(x, y), Vector2D(width, height)) {}
 
 	Rect() : Rect(Vector2D(), Vector2D()) {}
 

@@ -17,7 +17,7 @@ public:
 	InputSystem() : gcConnectedPads(0) {}
 
 	/*! \brief Provide a gamecube controller
-	 *  \param id Pad slot #
+	 *  \param padId Pad slot #
 	 *  \return Shared pointer of an GCController instance
 	 */
 	std::shared_ptr<GCController> GetController(unsigned short padId) const;
