@@ -1,6 +1,6 @@
 # rehover
 
-A rewrite of that stupid [hovercraft gamecube homebrew](https://github.com/hamcha/hovercraft).
+A rewrite of that stupid [hovercraft gamecube homebrew](https://github.com/hoverguys/hovercraft-old).
 
 ## Compiling
 
