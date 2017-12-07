@@ -1,4 +1,5 @@
 #pragma once
+#include "../pchheader.h"
 #include "GCController.h"
 
 class HovercraftController {

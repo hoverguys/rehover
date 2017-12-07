@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../pchheader.h"
 #include "Vector2D.h"
 
 /*! \brief 2D Rectangle */
