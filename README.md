@@ -1,4 +1,5 @@
 # rehover
+<a href="https://rehover-build.ovo.ovh/docs/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
 A rewrite of that stupid [hovercraft gamecube homebrew](https://github.com/hoverguys/hovercraft-old).
 
