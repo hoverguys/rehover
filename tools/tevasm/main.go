@@ -4,12 +4,15 @@ import (
 	"encoding/binary"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 )
 
+var debugmsg *bool
+var recording = false
+
 func main() {
 	outpath := flag.String("out", "-", "Output file (- for stdout)")
+	debugmsg = flag.Bool("debug", false, "Enable debug messages on stderr")
 	flag.Parse()
 
 	// Get output writer
@@ -21,7 +24,16 @@ func main() {
 		out = file
 	}
 
-	wgPipe = NewFifo(binary.BigEndian)
+	GX_Init()
+
+	// Rehover tweaks
+	GX_SetCullMode(GX_CULL_FRONT)
+
+	GX_Flush()
+
+	fifo := NewFifo(out, binary.BigEndian)
+	wgPipe = fifo
+	recording = true
 
 	/* BEGIN SHADER CODE */
 
@@ -55,8 +67,6 @@ func main() {
 	/* END SHADER CODE */
 
 	GX_Flush()
-
-	io.Copy(out, wgPipe.Buffer())
 }
 
 func checkErr(err error, msg string, args ...interface{}) {
