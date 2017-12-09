@@ -5,6 +5,8 @@
 #include "../rendering/Texture.h"
 #include "Resource.h"
 
+/*! \brief BTB file header
+ */
 struct TextureResourceHeader {
 	unsigned short width;       /*< Texture width  */
 	unsigned short height;      /*< Texture height */
@@ -18,10 +20,27 @@ struct TextureResourceHeader {
 	unsigned int paletteOffset; /*< Offset to palette data (if applicable) */
 } __attribute__((packed));
 
+/*!
+ * \brief Texture resource loader
+ * Loads a texture from a BTB file loaded in memory
+ */
 class TextureResource : public Resource {
 public:
+	/*!
+	 * \brief Load the texture from a BTB file
+	 *
+	 * \param base Pointer to BTB file
+	 * \param size Size of the BTB file
+	 */
 	TextureResource(void* base, unsigned int size) : Resource(base, size) {}
+
+	/*!
+	 * \brief Load and get the texture
+	 *
+	 * \return Pointer to the loaded texture
+	 */
 	std::shared_ptr<Texture> Load();
+
 	void Initialize() override;
 
 private:
