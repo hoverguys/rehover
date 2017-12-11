@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image"
 	"os"
 
 	// Image formats
@@ -21,6 +22,7 @@ func main() {
 		}
 	}
 	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
+	noheader := flag.Bool("nohead", false, "Don't add header, output atlas as a raw PNG image")
 	flag.Parse()
 
 	if flag.NArg() < 1 {
@@ -40,7 +42,8 @@ func main() {
 		out = file
 	}
 
-	packer := NewTexPacker()
+	maxBounds := image.Point{2048, 2048} // TODO
+	packer := NewTexPacker(maxBounds)
 	// Read images from input
 	for _, path := range inputFiles {
 		in, err := os.Open(path)
@@ -48,7 +51,9 @@ func main() {
 		defer in.Close()
 		packer.Add(in)
 	}
-	packer.Save(out)
+	if err := packer.Save(out); err != nil {
+		panic(err)
+	}
 }
 
 func checkErr(err error, msg string, args ...interface{}) {
