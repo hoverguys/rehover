@@ -27,11 +27,17 @@ if(NOT TEXCONV)
     message(WARNING "Could not find texconv")
 endif()
 
+# Check for tevasm
+find_program(TEVASM tevasm ${TOOLBIN})
+if(NOT TEVASM)
+    message(WARNING "Could not find tevasm")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TOOLS DEFAULT_MSG
-                                  OBJCONV BENTO GCPACKER TEXCONV)
+                                  OBJCONV BENTO GCPACKER TEXCONV TEVASM)
 
-mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TOOLBIN)
+mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TEVASM TOOLBIN)
 
 if(TOOLS_FOUND)
     message(STATUS "All tools found")
@@ -54,15 +60,15 @@ function(convert_models output)
         # Get output filename
         get_filename_component(__file_wd ${__file} NAME)
         string(REGEX REPLACE ".obj$" ".bmb" __BMB_FILE_NAME ${__file_wd})
+        set(TARGET_FILE ${MODEL_BMB_PATH}/${__BMB_FILE_NAME})
         # Schedule objconv to run
-        add_custom_command(OUTPUT ${MODEL_BMB_PATH}/${__BMB_FILE_NAME}
-            COMMAND ${OBJCONV} -in ${__file} -out ${MODEL_BMB_PATH}/${__BMB_FILE_NAME}
+        add_custom_command(OUTPUT ${TARGET_FILE}
+            COMMAND ${OBJCONV} -in ${__file} -out ${TARGET_FILE}
             DEPENDS ${__file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-            ${MODEL_BMB_PATH}/${__BMB_FILE_NAME})
+        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${TARGET_FILE})
         # Append new file to output array
-        list(APPEND MODELS ${MODEL_BMB_PATH}/${__BMB_FILE_NAME})
+        list(APPEND MODELS ${TARGET_FILE})
     endforeach()
     set(${output} ${MODELS} PARENT_SCOPE)
 endfunction()
@@ -72,7 +78,7 @@ endfunction()
 # Usage:
 #     convert_textures(<output> <fmt> <wrap> <filter> <tex1> [<tex2> ..])
 function(convert_textures output fmt wrap filter)
-    # Make director
+    # Make directory
     set(TEXTURE_BTB_PATH ${CMAKE_CURRENT_BINARY_DIR}/textures_btb)
     set(TEXTURES "")
     file(MAKE_DIRECTORY ${TEXTURE_BTB_PATH})
@@ -80,23 +86,52 @@ function(convert_textures output fmt wrap filter)
     string(TOLOWER ${wrap} WRAP_L)
     string(TOLOWER ${filter} FILTER_L)
 
-    # Process all the given models
+    # Process all the given textures
     foreach(__file ${ARGN})
         # Get output filename
         get_filename_component(__file_wd ${__file} NAME)
         string(REGEX REPLACE ".[^.]+$" ".btb" __BTB_FILE_NAME ${__file_wd})
+        set(TARGET_FILE ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
         # Schedule objconv to run
-        add_custom_command(OUTPUT ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
-            COMMAND ${TEXCONV} -in ${__file} -fmt ${fmt} -wrap ${WRAP_L} -filter ${FILTER_L} -out ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME}
+        add_custom_command(OUTPUT ${TARGET_FILE}
+            COMMAND ${TEXCONV} -in ${__file} -fmt ${fmt} -wrap ${WRAP_L} -filter ${FILTER_L} -out ${TARGET_FILE}
             DEPENDS ${__file}
             WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-            ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
+        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${TARGET_FILE})
         # Append new file to output array
-        list(APPEND TEXTURES ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
+        list(APPEND TEXTURES ${TARGET_FILE})
     endforeach()
     set(${output} ${TEXTURES} PARENT_SCOPE)
 endfunction()
+
+# Convert one or more TEV shaders to TDL
+# The <output> variable contains the list of the converted shaders
+# Usage:
+#     convert_shaders(<output> <shader1> [<shader2> ..])
+function(convert_shaders output)
+    # Make directory
+    set(SHADER_TDL_PATH ${CMAKE_CURRENT_BINARY_DIR}/shaders_tdl)
+    set(SHADERS "")
+    file(MAKE_DIRECTORY ${SHADER_TDL_PATH})
+
+    # Process all the given shaders
+    foreach(__file ${ARGN})
+        # Get output filename
+        get_filename_component(__file_wd ${__file} NAME)
+        string(REGEX REPLACE ".[^.]+$" ".tdl" __TDL_FILE_NAME ${__file_wd})
+        set(TARGET_FILE ${SHADER_TDL_PATH}/${__TDL_FILE_NAME})
+        # Schedule tevasm to run
+        add_custom_command(OUTPUT ${TARGET_FILE}
+            COMMAND ${TEVASM} -in ${__file} -out ${TARGET_FILE}
+            DEPENDS ${__file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+        set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${TARGET_FILE})
+        # Append new file to output array
+        list(APPEND SHADERS ${TARGET_FILE})
+    endforeach()
+    set(${output} ${SHADERS} PARENT_SCOPE)
+endfunction()
+
 
 # Embed arbitrary files into the final binaries
 # <target> *must* be a multi-target
@@ -168,7 +203,7 @@ function(add_resource_pack target prefix)
 
     # Process all the given resources
     foreach(_name ${ARGN})
-        if(_name MATCHES "BIN|MODEL|TEXTURE")
+        if(_name MATCHES "BIN|MODEL|TEXTURE|SHADER")
             set(_filetype "${_name}")
         elseif(_name MATCHES "I4|I8|IA4|IA8|RGB565|RGB5A3|RGBA8|A8|CI4|CI8|CI14|CMPR")
             set(_txtfmt "${_name}")
@@ -192,6 +227,11 @@ function(add_resource_pack target prefix)
                 convert_textures(TEXTURE ${_txtfmt} ${_txtwrap} ${_txtfilter} "${prefix}${_name}")
                 file(APPEND "${_filelist}" "${_name},${TEXTURE}\n")
                 list(APPEND _depends ${TEXTURE})
+            elseif(_filetype STREQUAL "SHADER")
+                # Call convert_shaders(..) and add target path
+                convert_shaders(SHADER "${prefix}${_name}")
+                file(APPEND "${_filelist}" "${_name},${SHADER}\n")
+                list(APPEND _depends ${SHADER})
             endif()
         endif()
     endforeach()

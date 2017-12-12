@@ -50,7 +50,7 @@ void Game::init() {
 	auto hovercraftDiffTex = hovercraftDiffRes->Load();
 	auto hovercraftShadeRes = ResourceLoader::Load<TextureResource>("textures/hovercraftShade.png");
 	auto hovercraftShadeTex = hovercraftShadeRes->Load();
-	auto hovercraftShaderBin = ResourceLoader::Load<ShaderResource>("shaders/hovercraft.bin");
+	auto hovercraftShaderBin = ResourceLoader::Load<ShaderResource>("shaders/hovercraft.tev");
 	auto hovercraftShader = hovercraftShaderBin->Load();
 	auto hovercraftMat = std::make_shared<Material>();
 	hovercraftMat->textures = {hovercraftDiffTex, hovercraftShadeTex};
