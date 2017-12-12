@@ -22,7 +22,6 @@ func main() {
 		}
 	}
 	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
-	noheader := flag.Bool("nohead", false, "Don't add header, output atlas as a raw PNG image")
 	flag.Parse()
 
 	if flag.NArg() < 1 {

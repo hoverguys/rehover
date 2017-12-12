@@ -3,3 +3,4 @@ go build -o bin/bento.exe ./bento
 go build -o bin/gcpacker.exe ./gcpacker
 go build -o bin/texconv.exe ./texconv
 go build -o bin/tevasm.exe ./tevasm
+go build -o bin/texpacker.exe ./texpacker

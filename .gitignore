@@ -2,3 +2,4 @@ emulator
 build
 .vscode
 docs/html
+*.swp
