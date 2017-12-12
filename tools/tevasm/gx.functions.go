@@ -831,3 +831,37 @@ func GX_Flush() {
 	// Pad to 32B boundary
 	wgPipe.Pad32()
 }
+
+// This is nasty!
+var gxfunctions = map[string]interface{}{
+	"GX_SetCullMode":         GX_SetCullMode,
+	"GX_SetCoPlanar":         GX_SetCoPlanar,
+	"GX_SetChanAmbColor":     GX_SetChanAmbColor,
+	"GX_SetChanMatColor":     GX_SetChanMatColor,
+	"GX_SetChanCtrl":         GX_SetChanCtrl,
+	"GX_SetTevOrder":         GX_SetTevOrder,
+	"GX_SetNumTevStages":     GX_SetNumTevStages,
+	"GX_SetNumChans":         GX_SetNumChans,
+	"GX_SetNumTexGens":       GX_SetNumTexGens,
+	"GX_SetTevSwapModeTable": GX_SetTevSwapModeTable,
+	"GX_SetTevIndirect":      GX_SetTevIndirect,
+	"GX_SetTevDirect":        GX_SetTevDirect,
+	"GX_SetNumIndStages":     GX_SetNumIndStages,
+	"GX_SetIndTexCoordScale": GX_SetIndTexCoordScale,
+	"GX_SetZCompLoc":         GX_SetZCompLoc,
+	"GX_SetTevColorIn":       GX_SetTevColorIn,
+	"GX_SetTevAlphaIn":       GX_SetTevAlphaIn,
+	"GX_SetTevOp":            GX_SetTevOp,
+	"GX_SetTevColorOp":       GX_SetTevColorOp,
+	"GX_SetTevAlphaOp":       GX_SetTevAlphaOp,
+	"GX_SetTevKColorSel":     GX_SetTevKColorSel,
+	"GX_SetTevKAlphaSel":     GX_SetTevKAlphaSel,
+	"GX_SetTevSwapMode":      GX_SetTevSwapMode,
+	"GX_SetZTexture":         GX_SetZTexture,
+	"GX_SetAlphaCompare":     GX_SetAlphaCompare,
+	"GX_SetBlendMode":        GX_SetBlendMode,
+	"GX_SetColorUpdate":      GX_SetColorUpdate,
+	"GX_SetAlphaUpdate":      GX_SetAlphaUpdate,
+	"GX_SetZMode":            GX_SetZMode,
+	"GX_Flush":               GX_Flush,
+}
