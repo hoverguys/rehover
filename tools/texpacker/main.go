@@ -32,25 +32,15 @@ func main() {
 	// All positional arguments are input files
 	inputFiles := flag.Args()
 
-	// Get output writer
-	out := os.Stdout
-	if *outpath != "-" {
-		file, err := os.Create(*outpath)
-		checkErr(err, "Cannot create output file")
-		defer file.Close()
-		out = file
-	}
-
-	maxBounds := image.Point{2048, 2048} // TODO
-	packer := NewTexPacker(maxBounds)
+	maxBounds := image.Point{1 << 16, 1 << 16} // TODO
+	packer := NewTexPacker(*outpath, TexPackerOptions{
+		MaxBounds: maxBounds,
+	})
 	// Read images from input
 	for _, path := range inputFiles {
-		in, err := os.Open(path)
-		checkErr(err, "Cannot open input file: "+path)
-		defer in.Close()
-		packer.Add(in)
+		packer.Add(path)
 	}
-	if err := packer.Save(out); err != nil {
+	if err := packer.Save(); err != nil {
 		panic(err)
 	}
 }
