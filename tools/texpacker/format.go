@@ -43,16 +43,16 @@ func ToFileHash(s string) FileHash {
 
 func (f FileHash) Bytes() []byte {
 	out := make([]byte, 4)
-	binary.BigEndian.PutUint32(out, uint32(f))
+	binary.BigEndian.PutUint32(out[0:], uint32(f))
 	return out
 }
 
 func (e Entry) Bytes() []byte {
 	out := make([]byte, 12)
-	binary.BigEndian.PutUint32(out, uint32(e.TexPath))
-	binary.BigEndian.PutUint16(out, e.Coords.Start.X)
-	binary.BigEndian.PutUint16(out, e.Coords.Start.Y)
-	binary.BigEndian.PutUint16(out, e.Coords.Size.X)
-	binary.BigEndian.PutUint16(out, e.Coords.Size.Y)
+	binary.BigEndian.PutUint32(out[0:], uint32(e.TexPath))
+	binary.BigEndian.PutUint16(out[4:], e.Coords.Start.X)
+	binary.BigEndian.PutUint16(out[6:], e.Coords.Start.Y)
+	binary.BigEndian.PutUint16(out[8:], e.Coords.Size.X)
+	binary.BigEndian.PutUint16(out[10:], e.Coords.Size.Y)
 	return out
 }
