@@ -25,5 +25,8 @@ SOFTWARE.
 All assets (textures, models, etc) are provided under CC BY 4.0, full text (available in versions for humans and lawyers) available at the following URL:
 https://creativecommons.org/licenses/by/4.0/
 
-This project uses [entityx](https://github.com/alecthomas/entityx), which is licensed under MIT.
+This project uses [entityx](https://github.com/alecthomas/entityx), which is licensed under the MIT license.
 You can find the full text copy in `LICENSE-entityx.txt` included in this project. 
+
+The tevasm tool uses GX code originating from [libogc](https://github.com/devkitPro/libogc), which is licensed under the zlib license.
+You can find the full text copy in `LICENSE-libogc.txt` included in this project.
