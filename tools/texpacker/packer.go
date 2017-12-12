@@ -13,7 +13,8 @@ import (
 )
 
 type TexPackerOptions struct {
-	MaxBounds image.Point
+	MaxBounds   image.Point
+	WriteHeader bool
 }
 
 type TexPacker struct {
@@ -67,8 +68,10 @@ func (packer *TexPacker) Save() error {
 	if err != nil {
 		return err
 	}
-	if err = packer.writeHeader(output); err != nil {
-		return err
+	if packer.options.WriteHeader {
+		if err = packer.writeHeader(output); err != nil {
+			return err
+		}
 	}
 	return png.Encode(output, outtex)
 }
