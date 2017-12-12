@@ -22,6 +22,7 @@ func main() {
 		}
 	}
 	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
+	noheader := flag.Bool("noheader", false, "Don't write header, output raw PNG")
 	flag.Parse()
 
 	if flag.NArg() < 1 {
@@ -34,7 +35,8 @@ func main() {
 
 	maxBounds := image.Point{1 << 16, 1 << 16} // TODO
 	packer := NewTexPacker(*outpath, TexPackerOptions{
-		MaxBounds: maxBounds,
+		MaxBounds:   maxBounds,
+		WriteHeader: !*noheader,
 	})
 	// Read images from input
 	for _, path := range inputFiles {
