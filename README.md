@@ -1,20 +1,22 @@
-# rehover
+![rehover](https://hoverguys.github.io/rehover/images/logo.svg)
 <a href="https://rehover-build.ovo.ovh/docs/"><img src="https://codedocs.xyz/doxygen/doxygen.svg"/></a>
 
-A rewrite of that stupid [hovercraft gamecube homebrew](https://github.com/hoverguys/hovercraft-old).
+A homebrew racing game for the Nintendo Gamecube and Wii inspired by Diddy Kong Racing.
+
+**Currently under heavy development**
 
 ## Compiling
 
 You will need:
 - A healthy fear of the end
-- devkitPro (w/ devkitPPC)
+- devkitPro (with devkitPPC)
 - Go 1.8+
 - Cmake 3.1+
 - [ppc-portlibs](https://github.com/Hamcha/ppc-portlibs) libraries installed, specifically:
     - entityx
 
 #### Step 0: BUILD TOOLS
-Run `build.sh` or `build.cmd` depending on your OS of choice
+Run `build.sh` or `build.cmd` (depending on your OS of choice) in the `tools` folder
 
 #### Step 1: BUILD THE PROJECT
 ```
