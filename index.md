@@ -1,3 +1,4 @@
 ---
-layout: home
+layout: default
 ---
+WIP

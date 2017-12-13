@@ -23,7 +23,7 @@ github_username:  hoverguys
 
 # Build settings
 markdown: kramdown
-theme: minima
+#theme: minima
 plugins:
   - jekyll-feed
 
