@@ -96,4 +96,8 @@ void RenderSystem::SetupCamera(cp::Camera& camera) {
 	GX_SetViewport(camera.viewport.offsetLeft, camera.viewport.offsetTop, camera.viewport.width, camera.viewport.height,
 				   0, 1);
 	GX_LoadProjectionMtx(camera.perspectiveMtx, GX_PERSPECTIVE);
+
+	// Disable alpha blending
+	/// \todo Maybe this SHOULD be on, but in a different way than sprites
+	GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);
 }

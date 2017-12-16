@@ -83,8 +83,12 @@ void Game::init() {
 
 	// Test sprite
 	auto sprite = entities.create();
+	auto spriteTexRes = ResourceLoader::Load<TextureResource>("sprites/logo.png");
+	auto spriteTex = spriteTexRes->Load();
+	auto spriteMat = std::make_shared<Material>();
+	spriteMat->textures = {spriteTex};
 	sprite.assign<cp::Transform>(cp::Transform({10, 10, -1}));
-	sprite.assign<cp::Sprite>(cp::Sprite(Vector2D(128, 128), terrainMat));
+	sprite.assign<cp::Sprite>(cp::Sprite(Vector2D(256, 80), spriteMat));
 }
 
 void Game::update(ex::TimeDelta dt) {
