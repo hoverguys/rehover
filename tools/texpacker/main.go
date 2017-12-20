@@ -38,7 +38,9 @@ func main() {
 	inputFiles := flag.Args()
 
 	maxBounds := image.Point{1 << 16, 1 << 16} // TODO
-	packer := NewTexPacker(*outpath, TexPackerOptions{
+	absoutpath, err := filepath.Abs(*outpath)
+	checkErr(err, "Error converting outpath %s to absolute", *outpath)
+	packer := NewTexPacker(absoutpath, TexPackerOptions{
 		MaxBounds:   maxBounds,
 		WriteHeader: !*noheader,
 		StripPrefix: *stripPfx,
