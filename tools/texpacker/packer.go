@@ -8,6 +8,7 @@ import (
 	"image/png"
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/adinfinit/texpack/maxrect"
 )
@@ -15,6 +16,7 @@ import (
 type TexPackerOptions struct {
 	MaxBounds   image.Point
 	WriteHeader bool
+	StripPrefix string
 }
 
 type TexPacker struct {
@@ -49,9 +51,12 @@ func (packer *TexPacker) Add(texpath string) error {
 	if fmt != "png" && fmt != "jpeg" && fmt != "gif" {
 		return errors.New("Unsupported input format: " + fmt)
 	}
+	// Strip path prefix
+	relpath, err := filepath.Rel(packer.options.StripPrefix, texpath)
+	checkErr(err, "Error converting absolute path %s to relative (with base %s)", texpath, packer.options.StripPrefix)
 	packer.images = append(packer.images, imageInfo{
 		Image: img,
-		Path:  texpath,
+		Path:  relpath,
 	})
 	return nil
 }

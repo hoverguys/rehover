@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"os"
+	"path/filepath"
 
 	// Image formats
 	_ "image/gif"
@@ -23,6 +24,9 @@ func main() {
 	}
 	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
 	noheader := flag.Bool("noheader", false, "Don't write header, output raw PNG")
+	cwd, err := os.Getwd()
+	checkErr(err, "Couldn't get working directory")
+	stripPfx := flag.String("strip", cwd, "Prefix to strip from file paths for hashing")
 	flag.Parse()
 
 	if flag.NArg() < 1 {
@@ -37,10 +41,14 @@ func main() {
 	packer := NewTexPacker(*outpath, TexPackerOptions{
 		MaxBounds:   maxBounds,
 		WriteHeader: !*noheader,
+		StripPrefix: *stripPfx,
 	})
 	// Read images from input
 	for _, path := range inputFiles {
-		packer.Add(path)
+		// Convert file path to absolute
+		abspath, err := filepath.Abs(path)
+		checkErr(err, "Error converting file path %s to absolute", path)
+		packer.Add(abspath)
 	}
 	if err := packer.Save(); err != nil {
 		panic(err)
