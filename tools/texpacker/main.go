@@ -15,7 +15,7 @@ import (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [-o outfile] <file1> [<file2> ...]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [flags] <file1> [<file2> ...]\n", os.Args[0])
 		flag.PrintDefaults()
 		fmt.Fprint(os.Stderr, "\nSupported input formats:\n")
 		for _, format := range []string{"JPEG", "GIF", "PNG"} {
