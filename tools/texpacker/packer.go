@@ -139,8 +139,10 @@ func (packer *TexPacker) writeHeader(output io.Writer) error {
 	hashes := make(map[FileHash]string, nEntries)
 
 	// Parent Texture Hash
-	ptHash := ToFileHash(packer.outfile)
-	hashes[ptHash] = packer.outfile
+	relpath, err := filepath.Rel(packer.options.StripPrefix, packer.outfile)
+	checkErr(err, "Error converting absolute path %s to relative (with base %s)", packer.outfile, packer.options.StripPrefix)
+	ptHash := ToFileHash(relpath)
+	hashes[ptHash] = relpath
 	if _, err := output.Write(ptHash.Bytes()); err != nil {
 		return err
 	}
