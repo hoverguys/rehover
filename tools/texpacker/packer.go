@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"image/draw"
 	"image/png"
 	"io"
 	"os"
@@ -101,22 +102,25 @@ func (packer *TexPacker) pack() (image.Image, error) {
 
 	points := getImageSizes(packer.images)
 
-	outsize, positions, ok := minimizeFit(packer.options.MaxBounds, points)
+	outsize, bounds, ok := minimizeFit(packer.options.MaxBounds, points)
 	if !ok {
 		return nil, errors.New("Couldn't pack all images!")
 	}
 
-	// Write packed texture
+	// Create and write packed texture
 	outtex := image.NewRGBA(image.Rect(0, 0, outsize.X, outsize.Y))
 	for i, imginfo := range packer.images {
-		pos := positions[i]
-		if err := writeImageAt(outtex, imginfo.Image, pos.Min.X, pos.Min.Y); err != nil {
-			return nil, err
-		}
+		srcbounds := bounds[i]
+		r := image.Rectangle{srcbounds.Min, srcbounds.Min.Add(imginfo.Image.Bounds().Size())}
+
+		// Copy whole imginfo.Image to rectangle `r` in outtex
+		draw.Draw(outtex, r, imginfo.Image, image.Point{0, 0}, draw.Src)
+
 		packer.images[i].Coords = Rect{
-			Start: Point{uint16(pos.Min.X), uint16(pos.Min.Y)},
-			Size:  Point{uint16(pos.Dx()), uint16(pos.Dy())},
+			Start: Vector2{uint16(srcbounds.Min.X), uint16(srcbounds.Min.Y)},
+			Size:  Vector2{uint16(srcbounds.Dx()), uint16(srcbounds.Dy())},
 		}
+
 		// No need to keep this anymore
 		packer.images[i].Image = nil
 	}
@@ -181,24 +185,6 @@ func getImageSizes(images []imageInfo) []image.Point {
 	return points
 }
 
-// writeImageAt adds all pixels of `src` to `dst`, starting from pixel at (`x`,`y`).
-// It returns an error if the whole source image couldn't be added to the target.
-func writeImageAt(dst *image.RGBA, src image.Image, x, y int) error {
-	srcsize := src.Bounds().Size()
-	dstsize := dst.Bounds().Size()
-	if srcsize.X > dstsize.X-x || srcsize.Y > dstsize.Y-y {
-		return errors.New("The given image couldn't fit into the destination image")
-	}
-
-	for py := y; py < y+srcsize.Y; py++ {
-		for px := x; px < x+srcsize.X; px++ {
-			dst.Set(px, py, src.At(px-x, py-y))
-		}
-	}
-
-	return nil
-}
-
 // Taken from https://github.com/adinfinit/texpack/blob/master/pack/fit.go
 func minimizeFit(maxContextSize image.Point, sizes []image.Point) (contextSize image.Point, rects []image.Rectangle, ok bool) {
 
@@ -236,7 +222,7 @@ func minimizeFit(maxContextSize image.Point, sizes []image.Point) (contextSize i
 				rects = tryRects
 				shrunk = true
 			} else {
-				shrinkX = false
+				shrinkY = false
 			}
 		}
 	}

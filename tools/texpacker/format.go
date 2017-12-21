@@ -7,13 +7,13 @@ import (
 )
 
 // 4 bytes
-type Point struct {
+type Vector2 struct {
 	X, Y uint16
 }
 
 // 8 bytes
 type Rect struct {
-	Start, Size Point
+	Start, Size Vector2
 }
 
 type FileHash uint32
@@ -35,9 +35,7 @@ var hash = fnv.New32()
 func ToFileHash(s string) FileHash {
 	hash.Reset()
 	_, err := fmt.Fprintf(hash, s)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err, "Failed to hash string %s", s)
 	return FileHash(hash.Sum32())
 }
 

@@ -24,9 +24,11 @@ func main() {
 	}
 	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
 	noheader := flag.Bool("noheader", false, "Don't write header, output raw PNG")
+	maxW := flag.Int("maxwidth", 1<<16, "Max width of output texture")
+	maxH := flag.Int("maxheight", 1<<16, "Max height of output texture")
 	cwd, err := os.Getwd()
 	checkErr(err, "Couldn't get working directory")
-	stripPfx := flag.String("strip", cwd, "Prefix to strip from file paths for hashing")
+	stripPfx := flag.String("prefix", cwd, "Prefix to strip from file paths for hashing")
 	flag.Parse()
 
 	if flag.NArg() < 1 {
@@ -37,7 +39,7 @@ func main() {
 	// All positional arguments are input files
 	inputFiles := flag.Args()
 
-	maxBounds := image.Point{1 << 16, 1 << 16} // TODO
+	maxBounds := image.Point{*maxW, *maxH}
 	absoutpath, err := filepath.Abs(*outpath)
 	checkErr(err, "Error converting outpath %s to absolute", *outpath)
 	packer := NewTexPacker(absoutpath, TexPackerOptions{
@@ -52,9 +54,7 @@ func main() {
 		checkErr(err, "Error converting file path %s to absolute", path)
 		packer.Add(abspath)
 	}
-	if err := packer.Save(); err != nil {
-		panic(err)
-	}
+	checkErr(packer.Save(), "Failed to save packed texture")
 }
 
 func checkErr(err error, msg string, args ...interface{}) {
