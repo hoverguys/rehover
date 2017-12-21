@@ -22,10 +22,9 @@ func main() {
 			fmt.Fprintf(os.Stderr, "    %s\n", format)
 		}
 	}
-	outpath := flag.String("o", "-", "Output file (- for STDOUT)")
-	noheader := flag.Bool("noheader", false, "Don't write header, output raw PNG")
-	maxW := flag.Int("maxwidth", 1<<16, "Max width of output texture")
-	maxH := flag.Int("maxheight", 1<<16, "Max height of output texture")
+	outpath := flag.String("o", "out.png", "Output file")
+	maxW := flag.Int("maxwidth", 1<<16, "Max width of output texture in pixels")
+	maxH := flag.Int("maxheight", 1<<16, "Max height of output texture in pixels")
 	cwd, err := os.Getwd()
 	checkErr(err, "Couldn't get working directory")
 	stripPfx := flag.String("prefix", cwd, "Prefix to strip from file paths for hashing")
@@ -44,7 +43,6 @@ func main() {
 	checkErr(err, "Error converting outpath %s to absolute", *outpath)
 	packer := NewTexPacker(absoutpath, TexPackerOptions{
 		MaxBounds:   maxBounds,
-		WriteHeader: !*noheader,
 		StripPrefix: *stripPfx,
 	})
 	// Read images from input
