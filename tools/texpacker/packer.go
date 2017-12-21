@@ -16,7 +16,6 @@ import (
 
 type TexPackerOptions struct {
 	MaxBounds   image.Point
-	WriteHeader bool
 	StripPrefix string
 }
 
@@ -64,36 +63,32 @@ func (packer *TexPacker) Add(texpath string) error {
 
 // Save packs all the given textures into one and writes the result into `output`
 func (packer *TexPacker) Save() error {
-	output, err := packer.getOutput()
+	imageOut, headerOut, err := packer.getOutputs()
 	if err != nil {
 		return err
 	}
-	defer output.Close()
+	defer imageOut.Close()
+	defer headerOut.Close()
 
 	outtex, err := packer.pack()
 	if err != nil {
 		return err
 	}
-	if packer.options.WriteHeader {
-		if err = packer.writeHeader(output); err != nil {
-			return err
-		}
+	if err = packer.writeHeader(headerOut); err != nil {
+		return err
 	}
-	return png.Encode(output, outtex)
+	return png.Encode(imageOut, outtex)
 }
 
-// getOutput opens the output file and returns its handle
-func (packer *TexPacker) getOutput() (io.WriteCloser, error) {
+// getOutput opens the output files and returns their handle
+func (packer *TexPacker) getOutputs() (imageOut io.WriteCloser, headerOut io.WriteCloser, err error) {
 	// Get output writer
-	out := os.Stdout
-	if packer.outfile != "-" {
-		file, err := os.Create(packer.outfile)
-		if err != nil {
-			return nil, errors.New("Cannot create output file")
-		}
-		out = file
+	imageOut, err = os.Create(packer.outfile)
+	if err != nil {
+		return
 	}
-	return out, nil
+	headerOut, err = os.Create(packer.outfile + ".atlas")
+	return
 }
 
 // pack runs the maxrect algorithms on the input textures, then writes the result
@@ -104,7 +99,7 @@ func (packer *TexPacker) pack() (image.Image, error) {
 
 	outsize, bounds, ok := minimizeFit(packer.options.MaxBounds, points)
 	if !ok {
-		return nil, errors.New("Couldn't pack all images!")
+		return nil, errors.New("Couldn't pack all images in given bounds!")
 	}
 
 	// Create and write packed texture
