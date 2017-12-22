@@ -23,8 +23,7 @@ func main() {
 		}
 	}
 	outpath := flag.String("o", "out.png", "Output file")
-	maxW := flag.Int("maxwidth", 1<<16, "Max width of output texture in pixels")
-	maxH := flag.Int("maxheight", 1<<16, "Max height of output texture in pixels")
+	maxSize := flag.Int("maxsize", 1<<16, "Max size (width/height) of output texture in pixels")
 	cwd, err := os.Getwd()
 	checkErr(err, "Couldn't get working directory")
 	stripPfx := flag.String("prefix", cwd, "Prefix to strip from file paths for hashing")
@@ -38,7 +37,7 @@ func main() {
 	// All positional arguments are input files
 	inputFiles := flag.Args()
 
-	maxBounds := image.Point{*maxW, *maxH}
+	maxBounds := image.Point{*maxSize, *maxSize}
 	absoutpath, err := filepath.Abs(*outpath)
 	checkErr(err, "Error converting outpath %s to absolute", *outpath)
 	packer := NewTexPacker(absoutpath, TexPackerOptions{

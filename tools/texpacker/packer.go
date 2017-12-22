@@ -88,6 +88,10 @@ func (packer *TexPacker) getOutputs() (imageOut io.WriteCloser, headerOut io.Wri
 		return
 	}
 	headerOut, err = os.Create(packer.outfile + ".atlas")
+	if err != nil {
+		imageOut.Close()
+		return
+	}
 	return
 }
 
