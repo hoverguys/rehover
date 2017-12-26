@@ -81,14 +81,20 @@ void Game::init() {
 	light.assign<cp::Transform>()->Lookat({0, -1, -0.5f});
 	light.assign<cp::DirectionalLight>(cp::DirectionalLight({0xff, 0xee, 0xee, 0xff}, 0));
 
-	// Test sprite
-	auto sprite = entities.create();
-	auto spriteTexRes = ResourceLoader::Load<TextureResource>("sprites/logo.png");
-	auto spriteTex = spriteTexRes->Load();
-	auto spriteMat = std::make_shared<Material>();
-	spriteMat->textures = {spriteTex};
-	sprite.assign<cp::Transform>(cp::Transform({10, 10, -1}));
-	sprite.assign<cp::Sprite>(cp::Sprite(Vector2D(256, 80), spriteMat));
+	// Timer sprite
+	auto timer = entities.create();
+	auto timerTexRes = ResourceLoader::Load<TextureResource>("generated/timerfont.png");
+	auto timerTex = timerTexRes->Load();
+	auto fontShaderBin = ResourceLoader::Load<ShaderResource>("shaders/font.tev");
+	auto fontShader = fontShaderBin->Load();
+	auto timerMat = std::make_shared<Material>();
+	timerMat->textures = {timerTex};
+	timerMat->shader = fontShader;
+	timerMat->uniforms.color0 = GXColor{0xff, 0, 0, 0xff};
+	// auto timerAtlasRes = ResourceLoader::Load<AtlasResource>("generated/timer.png.atlas");
+	// auto timerAtlas = timerAtlasRes->Load();
+	timer.assign<cp::Transform>(cp::Transform({10, 10, -1}));
+	timer.assign<cp::Sprite>(cp::Sprite(Vector2D(128, 128), timerMat)); // TODO Make Atlas work (also nicer to use)
 }
 
 void Game::update(ex::TimeDelta dt) {

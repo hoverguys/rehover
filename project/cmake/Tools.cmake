@@ -166,13 +166,12 @@ function(make_atlas target texturefile atlasfile prefix size)
 					   DEPENDS ${SPRITES}
 					   COMMENT "Generating texture atlas ${_fname}"
 					   VERBATIM)
-	add_custom_target(${target_tex} DEPENDS ${_resfile})
-	set_target_properties(${target_tex} PROPERTIES OUTPUT_NAME ${_resfile})
+	add_custom_target(${_fname} DEPENDS ${_resfile})
+	set_target_properties(${_fname} PROPERTIES OUTPUT_NAME ${_resfile})
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 							 ${_resfile})
 	set(${texturefile} "${_resfile}" PARENT_SCOPE)
 	set(${atlasfile} "${_resfile}.atlas" PARENT_SCOPE)
-	add_custom_target(${_fname} DEPENDS ${_resfile})
 endfunction()
 
 # Embed arbitrary files into the final binaries
