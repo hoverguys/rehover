@@ -133,22 +133,12 @@ func (packer *TexPacker) writeHeader(output io.Writer) error {
 	nEntries := len(packer.images)
 
 	// Output file format is:
-	// ParentTexture Hash [4B]
 	// Entry Count        [4B]
 	// Entry0             [12B]
 	// ...
 
 	// Used to check hash collisions
 	hashes := make(map[FileHash]string, nEntries)
-
-	// Parent Texture Hash
-	relpath, err := filepath.Rel(packer.options.StripPrefix, packer.outfile)
-	checkErr(err, "Error converting absolute path %s to relative (with base %s)", packer.outfile, packer.options.StripPrefix)
-	ptHash := ToFileHash(relpath)
-	hashes[ptHash] = relpath
-	if _, err := output.Write(ptHash.Bytes()); err != nil {
-		return err
-	}
 
 	// Entry Count
 	countbuf := make([]byte, 4)

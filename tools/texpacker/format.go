@@ -18,12 +18,6 @@ type Rect struct {
 
 type FileHash uint32
 
-// 4 + 4 = 8 bytes
-type Header struct {
-	ParentTexture FileHash
-	EntryCount    int
-}
-
 // An Entry is a single texture's path + coordinates. 4 + 8 = 12 bytes
 type Entry struct {
 	TexPath FileHash
