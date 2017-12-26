@@ -25,6 +25,7 @@ const (
 	ColorFmtRGB565 ColorFmt = "RGB565"
 	ColorFmtRGB5A3 ColorFmt = "RGB5A3"
 	ColorFmtRGBA8  ColorFmt = "RGBA8"
+	ColorFmtA8     ColorFmt = "A8"
 )
 
 // Color formats IDs (try to match libogc)
@@ -36,6 +37,7 @@ var fmtid = map[ColorFmt]uint8{
 	ColorFmtRGB565: 0x4,
 	ColorFmtRGB5A3: 0x5,
 	ColorFmtRGBA8:  0x6,
+	ColorFmtA8:     0x7,
 }
 
 // Description of all supported formats
@@ -47,6 +49,7 @@ var allfmt = map[ColorFmt]string{
 	ColorFmtRGB565: "Limited color (R5G6B5)",
 	ColorFmtRGB5A3: "Limited color and alpha (R4B4G4A3|R5B5G5)",
 	ColorFmtRGBA8:  "Full 8bpc color (A8R8G8B8)",
+	ColorFmtA8:     "Alpha-only 8bit (A8)",
 }
 
 type colorFmtEncoder func(tex image.Image, out io.Writer, options FormatOptions) (paletteOffset uint32, err error)
@@ -59,6 +62,7 @@ var fmtEncoders = map[ColorFmt]colorFmtEncoder{
 	ColorFmtRGB565: encodeRGB565,
 	ColorFmtRGB5A3: encodeRGB5A3,
 	ColorFmtRGBA8:  encodeRGBA8,
+	ColorFmtA8:     encodeA8,
 }
 
 func encodeI4(tex image.Image, out io.Writer, options FormatOptions) (paletteOffset uint32, err error) {
@@ -98,6 +102,26 @@ func encodeI8(tex image.Image, out io.Writer, options FormatOptions) (paletteOff
 				grey, _, _, _ := rgba8(color.GrayModel.Convert(col))
 
 				block[baseIndex] = grey
+			}
+		}
+		return block
+	})
+}
+
+func encodeA8(tex image.Image, out io.Writer, options FormatOptions) (paletteOffset uint32, err error) {
+	return 0, writeTiles(tex, out, options, 8, 4, func(tex image.Image, tilePoint image.Point, options FormatOptions) []byte {
+		block := make([]byte, 32, 32)
+		// Iterate through each pixel in the block
+		for y := 0; y < 4; y++ {
+			for x := 0; x < 8; x++ {
+				// Calculate base index
+				baseIndex := x + y*8
+
+				// Get alpha
+				col := tex.At(tilePoint.X+x, tilePoint.Y+y)
+				_, _, _, alpha := rgba8(col)
+
+				block[baseIndex] = alpha
 			}
 		}
 		return block
