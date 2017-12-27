@@ -2,13 +2,20 @@
 #include "../pchheader.h"
 #include "Resource.h"
 
+#include "AtlasResource.h"
+
+/*! FNV1 hash of file paths */
 typedef unsigned int FileHash;
+
+/*! Atlas texture path and coordinate to a specific sprite */
+typedef std::pair<FileHash, Rect> SpriteLocation;
 
 class ResourceLoader {
 public:
 	static void LoadPack(const char* path);
 
-	template <typename T> static std::shared_ptr<T> Load(FileHash hash) {
+	template <typename T>
+	static std::shared_ptr<T> Load(const FileHash hash) {
 		auto entry = cache.find(hash);
 		if (entry != cache.end()) {
 			return std::static_pointer_cast<T>(entry->second);
@@ -41,18 +48,39 @@ public:
 		return resource;
 	}
 
-	template <typename T> static constexpr std::shared_ptr<T> Load(const char* path) {
+	template <typename T>
+	static constexpr std::shared_ptr<T> Load(const char* path) {
 		static_assert(std::is_base_of<Resource, T>::value, "Must inherit of type Resource");
 		return Load<T>(fnv1_hash(path));
 	}
 
-private:
+	static std::shared_ptr<Atlas> LoadAtlas(const FileHash hash) {
+		auto atlasResource = Load<AtlasResource>(hash);
+		auto atlas = atlasResource->Load();
+		// TODO
+		return atlas;
+	}
 
+	static constexpr std::shared_ptr<Atlas> LoadAtlas(const char* path) { return LoadAtlas(fnv1_hash(path)); }
+
+	static SpriteLocation GetSprite(const FileHash hash) {
+		auto it = sprites.find(hash);
+		if (it != sprites.end()) {
+			return it->second;
+		}
+		/*! \todo Fallback: load the sprite as a texture */
+		std::printf("Sprite %08x not found\n", hash);
+		return SpriteLocation{};
+	}
+
+	static constexpr SpriteLocation GetSprite(const char* path) { return GetSprite(fnv1_hash(path)); }
+
+private:
 	static constexpr unsigned int fnv1_hash(const char* buffer) {
 		const unsigned int fnv_prime32 = 16777619;
 		unsigned int result = 2166136261;
-		int i=0;
-		while(buffer[i] != '\0') {
+		int i = 0;
+		while (buffer[i] != '\0') {
 			result *= fnv_prime32;
 			result ^= (unsigned int)buffer[i++];
 		}
@@ -64,6 +92,9 @@ private:
 
 	typedef std::map<FileHash, std::shared_ptr<Resource>> ResourceMap;
 	static ResourceMap cache;
+
+	typedef std::map<FileHash, SpriteLocation> AtlasMap;
+	static AtlasMap sprites;
 
 	static const char* packfile;
 

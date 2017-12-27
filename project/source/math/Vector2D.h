@@ -9,11 +9,11 @@ struct Vector2D {
 	 *  \param x X value
 	 *  \param y Y value
 	 */
-	Vector2D(const float x, const float y) : x(x), y(y) {}
+	constexpr Vector2D(const float x, const float y) : x(x), y(y) {}
 
 	/*! \brief Create a Vector2D at the origin (0,0)
 	 */
-	Vector2D() : Vector2D(0, 0) {}
+	constexpr Vector2D() : Vector2D(0, 0) {}
 
 	Vector2D operator*(const float& scale) const;
 	Vector2D operator*(const Vector2D& scale) const;

@@ -17,7 +17,7 @@ public:
 	 *  \param start  Origin (top left corner)
 	 *  \param size   Size of the rectangle
 	 */
-	Rect(const Vector2D& start, const Vector2D& size) : start(start), size(size) {}
+	constexpr Rect(const Vector2D& start, const Vector2D& size) : start(start), size(size) {}
 
 	/*! \brief Create a rectangle providing top left coordinates and size
 	 *
@@ -26,10 +26,10 @@ public:
 	 *  \param width  Width
 	 *  \param height Height
 	 */
-	Rect(const float x, const float y, const float width, const float height)
+	constexpr Rect(const float x, const float y, const float width, const float height)
 		: Rect(Vector2D(x, y), Vector2D(width, height)) {}
 
-	Rect() : Rect(Vector2D(), Vector2D()) {}
+	constexpr Rect() : Rect(Vector2D(), Vector2D()) {}
 
 	/*! \brief Get width of the rectangle
 	 */
