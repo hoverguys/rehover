@@ -46,6 +46,26 @@ public:
 		return Load<T>(fnv1_hash(path));
 	}
 
+	static void UnloadUnused() {
+#ifdef EMBED_RESOURCES
+		auto removed = 0;
+		for (auto it = cache.cbegin(); it != cache.cend();) {
+			if (it->second.use_count() <= 1) {
+				// Removing it from the cache should get rid of the last reference
+				// and cause the destructor to be called.
+				it = cache.erase(it);
+				removed++;
+			} else {
+				++it;
+			}
+		}
+		std::printf("Unloaded %d resources\n", removed);
+#else
+		std::printf("Asset unloading not supported in embedded mode\n");
+#endif
+
+	}
+
 private:
 
 	static constexpr unsigned int fnv1_hash(const char* buffer) {
