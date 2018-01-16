@@ -85,9 +85,9 @@ private:
 	typedef std::map<FileHash, std::shared_ptr<Resource>> ResourceMap;
 	static ResourceMap cache;
 
-	static const char* packfile;
-
 #ifdef EMBED_RESOURCES
 	static const unsigned char* embedded;
+#else
+	static void const* packfile;
 #endif
 };

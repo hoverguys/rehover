@@ -1,4 +1,5 @@
 #include <ogc/lwp_watchdog.h>
+#include <fat.h>
 #include "pchheader.h"
 
 #include "rendering/Graphics.h"
@@ -13,6 +14,7 @@ int main() {
 	CON_EnableGecko(1, 0);
 
 	Graphics::Init();
+	fatInitDefault();
 	ResourceLoader::LoadPack("rehover_data.gcr");
 
 	Game game;

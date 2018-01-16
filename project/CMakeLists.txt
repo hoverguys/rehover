@@ -18,7 +18,7 @@ add_multi_target(rehover "${SOURCE_FILES}")
 add_multi_precompiled_header(rehover source/pchheader.h)
 
 # Dependencies
-add_default_libraries(rehover ogc)
+add_default_libraries(rehover fat ogc)
 add_port_libraries(rehover entityx)
 
 # Create resource pack
