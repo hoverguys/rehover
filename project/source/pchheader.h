@@ -19,3 +19,9 @@
 #include <ogc/pad.h>
 #include <ogc/gx.h>
 #include <ogc/gu.h>
+
+#ifdef WII
+#include <sdcard/wiisd_io.h>
+#else
+#include <sdcard/gcsd.h>
+#endif

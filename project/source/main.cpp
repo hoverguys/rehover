@@ -13,10 +13,21 @@ int main() {
 	// DEBUG: Enable USBGecko
 	CON_EnableGecko(1, 0);
 
+	// Initialize graphics
 	Graphics::Init();
-	fatInitDefault();
-	ResourceLoader::LoadPack("rehover_data.gcr");
 
+	// Setup storage
+	fatInitDefault();
+#ifdef WII
+	fatMountSimple("sd", &__io_wiisd);
+#else
+	fatMountSimple("sd", &__io_gcsdb);
+#endif
+
+	// Load assets
+	ResourceLoader::LoadPack("sd:/rehover_data.gcr");
+
+	// Start game
 	Game game;
 	game.init();
 
