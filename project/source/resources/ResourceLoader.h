@@ -23,9 +23,20 @@ public:
 
 #ifndef EMBED_RESOURCES
 		// Allocate buffer for resource
+		auto offset = info.first;
+		auto size = info.second;
+		unsigned char* address = (unsigned char*)memalign(32, size);
+
 		// Load from pack
-		std::printf("Loading from file");
-		return nullptr;
+		std::FILE* fp = std::fopen(packfile, "rb");
+    	assert(fp);
+
+		// Seek to offset and copy over data
+		std::fseek(fp, offset, SEEK_SET);
+		std::fread(address, size, 1, fp);
+		std::fclose(fp);
+
+		std::printf("Loading file %08x from file, allocated %d\n", hash, size);
 #else
 		unsigned char* address = (unsigned char*)embedded;
 		address += info.first; // Add offset
@@ -47,7 +58,7 @@ public:
 	}
 
 	static void UnloadUnused() {
-#ifdef EMBED_RESOURCES
+#ifndef EMBED_RESOURCES
 		auto removed = 0;
 		for (auto it = cache.cbegin(); it != cache.cend();) {
 			if (it->second.use_count() <= 1) {
@@ -88,6 +99,6 @@ private:
 #ifdef EMBED_RESOURCES
 	static const unsigned char* embedded;
 #else
-	static void const* packfile;
+	static const char* packfile;
 #endif
 };

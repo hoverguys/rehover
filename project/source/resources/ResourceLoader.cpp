@@ -17,27 +17,31 @@ ResourceLoader::FileMap ResourceLoader::files;
 ResourceLoader::ResourceMap ResourceLoader::cache;
 
 #ifndef EMBED_RESOURCES
-void const* ResourceLoader::packfile = nullptr;
+const char* ResourceLoader::packfile = nullptr;
 #endif
 
 void ResourceLoader::LoadPack(const char* path) {
 #ifndef EMBED_RESOURCES
 	// Load header from file into allocated memory
-	std::FILE* fp = std::fopen(path, "rb");
+	packfile = path;
+	std::FILE* fp = std::fopen(packfile, "rb");
     assert(fp);
  
-	// Get file size
-    std::fseek(fp, 0, SEEK_END);
-    std::size_t filesize = std::ftell(fp);
-    std::fseek(fp, 0, SEEK_SET);
+	// Read header
+	PackHeader tmp;
+	std::fread(&tmp, sizeof(PackHeader), 1, fp);
 
-	// Copy file into aligned memory
-	packfile = memalign(32, filesize);
-	std::fread(packfile, filesize, 1, fp);
+	// Calculate header size and read in
+	auto headerSize = sizeof(PackHeader) + sizeof(PackEntry) * tmp.fileCount;
+	void* packHeader = malloc(headerSize);
+
+	// Copy header into memory
+	std::fseek(fp, 0, SEEK_SET);
+	std::fread(packHeader, headerSize, 1, fp);
 	std::fclose(fp);
 
-	unsigned char* address = packfile;
-	std::printf("Loading pack from file %s\n", path);
+	unsigned char* address = (unsigned char*)packHeader;
+	std::printf("Loading pack from file %s\n", packfile);
 #else
 	unsigned char* address = (unsigned char*)rehover_data_gcr_txt;
 	std::printf("Loading pack from memory @ %p\n", address);
@@ -55,4 +59,7 @@ void ResourceLoader::LoadPack(const char* path) {
 		files.emplace(entry->hash, info);
 		std::printf("Found file %08x at %u, size %u bytes\n", entry->hash, info.first, info.second);
 	}
+#ifndef EMBED_RESOURCES
+	free(packHeader);
+#endif
 }
