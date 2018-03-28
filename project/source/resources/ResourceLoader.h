@@ -26,10 +26,11 @@ public:
 		auto offset = info.first;
 		auto size = info.second;
 		unsigned char* address = (unsigned char*)memalign(32, size);
+		memoryAllocated += size;
 
 		// Load from pack
 		std::FILE* fp = std::fopen(packfile, "rb");
-    	assert(fp);
+		assert(fp);
 
 		// Seek to offset and copy over data
 		std::fseek(fp, offset, SEEK_SET);
@@ -60,21 +61,29 @@ public:
 	static void UnloadUnused() {
 #ifndef EMBED_RESOURCES
 		auto removed = 0;
+		auto freed = 0;
 		for (auto it = cache.cbegin(); it != cache.cend();) {
-			if (it->second.use_count() <= 1) {
+			if (it->second.use_count() <= 1 && it->second->ReferenceCount() <= 1) {
 				// Removing it from the cache should get rid of the last reference
 				// and cause the destructor to be called.
+				std::printf("Unloading resource %08x\n", it->first);
+				freed += it->second->size;
 				it = cache.erase(it);
 				removed++;
 			} else {
 				++it;
 			}
 		}
-		std::printf("Unloaded %d resources\n", removed);
+
+		memoryAllocated -= freed;
+		std::printf("Unloaded %d resources, freed %d bytes (using %d bytes)\n", removed, freed, memoryAllocated);
 #else
 		std::printf("Asset unloading not supported in embedded mode\n");
 #endif
+	}
 
+	static void PrintUsage() {
+		std::printf("Resources (%d) are using %d bytes\n", cache.size(), memoryAllocated);
 	}
 
 private:
@@ -95,6 +104,8 @@ private:
 
 	typedef std::map<FileHash, std::shared_ptr<Resource>> ResourceMap;
 	static ResourceMap cache;
+
+	static unsigned int memoryAllocated;
 
 #ifdef EMBED_RESOURCES
 	static const unsigned char* embedded;

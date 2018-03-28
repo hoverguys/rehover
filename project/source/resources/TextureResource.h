@@ -41,6 +41,10 @@ public:
 	 */
 	std::shared_ptr<Texture> Load();
 
+	long int ReferenceCount() override {
+		return internal == NULL ? 0 : internal.use_count();
+	}
+
 	void Initialize() override;
 
 private:

@@ -13,9 +13,14 @@ public:
 	 * \param size Size of resource data
 	 */
 	Resource(void* address, unsigned int size) : address(address), size(size){};
+	~Resource() {
+		free(address);
+	}
 	virtual void Initialize() = 0;
+	virtual long int ReferenceCount() = 0;
 
 protected:
+	friend class ResourceLoader;
 	void* address;
 	unsigned int size;
 };

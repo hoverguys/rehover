@@ -3,6 +3,9 @@
 #include "../components/Rigidbody.h"
 #include "../math/Math.h"
 
+#include "../scenes/GameScene.h"
+#include "../resources/ResourceLoader.h"
+
 namespace cp = Components;
 
 namespace Behaviours {
@@ -35,6 +38,13 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	/* Lerp between old camera position and target */
 	camera_trans->position = camera_trans->position + (targetCameraPos - camera_trans->position) * t;
 	camera_trans->Lookat(targetPos);
+
+	if (controller->GetAction(HovercraftController::Action::Jump)) {
+		std::printf("Reloading GameScene\n");
+		GameScene::unload();
+		GameScene::load();
+		ResourceLoader::UnloadUnused();
+	}
 }
 
 } // namespace Behaviours

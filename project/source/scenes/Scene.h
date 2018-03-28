@@ -7,16 +7,24 @@ namespace ex = entityx;
 template <typename T>
 struct Scene {
 public:
-	static ex::Entity create() {
-        auto entity = SceneSystem::manager->entities.create();
-        entity.assign<T>();
-        return entity;
-    }
+	static ex::Entity create(bool tag = true) {
+		auto entity = SceneSystem::manager->entities.create();
+		if (tag) {
+			entity.assign<T>();
+		}
+		return entity;
+	}
 
-    template <typename S>
-    static std::shared_ptr<S> system() {
-        return SceneSystem::manager->systems.system<S>();
-    }
+	template <typename S>
+	static std::shared_ptr<S> system() {
+		return SceneSystem::manager->systems.system<S>();
+	}
+
+	static void unload() {
+		SceneSystem::manager->entities.each<T>([](ex::Entity entity, T &marker) {
+			entity.destroy();
+		});
+	}
 private:
-    Scene() = delete;
+	Scene() = delete;
 };

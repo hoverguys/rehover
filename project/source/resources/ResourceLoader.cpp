@@ -16,6 +16,7 @@ struct PackEntry {
 
 ResourceLoader::FileMap ResourceLoader::files;
 ResourceLoader::ResourceMap ResourceLoader::cache;
+unsigned int ResourceLoader::memoryAllocated = 0;
 
 #ifndef EMBED_RESOURCES
 const char* ResourceLoader::packfile = nullptr;

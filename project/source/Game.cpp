@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "resources/ResourceLoader.h"
+
 #include "behaviours/Hovercraft.h"
 #include "systems/SceneSystem.h"
 #include "systems/BehaviourSystem.h"
@@ -23,7 +25,9 @@ Game::Game() {
 
 void Game::init() {
 	SceneSystem::initialize(this);
+	std::printf("Loading Game scene\n");
 	GameScene::load();
+	ResourceLoader::PrintUsage();
 }
 
 void Game::update(ex::TimeDelta dt) {
