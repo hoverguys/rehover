@@ -20,6 +20,7 @@
 #include <ogc/gx.h>
 #include <ogc/gu.h>
 
+// Resource loading
 #ifdef WII
 #include <sdcard/wiisd_io.h>
 #else
