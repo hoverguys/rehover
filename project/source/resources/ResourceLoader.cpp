@@ -2,6 +2,7 @@
 #include "EmbeddedResource.h"
 
 #include <cstdio>
+#include <cerrno>
 
 struct PackHeader {
 	unsigned int fileCount;
@@ -25,7 +26,10 @@ void ResourceLoader::LoadPack(const char* path) {
 	// Load header from file into allocated memory
 	packfile = path;
 	std::FILE* fp = std::fopen(packfile, "rb");
-    assert(fp);
+	if (fp == NULL) {
+		std::printf("Failed to load pack from file %s (%s)\n", packfile, std::strerror(errno));
+		return;
+	}
  
 	// Read header
 	PackHeader tmp;

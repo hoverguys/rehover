@@ -25,7 +25,7 @@ int main() {
 #endif
 
 	// Load assets
-	ResourceLoader::LoadPack("sd:/rehover_data.gcr");
+	ResourceLoader::LoadPack("sd:/rehover-data.gcr");
 
 	// Start game
 	Game game;
