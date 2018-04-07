@@ -1,14 +1,14 @@
 #include "PhysicsSystem.h"
 
-#include "../components/Transform.h"
 #include "../components/MeshCollider.h"
 #include "../components/Rigidbody.h"
+#include "../components/Transform.h"
 #include "../math/Math.h"
 #include "../math/Vector.h"
 
 namespace cp = Components;
 
-const Vector gravity = {0,-9.8f, 0};
+const Vector gravity = {0, -9.8f, 0};
 const int steps = 4;
 const float substep = 1.0f / steps;
 
@@ -18,16 +18,13 @@ void handleWalls(const Mesh& mesh, PhysicsStep& step);
 void PhysicsSystem::update(ex::EntityManager& es, ex::EventManager& events, ex::TimeDelta dt) {
 	es.each<cp::Transform, cp::Rigidbody>([&](ex::Entity entity, cp::Transform& transform, cp::Rigidbody& body) {
 
-		PhysicsStep stepData = {
-			transform.position,
-			body.velocity
-		};
+		PhysicsStep stepData = {transform.position, body.velocity};
 
-		for (int i=0; i < 4; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			// Gravity
 			stepData.velocity = stepData.velocity + (gravity * dt * substep);
 
-			//Drag
+			// Drag
 			stepData.velocity = stepData.velocity + ((stepData.velocity * -1.0f) * 0.4f * dt * substep);
 			step(es, events, stepData, stepData.velocity * (dt * substep));
 		}
@@ -44,30 +41,31 @@ void PhysicsSystem::step(ex::EntityManager& es, ex::EventManager& events, Physic
 	step.position = step.position + delta;
 
 	// Correct position through collision
-	es.each<cp::Transform, cp::MeshCollider>([&](ex::Entity entity, cp::Transform& transform, cp::MeshCollider& collider) {
-		const Matrix& modelMtx = transform.GetMatrix();
-		const Matrix& inversedMtx = modelMtx.Inversed();
+	es.each<cp::Transform, cp::MeshCollider>(
+		[&](ex::Entity entity, cp::Transform& transform, cp::MeshCollider& collider) {
+			const Matrix& modelMtx = transform.GetMatrix();
+			const Matrix& inversedMtx = modelMtx.Inversed();
 
-		// Move player into model space
-		step.position = inversedMtx.Multiply(step.position);
-		
-		const Mesh& mesh = *collider.mesh;
+			// Move player into model space
+			step.position = inversedMtx.Multiply(step.position);
 
-		handleFloors(mesh, step);
-		handleWalls(mesh, step);
+			const Mesh& mesh = *collider.mesh;
 
-		// Move player into world space
-		step.position = modelMtx.Multiply(step.position);
-	});
+			handleFloors(mesh, step);
+			handleWalls(mesh, step);
+
+			// Move player into world space
+			step.position = modelMtx.Multiply(step.position);
+		});
 }
 
 void handleFloors(const Mesh& mesh, PhysicsStep& step) {
 	for (int f = 0; f < mesh.faceCount; ++f) {
 		// Get face indices
 		const int faceOffset = f * 3;
-		const MeshIndex& i0 = mesh.indexArray[faceOffset+0];
-		const MeshIndex& i1 = mesh.indexArray[faceOffset+1];
-		const MeshIndex& i2 = mesh.indexArray[faceOffset+2];
+		const MeshIndex& i0 = mesh.indexArray[faceOffset + 0];
+		const MeshIndex& i1 = mesh.indexArray[faceOffset + 1];
+		const MeshIndex& i2 = mesh.indexArray[faceOffset + 2];
 
 		// Get points and normal from face
 		const Vector& normal = mesh.normalArray[i0.normal];
@@ -83,8 +81,10 @@ void handleFloors(const Mesh& mesh, PhysicsStep& step) {
 
 		const float alpha = 0.5f * (-v1.z * v2.x + v0.z * (-v1.x + v2.x) + v0.x * (v1.z - v2.z) + v1.x * v2.z);
 		const float sign = alpha < 0.0f ? -1.0f : 1.0f;
-		const float s = (v0.z * v2.x - v0.x * v2.z + (v2.z - v0.z) * step.position.x + (v0.x - v2.x) * step.position.z) * sign;
-		const float t = (v0.x * v1.z - v0.z * v1.x + (v0.z - v1.z) * step.position.x + (v1.x - v0.x) * step.position.z) * sign;
+		const float s =
+			(v0.z * v2.x - v0.x * v2.z + (v2.z - v0.z) * step.position.x + (v0.x - v2.x) * step.position.z) * sign;
+		const float t =
+			(v0.x * v1.z - v0.z * v1.x + (v0.z - v1.z) * step.position.x + (v1.x - v0.x) * step.position.z) * sign;
 
 		if (s < 0 || t < 0 || (s + t) >= 2.0f * alpha * sign) {
 			continue;
@@ -119,9 +119,9 @@ void handleWalls(const Mesh& mesh, PhysicsStep& step) {
 	for (int faceID = 0; faceID < mesh.faceCount; ++faceID) {
 		// Get face indices
 		const int faceOffset = faceID * 3;
-		const MeshIndex& i0 = mesh.indexArray[faceOffset+0];
-		const MeshIndex& i1 = mesh.indexArray[faceOffset+1];
-		const MeshIndex& i2 = mesh.indexArray[faceOffset+2];
+		const MeshIndex& i0 = mesh.indexArray[faceOffset + 0];
+		const MeshIndex& i1 = mesh.indexArray[faceOffset + 1];
+		const MeshIndex& i2 = mesh.indexArray[faceOffset + 2];
 
 		// Get points and normal from face
 		const Vector normal = mesh.normalArray[i0.normal];
