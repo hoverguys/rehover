@@ -73,7 +73,7 @@ void handleFloors(const Mesh& mesh, PhysicsStep& step) {
 		const Vector& normal = mesh.normalArray[i0.normal];
 
 		// Skip if not a floor
-		if (normal.y <= 0.1f) {
+		if (normal.y <= 0.01f) {
 			continue;
 		}
 
@@ -113,36 +113,57 @@ void handleFloors(const Mesh& mesh, PhysicsStep& step) {
 }
 
 void handleWalls(const Mesh& mesh, PhysicsStep& step) {
-	for (int f = 0; f < mesh.faceCount; ++f) {
+	const float wallFront = 0.0f;
+	const float wallBack = -1.0f;
+
+	for (int faceID = 0; faceID < mesh.faceCount; ++faceID) {
 		// Get face indices
-		const int faceOffset = f * 3;
+		const int faceOffset = faceID * 3;
 		const MeshIndex& i0 = mesh.indexArray[faceOffset+0];
 		const MeshIndex& i1 = mesh.indexArray[faceOffset+1];
 		const MeshIndex& i2 = mesh.indexArray[faceOffset+2];
 
 		// Get points and normal from face
-		const Vector& normal = mesh.normalArray[i0.normal];
+		const Vector normal = mesh.normalArray[i0.normal];
 
 		// Skip if not a wall
-		if (normal.y <= -0.1f || normal.y >= 0.1f) {
+		if (normal.y <= -0.01f || normal.y >= 0.01f) {
 			continue;
 		}
 
-		const Vector skewnormal = normal * Vector(1.0f, 0.0f, 1.0f);
+		const Vector skewnormal = (normal * Vector(1.0f, 0.0f, 1.0f)).Normalized();
 		const Vector& v0 = mesh.vertexArray[i0.vertex];
 		const Vector& v1 = mesh.vertexArray[i1.vertex];
 		const Vector& v2 = mesh.vertexArray[i2.vertex];
 
-		// Skip if we are in front
-		const Vector deltaFront = step.position - (v0 + skewnormal * 0.0f);
-		if (normal.Dot(deltaFront) > 0.0f) {
+		// Check if point is in triangle
+		// Compute vectors
+		const Vector edge1 = v1 - v0;
+		const Vector edge2 = v2 - v0;
+		const Vector rayDirection = skewnormal * -1.0f;
+		const Vector h = rayDirection.Cross(edge2);
+		const float f = 1.0f / edge1.Dot(h);
+		const Vector s = step.position - v0;
+		const float u = f * s.Dot(h);
+
+		if (u < 0.0f || u > 1.0f) {
 			continue;
 		}
 
-		// Skip if we are below the hitbox
-		const Vector deltaBack = step.position - (v0 + skewnormal * -1.0f);
-		if (normal.Dot(deltaBack) < 0.0f) {
+		const Vector q = s.Cross(edge1);
+		const float v = f * rayDirection.Dot(q);
+		if (v < 0.0f || u + v > 1.0f) {
 			continue;
 		}
+
+		// Cool we intersected! lets see if we are in the hitbox
+		float t = f * edge2.Dot(q);
+		if (t > wallFront || t < wallBack) {
+			continue;
+		}
+
+		// We hit bricks
+		step.position = step.position - (skewnormal * t);
+		step.velocity = step.velocity - (skewnormal * skewnormal.Dot(step.velocity));
 	}
 }
