@@ -43,6 +43,9 @@ func main() {
 	})
 	checkErr(err, "Error while parsing input file")
 
+	// Preprocess data
+	Preprocess(&meshdata)
+
 	// Dump to JSON is requested
 	if *dumpjson {
 		enc := json.NewEncoder(out)
