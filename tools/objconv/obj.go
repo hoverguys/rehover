@@ -57,14 +57,17 @@ func ParseOBJ(in io.Reader, settings OBJSettings) (Mesh, error) {
 	// Start reading from file
 	reader := bufio.NewReader(in)
 	linenum := 0
-	for {
+	reading := true
+	for reading {
 		linenum++
 
 		// Get next line from reader
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			//TODO Should probably check for other errors and not assume EOF
-			break
+			if err != io.EOF {
+				return mesh, fmt.Errorf("Error while reading line %d: %s", linenum, err.Error())
+			}
+			reading = false
 		}
 
 		// Trim extra whitespace (like windows' \r)
@@ -188,7 +191,11 @@ func parseFace(line string, allowPartial bool) (f Face, err error) {
 		vcombo := VertexCombo{}
 		combo := strings.Replace(combo, "/", " ", -1)
 		n, err = fmt.Sscan(combo, &vcombo.Vertex, &vcombo.TexCoord, &vcombo.Normal)
-		if err != nil && err != io.EOF {
+		// Reset err (if EOF)
+		if err == io.EOF {
+			err = nil
+		}
+		if err != nil {
 			return
 		}
 		// Check for partial match
