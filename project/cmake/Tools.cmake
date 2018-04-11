@@ -39,11 +39,17 @@ if(NOT TEXPACKER)
 	message(WARNING "Could not find texpacker")
 endif()
 
+# Check for makesd
+find_program(MAKESD makesd ${TOOLBIN})
+if(NOT MAKESD)
+	message(WARNING "Could not find makesd")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TOOLS DEFAULT_MSG
-								  OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER)
+								  OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER MAKESD)
 
-mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER TOOLBIN)
+mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER MAKESD TOOLBIN)
 
 if(TOOLS_FOUND)
 	message(STATUS "All tools found")
@@ -225,7 +231,7 @@ endfunction()
 # <prefix> is the assets folder, including trailing slash
 # <target> is the resulting resource pack target
 # Usage:
-#     add_resource_pack(<target> <prefix> <type> <res1> [[<type2> <res2> ..])
+#     add_resource_pack(<target> <prefix> <type> <res1> [<type2> <res2> ..])
 # All supported types:
 #   BIN     - Binary, embed as it is
 #   MODEL   - Model, use convert_models(..)
@@ -304,3 +310,20 @@ function(add_resource_pack target prefix)
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 							 ${_resfile})
 endfunction()
+
+# Create a SD image with the required data to make the project run
+# <target> is the resulting target name
+# <fileN> are all the files to embed in the SD image (at the root)
+# Usage:
+#     add_sd_image(<target> <file1> [<file2> ..])
+function(add_sd_image target)
+	set(_outfile "${CMAKE_CURRENT_BINARY_DIR}/sd.raw")
+	string(REPLACE ";" " -in ${CMAKE_CURRENT_BINARY_DIR}/" _INFILES "${ARGN}")
+	# Create resource pack target
+	add_custom_command(OUTPUT ${_outfile}
+					   COMMAND ${MAKESD} -in ${CMAKE_CURRENT_BINARY_DIR}/${_INFILES} -out ${_outfile}
+					   DEPENDS ${ARGN}
+					   COMMENT "Generating sd image"
+					   VERBATIM)
+	add_custom_target(${target} DEPENDS ${_outfile})
+endfunction(add_sd_image target)

@@ -13,6 +13,7 @@ import (
 	fs "github.com/mitchellh/go-fs"
 )
 
+// Default SD image size
 const DEFAULTSIZE = 24 * 1024 * 1024 // 24MiB
 
 func main() {
