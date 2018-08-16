@@ -48,7 +48,7 @@ endif()
 
 # Find elf2dol (required for add_dol_target)
 if(NOT ELF2DOL)
-    find_program(ELF2DOL elf2dol ${DEVKITPPC}/bin)
+    find_program(ELF2DOL elf2dol ${DEVKITPPC}/bin ${DEVKITPRO}/tools/bin)
     if(ELF2DOL)
         message(STATUS "elf2dol: ${ELF2DOL} - found")
     else()
