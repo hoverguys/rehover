@@ -39,11 +39,17 @@ if(NOT TEXPACKER)
 	message(WARNING "Could not find texpacker")
 endif()
 
+# Check for makesd
+find_program(MAKESD makesd ${TOOLBIN})
+if(NOT MAKESD)
+	message(WARNING "Could not find makesd")
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(TOOLS DEFAULT_MSG
-								  OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER)
+								  OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER MAKESD)
 
-mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER TOOLBIN)
+mark_as_advanced(OBJCONV BENTO GCPACKER TEXCONV TEVASM TEXPACKER MAKESD TOOLBIN)
 
 if(TOOLS_FOUND)
 	message(STATUS "All tools found")
@@ -161,7 +167,7 @@ function(make_atlas target texturefile atlasfile prefix size)
 
 
 	# Create resource pack target
-	add_custom_command(OUTPUT ${_resfile}
+	add_custom_command(OUTPUT "${_resfile}" "${_resfile}.atlas"
 					   COMMAND ${TEXPACKER} -o ${_resfile} -prefix ${CMAKE_CURRENT_LIST_DIR}/${prefix} -maxsize ${size} ${SPRITES}
 					   DEPENDS ${SPRITES}
 					   COMMENT "Generating texture atlas ${_fname}"
@@ -170,6 +176,7 @@ function(make_atlas target texturefile atlasfile prefix size)
 	set_target_properties(${_fname} PROPERTIES OUTPUT_NAME ${_resfile})
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 							 ${_resfile})
+
 	set(${texturefile} "${_resfile}" PARENT_SCOPE)
 	set(${atlasfile} "${_resfile}.atlas" PARENT_SCOPE)
 endfunction()
@@ -225,7 +232,7 @@ endfunction()
 # <prefix> is the assets folder, including trailing slash
 # <target> is the resulting resource pack target
 # Usage:
-#     add_resource_pack(<target> <prefix> <type> <res1> [[<type2> <res2> ..])
+#     add_resource_pack(<target> <prefix> <type> <res1> [<type2> <res2> ..])
 # All supported types:
 #   BIN     - Binary, embed as it is
 #   MODEL   - Model, use convert_models(..)
@@ -240,7 +247,7 @@ function(add_resource_pack target prefix)
 	set(_txtwrap "CLAMP")
 	set(_txtfilter "BILINEAR")
 	set(_pathtype "REL")
-	set(_depends ${_filelist})
+	set(_depends "")
 
 	# Create resource list
 	file(WRITE "${_filelist}" "")
@@ -297,6 +304,7 @@ function(add_resource_pack target prefix)
 	add_custom_command(OUTPUT ${_resfile}
 					   COMMAND ${GCPACKER} -verbose -list ${_filelist} -out ${_resfile}
 					   DEPENDS ${_depends}
+					   BYPRODUCTS ${_filelist}
 					   COMMENT "Generating resource pack ${_fname}"
 					   VERBATIM)
 	add_custom_target(${target} DEPENDS ${_resfile})
@@ -304,3 +312,20 @@ function(add_resource_pack target prefix)
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 							 ${_resfile})
 endfunction()
+
+# Create a SD image with the required data to make the project run
+# <target> is the resulting target name
+# <fileN> are all the files to embed in the SD image (at the root)
+# Usage:
+#     add_sd_image(<target> <file1> [<file2> ..])
+function(add_sd_image target)
+	set(_outfile "${CMAKE_CURRENT_BINARY_DIR}/sd.raw")
+	string(REPLACE ";" " -in ${CMAKE_CURRENT_BINARY_DIR}/" _INFILES "${ARGN}")
+	# Create resource pack target
+	add_custom_command(OUTPUT ${_outfile}
+					   COMMAND ${MAKESD} -in ${CMAKE_CURRENT_BINARY_DIR}/${_INFILES} -out ${_outfile}
+					   DEPENDS ${ARGN}
+					   COMMENT "Generating sd image"
+					   VERBATIM)
+	add_custom_target(${target} DEPENDS ${_outfile})
+endfunction(add_sd_image target)

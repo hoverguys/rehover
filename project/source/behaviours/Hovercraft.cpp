@@ -1,10 +1,10 @@
 #include "Hovercraft.h"
-#include "../components/Transform.h"
 #include "../components/Rigidbody.h"
+#include "../components/Transform.h"
 #include "../math/Math.h"
 
-#include "../scenes/GameScene.h"
 #include "../resources/ResourceLoader.h"
+#include "../scenes/GameScene.h"
 
 namespace cp = Components;
 
@@ -18,7 +18,8 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	transform->RotateAxisAngle(Math::worldUp, deltaRotation);
 
 	// Forward
-	const Vector throttle = transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 25.0f * dt);
+	const Vector throttle =
+		transform->forward * (controller->GetAxis(HovercraftController::Motion::Throttle) * 25.0f * dt);
 	rigidbody->velocity = rigidbody->velocity + throttle;
 
 	// Have camera track hovercraft
@@ -30,7 +31,8 @@ void Hovercraft::Tick(ex::Entity entity, ex::TimeDelta dt) {
 	const float t = 1.f / 5.f;
 
 	/* Calculate camera position */
-	const Vector targetCameraPos = transform->position + (transform->forward * cameraDistance) + Vector(0, cameraHeight, 0);
+	const Vector targetCameraPos =
+		transform->position + (transform->forward * cameraDistance) + Vector(0, cameraHeight, 0);
 
 	/* Calculate camera target */
 	const Vector targetPos = transform->position + (transform->up * targetHeight);

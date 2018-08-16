@@ -11,6 +11,7 @@ include(GitVersion)
 
 # Options
 set(EMBED_RESOURCES true CACHE BOOL "Embed resource pack into the binary")
+set(GENERATE_SD_IMAGE false CACHE BOOL "Generate SD image for Dolphin")
 
 # Sources
 file(GLOB_RECURSE SOURCE_FILES source/*)
@@ -31,6 +32,11 @@ if(EMBED_RESOURCES)
 	add_definitions(-DEMBED_RESOURCES)
 else()
 	add_multi_dependency(rehover rehover-data)
+endif()
+
+if (GENERATE_SD_IMAGE)
+	add_sd_image(rehover-sd "rehover-data.gcr")
+	add_multi_dependency(rehover rehover-sd)
 endif()
 
 # Create .dol

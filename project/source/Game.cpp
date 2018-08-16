@@ -3,12 +3,12 @@
 #include "resources/ResourceLoader.h"
 
 #include "behaviours/Hovercraft.h"
-#include "systems/SceneSystem.h"
 #include "systems/BehaviourSystem.h"
+#include "systems/InputSystem.h"
 #include "systems/PhysicsSystem.h"
 #include "systems/RenderSystem.h"
+#include "systems/SceneSystem.h"
 #include "systems/UISystem.h"
-#include "systems/InputSystem.h"
 
 #include "scenes/GameScene.h"
 

@@ -1,6 +1,7 @@
-#include <ogc/lwp_watchdog.h>
-#include <fat.h>
 #include "pchheader.h"
+#include <fat.h>
+#include <ogc/lwp_watchdog.h>
+
 
 #include "rendering/Graphics.h"
 #include "resources/MeshResource.h"
