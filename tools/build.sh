@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+cd "$(dirname "$0")/"
+
 go get github.com/adinfinit/texpack/maxrect
 go get github.com/mitchellh/go-fs/...
 
