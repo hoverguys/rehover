@@ -1,7 +1,7 @@
 FROM debian
 
-ENV DEVKITPRO=/opt/devkitpro
-ENV DEVKITPPC=/opt/devkitpro/devkitPPC
+ENV DEVKITPRO=/opt/devkitpro \
+	DEVKITPPC=/opt/devkitpro/devkitPPC
 
 # Install devKitPro
 RUN apt-get update && \
@@ -11,6 +11,7 @@ RUN apt-get update && \
 	dpkg --install /home/root/devkitpro-pacman.deb && \
 	dkp-pacman --noconfirm -S devkit-env devkitPPC gamecube-tools general-tools libfat-ogc libogc && \
 	dkp-pacman --noconfirm -Scc && \
+	rm /home/root/devkitpro-pacman.deb && \
 	apt-get remove -y gpg libxml2 wget xz-utils && \
 	apt-get autoremove -y && \
 	apt-get clean

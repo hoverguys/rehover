@@ -9,5 +9,15 @@ RUN apt-get update && \
 	apt-get remove -y unzip wget patch && \
 	apt-get autoremove -y && \
 	apt-get clean
-	
-# TODO: Mount volume for rehover
+
+ENV GOPATH=/go
+
+# Mount the project
+VOLUME /rehover
+
+# Entrypoint
+CMD /rehover/tools/build.sh && \
+	mkdir -p /rehover/build && \
+	cd /rehover/build && \
+	cmake /rehover/project && \
+	make -j
