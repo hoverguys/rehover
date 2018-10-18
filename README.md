@@ -11,8 +11,8 @@ Run the following commands to build and finally run the container to compile the
 The result will be put in the `build` folder in the root of the repository
 
 ```sh
-docker build -f .\gamecube.Dockerfile -t gamecube .
-docker build -f .\rehover.Dockerfile -t rehover .
+docker build -f ./gamecube.Dockerfile -t gamecube .
+docker build -f ./rehover.Dockerfile -t rehover .
 docker run --volume <path to project>:/rehover --rm -it rehover
 ```
 
