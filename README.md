@@ -11,9 +11,8 @@ Run the following commands to build and finally run the container to compile the
 The result will be put in the `build` folder in the root of the repository
 
 ```sh
-docker build -f ./gamecube.Dockerfile -t gamecube .
-docker build -f ./rehover.Dockerfile -t rehover .
-docker run --volume <path to project>:/rehover --rm -it rehover
+docker build -t rehover .
+docker run --volume <path to project>:/rehover --rm -t rehover
 ```
 
 The final command can be re-run any time you wish to compile any changes to the project.
@@ -32,7 +31,7 @@ You will need:
   - entityx
 
 ## Step 0: BUILD TOOLS
-Run `build.sh` or `build.cmd` (depending on your OS of choice) in the `tools` folder
+Run `tools/build.sh` or `tools/build.cmd` (depending on your OS of choice).
 
 ## Step 1: BUILD THE PROJECT
 ```
