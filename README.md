@@ -7,17 +7,51 @@ A homebrew racing game for the Nintendo Gamecube and Wii inspired by Diddy Kong 
 
 # Compiling with docker
 
-Run the following commands to build and finally run the container to compile the project.
-The result will be put in the `build` folder in the root of the repository
+Compiling using docker will start a service container with the toolchain which can be instructed to compile the project
+
+First start the container using the following command:
 
 ```sh
-docker build -t rehover .
-docker run --volume <path to project>:/rehover --rm -t rehover
+docker-compose -f "docker-compose.yml" up -d --build
+```
+
+Then instruct the container to compile:
+
+```sh
+docker exec --tty devenv make -j
 ```
 
 The final command can be re-run any time you wish to compile any changes to the project.
 
-**Docker on windows needs special setup for [mounting](https://rominirani.com/docker-on-windows-mounting-host-directories-d96f3f056a2c)**
+## Visual Code
+
+In Visual Code, a task.json file in the .vscode folder can be used to tell docker to build whenever you use the buildin build command.
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "docker exec --tty devenv make -j",
+            "problemMatcher": "$gcc",
+            "isBackground": true,
+            "presentation": {
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
+        }
+    ]
+}
+```
+
+The `$gcc` problemMatcher the C/C++ extension to be installed.
 
 # Compiling from source
 
