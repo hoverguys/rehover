@@ -1,9 +1,5 @@
 FROM devkitpro/devkitppc
 
-VOLUME /rehover
-
-ENV GOPATH=/go
-
 # Install thirdparty ppc libs and other requirements
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends git patch golang wget unzip cmake make && \
@@ -14,6 +10,11 @@ RUN apt-get update && \
 	apt-get autoremove -y && \
 	apt-get clean
 
+ENV GOPATH=/go
+
+VOLUME /rehover
+WORKDIR /rehover/build
+
 # Entrypoint
 COPY ./docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT "/docker-entrypoint.sh" && /bin/bash

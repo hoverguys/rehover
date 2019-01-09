@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  rehover:
+    image: rehover
+    build: .
+    container_name: devenv
+    volumes:
+     - "./:/rehover"
+    tty: true
