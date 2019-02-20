@@ -53,6 +53,23 @@ In Visual Code, a task.json file in the .vscode folder can be used to tell docke
 
 The `$gcc` problemMatcher the C/C++ extension to be installed.
 
+# Using Vagrant
+
+First, the ugly: you need a plugin.
+```
+vagrant plugin install vagrant-docker-compose
+```
+
+After that, setup/run the VM with `vagrant up` and build the project with `vagrant build`.
+
+### Why would you want to use Vagrant?
+
+If you develop on Windows but don't want HyperV active (needed for Docker on Windows) this is a decent middle ground.
+
+### `vagrant build` fails
+
+Sometimes the provisioning can't keep the container running, just run `vagrant provision` and use `vagrant ssh -c "docker ps"` to check if the container is up.
+
 # Compiling from source
 
 You will need:

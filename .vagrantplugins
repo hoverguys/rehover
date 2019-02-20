@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+class BuildCmd < Vagrant.plugin(2, :command)
+	def self.synopsis
+		"builds project on guest machine"
+	end
+
+	def execute
+		with_target_vms(nil, single_target: true) do |vm|
+			vm.action(:ssh_run, ssh_run_command: "docker exec --tty devenv make -j")
+		end
+	end
+end
+
+class BuildProject < Vagrant.plugin(2)
+	name "Project builder"
+
+	command "build" do
+		BuildCmd
+	end
+end
