@@ -10,7 +10,7 @@ endif()
 set(LIBOGC_PATHS $ENV{LIBOGC} libogc ${DEVKITPRO}/libogc)
 
 # Set default portlib
-set(PORTLIB_PATH ${DEVKITPRO}/ppc-portlibs CACHE STRING "Path to portlibs (if used)")
+set(PORTLIB_PATH ${DEVKITPRO}/portlibs/ppc CACHE STRING "Path to portlibs (if used)")
 set(PORT_INCLUDE_DIR ${PORTLIB_PATH}/include)
 set(PORT_LIBRARY_DIR_GCN ${PORTLIB_PATH}/lib/cube)
 set(PORT_LIBRARY_DIR_WII ${PORTLIB_PATH}/lib/wii)
