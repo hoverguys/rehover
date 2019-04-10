@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Gamecube",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/devkitpro/devkitPPC/**",
+                "/opt/devkitpro/libogc/**",
+                "/opt/devkitpro/portlibs/ppc/**"
+            ],
+            "defines": [
+                "__gamecube__",
+                "HW_DOL"
+            ],
+            "compilerPath": "/opt/devkitpro/devkitPPC/bin/powerpc-eabi-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
