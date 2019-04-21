@@ -32,7 +32,7 @@ func Parse(in io.Reader) ([]gxCall, error) {
 	linen := 0
 	last := false
 	var calls []gxCall
-	for {
+	for !last {
 		linen++
 
 		// Read next line
@@ -113,9 +113,6 @@ func Parse(in io.Reader) ([]gxCall, error) {
 		// Add call to list
 		calls = append(calls, call)
 
-		if last {
-			break
-		}
 	}
 
 	return calls, nil
