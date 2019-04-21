@@ -20,7 +20,9 @@ add_multi_precompiled_header(rehover source/pchheader.h)
 
 # Dependencies
 add_default_libraries(rehover fat ogc)
-add_port_libraries(rehover entityx)
+add_port_libraries(rehover entityx EASTL)
+
+add_definitions(-DEA_PLATFORM_GEKKO)
 
 # Create resource pack
 include(../Assets)
