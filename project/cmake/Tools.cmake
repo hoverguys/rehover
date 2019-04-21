@@ -167,15 +167,15 @@ function(make_atlas target texturefile atlasfile prefix size)
 
 
 	# Create resource pack target
-	add_custom_command(OUTPUT ${_resfile}
+	add_custom_command(OUTPUT ${_resfile} "${_resfile}.atlas"
 					   COMMAND ${TEXPACKER} -o ${_resfile} -prefix ${CMAKE_CURRENT_LIST_DIR}/${prefix} -maxsize ${size} ${SPRITES}
 					   DEPENDS ${SPRITES}
 					   COMMENT "Generating texture atlas ${_fname}"
 					   VERBATIM)
 	add_custom_target(${_fname} DEPENDS ${_resfile})
-	set_target_properties(${_fname} PROPERTIES OUTPUT_NAME ${_resfile})
+	set_target_properties(${_fname} PROPERTIES OUTPUT_NAME "${_resfile}")
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-							 ${_resfile})
+							 ${_resfile} "${_resfile}.atlas")
 	set(${texturefile} "${_resfile}" PARENT_SCOPE)
 	set(${atlasfile} "${_resfile}.atlas" PARENT_SCOPE)
 endfunction()
