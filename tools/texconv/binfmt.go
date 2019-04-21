@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"image"
 	"io"
+	"os"
 )
 
 // Endianess represents a byte order
@@ -44,12 +45,13 @@ const (
 
 // TextureOptions contains all the available options to tune the output texture
 type TextureOptions struct {
-	Endianess Endianess
-	Format    ColorFmt
-	MaxLOD    int
-	MinLOD    int
-	Wrap      WrapStrategy
-	Filter    Filter
+	Endianess  Endianess
+	Format     ColorFmt
+	PaletteFmt ColorFmt
+	MaxLOD     int
+	MinLOD     int
+	Wrap       WrapStrategy
+	Filter     Filter
 }
 
 // SaveTexture takes a parsed image file and writes it in binary format using a provided byte order
@@ -96,30 +98,37 @@ func SaveTexture(tex image.Image, out io.WriteSeeker, options TextureOptions) er
 	endianess.PutUint16(header[0:], uint16(width))
 	endianess.PutUint16(header[2:], uint16(height))
 	header[4] = fmtid[options.Format]
-	header[5] = mipmap
-	header[6] = filter | wrap<<2 | wrap<<5
+	header[5] = palfmtid[options.PaletteFmt]
+	header[6] = mipmap
+	header[7] = filter | wrap<<2 | wrap<<5
 
 	// Write padding for now
 	headerlen := len(header)
 	padding := make([]byte, headerlen, headerlen)
 	binary.Write(out, endianess, padding)
 
-	paletteoffset, err := fmtfn(tex, out, FormatOptions{
-		Endianess: endianess,
+	palettedata, err := fmtfn(tex, out, FormatOptions{
+		Endianess:  endianess,
+		PaletteFmt: options.PaletteFmt,
 	})
 	if err != nil {
 		return fmt.Errorf("Error encoding and writing texture data: %s", err.Error())
 	}
 
 	// Add data offsets to header
-	endianess.PutUint32(header[7:], uint32(headerlen))
+	endianess.PutUint32(header[8:], uint32(headerlen))
 
-	// Add palette offset if color fmt has it
-	//switch (options.Format) {
-	//	case <FORMAT>
-	//	endianess.PutUint32(header[10:], uint32(headerlen)+paletteoffset)
-	//}
-	_ = paletteoffset
+	// Add palette data
+	endianess.PutUint32(header[12:], uint32(palettedata.Offset))
+	endianess.PutUint16(header[16:], uint16(palettedata.NumEntries))
+
+	if !*quiet {
+		if palettedata.NumEntries > 0 {
+			fmt.Fprintf(os.Stderr, "%d data bytes, %d palette entries\n", palettedata.Offset-uint32(headerlen), palettedata.NumEntries)
+		} else {
+			fmt.Fprintf(os.Stderr, "%d data bytes\n", palettedata.Offset-uint32(headerlen))
+		}
+	}
 
 	// Write header to file
 	// Write header

@@ -8,16 +8,18 @@
 /*! \brief BTB file header
  */
 struct TextureResourceHeader {
-	unsigned short width;       /*< Texture width  */
-	unsigned short height;      /*< Texture height */
-	unsigned char format;       /*< Color format */
-	unsigned short maxlod : 4;  /*< Max LOD (0-10) */
-	unsigned short minlod : 4;  /*< Min LOD (0-10) */
-	unsigned short wrapS : 3;   /*< Wrap S */
-	unsigned short wrapT : 3;   /*< Wrap T */
-	unsigned short filter : 2;  /*< Texture filtering mode */
-	unsigned int dataOffset;    /*< Offset to texture data */
-	unsigned int paletteOffset; /*< Offset to palette data (if applicable) */
+	u16 width;         /*< Texture width  */
+	u16 height;        /*< Texture height */
+	u8 format;         /*< Color format */
+	u8 palfmt;         /*< Palette color format */
+	u16 maxlod : 4;    /*< Max LOD (0-10) */
+	u16 minlod : 4;    /*< Min LOD (0-10) */
+	u16 wrapS : 3;     /*< Wrap S */
+	u16 wrapT : 3;     /*< Wrap T */
+	u16 filter : 2;    /*< Texture filtering mode */
+	u32 dataOffset;    /*< Offset to texture data */
+	u32 paletteOffset; /*< Offset to palette data (if applicable) */
+	u16 paletteLength; /*< How many palette entries (max 16384) */
 } __attribute__((packed));
 
 /*!
@@ -41,9 +43,7 @@ public:
 	 */
 	std::shared_ptr<Texture> Load();
 
-	long int ReferenceCount() override {
-		return internal == NULL ? 0 : internal.use_count();
-	}
+	long int ReferenceCount() override { return internal == NULL ? 0 : internal.use_count(); }
 
 	void Initialize() override;
 

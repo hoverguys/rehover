@@ -3,8 +3,14 @@
 void TextureResource::Initialize() {
 	header = static_cast<TextureResourceHeader*>(address);
 	unsigned char* data = static_cast<unsigned char*>(address) + header->dataOffset;
+	unsigned char* palette = nullptr;
+
 	std::printf("Loading texture (%dx%d fmt %d wrap S%x T%x filter %x) at offset %p\n", header->width, header->height,
-	            header->format, header->wrapS, header->wrapT, header->filter, data);
+				header->format, header->wrapS, header->wrapT, header->filter, data);
+	// Check for palette format
+	if (header->format >= 0x08 && header->format <= 0x0A) {
+		palette = static_cast<unsigned char*>(address) + header->paletteOffset;
+	}
 
 	auto t = std::make_shared<Texture>();
 
@@ -17,6 +23,9 @@ void TextureResource::Initialize() {
 	t->maxlod = header->maxlod;
 	t->minlod = header->minlod;
 	t->data = data;
+	t->palette = palette;
+	t->palfmt = header->palfmt;
+	t->paletteCount = header->paletteLength;
 
 	loaded = false;
 	internal = t;
@@ -53,7 +62,15 @@ std::shared_ptr<Texture> TextureResource::Load() {
 		break;
 	}
 
-	GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, t->wrapS, t->wrapT, useTrilinear);
+	if (t->palette == nullptr) {
+		GX_InitTexObj(&t->object, t->data, t->width, t->height, t->format, t->wrapS, t->wrapT, useTrilinear);
+	} else {
+		GX_InitTexObjCI(&t->object, t->data, t->width, t->height, t->format, t->wrapS, t->wrapT, useTrilinear,
+						GX_TLUT0);
+		// Also initialize the TLUT/Palette
+		DCFlushRange(&t->paletteobj, sizeof(u16) * 256);
+		GX_InitTlutObj(&t->paletteobj, t->palette, t->palfmt, t->paletteCount);
+	}
 	GX_InitTexObjLOD(&t->object, filterTex, filterMip, t->minlod, t->maxlod, 0, 0, 0, GX_ANISO_1);
 
 	loaded = true;

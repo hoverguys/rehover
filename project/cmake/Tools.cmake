@@ -106,7 +106,7 @@ function(convert_textures output fmt wrap filter)
 		set(TARGET_FILE ${TEXTURE_BTB_PATH}/${__BTB_FILE_NAME})
 		# Schedule objconv to run
 		add_custom_command(OUTPUT ${TARGET_FILE}
-			COMMAND ${TEXCONV} -in ${__file} -fmt ${fmt} -wrap ${WRAP_L} -filter ${FILTER_L} -out ${TARGET_FILE}
+			COMMAND ${TEXCONV} -in ${__file} -fmt ${fmt} -wrap ${WRAP_L} -filter ${FILTER_L} -out ${TARGET_FILE} -quiet
 			DEPENDS ${__file}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 		set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${TARGET_FILE})
