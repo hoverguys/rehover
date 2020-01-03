@@ -34,8 +34,8 @@ set(ASSETS
 #		I4     REPEAT NEAR     textures/checkerboard.png
 		RGB565 REPEAT NEAR  textures/testmap.png
 		RGB5A3 CLAMP  BILINEAR sprites/logo.png
-		RGB5A3 CLAMP  BILINEAR ABS ${GAMEHUD_TEXTURE}
 		I4     CLAMP  BILINEAR ABS ${TIMERFONT_TEXTURE}
+		RGB5A3 CLAMP  BILINEAR ABS ${GAMEHUD_TEXTURE}
 	SHADER
 		shaders/hovercraft.tev
 		shaders/font.tev

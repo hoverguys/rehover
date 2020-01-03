@@ -42,7 +42,8 @@ void RenderSystem::SetupLights(const Matrix& cameraMtx, ex::EntityManager& es) {
 
 			// Increase light id (it's a bitmask)
 			lightId = lightId << 1;
-		});
+		}
+	);
 }
 
 void RenderSystem::RenderScene(const Matrix& cameraMtx, ex::EntityManager& es, ex::EventManager& events,
