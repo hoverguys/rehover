@@ -21,6 +21,10 @@ find_path(LIBOGC_INCLUDE_DIR gccore.h
           PATHS ${LIBOGC_PATHS}
           PATH_SUFFIXES include libogc/include )
 
+find_path(PORT_LIBRARY_DIR_SHARED NAMES libogc.a
+          PATHS ${LIBOGC_PATHS}
+          PATH_SUFFIXES lib libogc/lib )
+
 find_path(LIBOGC_LIBRARY_DIR_GCN NAMES libogc.a
           PATHS ${LIBOGC_PATHS}
           PATH_SUFFIXES lib/cube libogc/lib/cube )

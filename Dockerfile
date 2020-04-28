@@ -6,6 +6,7 @@ RUN apt-get update && \
 	git clone https://github.com/hoverguys/ppc-portlibs.git && \
 	./ppc-portlibs/build.sh entityx && \
 	rm -rf ./ppc-portlibs && \
+	git clone https://github.com/hoverguys/EASTL.git && \
 	apt-get remove -y unzip wget patch && \
 	apt-get autoremove -y && \
 	apt-get clean
